@@ -1,0 +1,54 @@
+import os
+import shutil
+from typing import Optional
+
+from stores.artifact.base import ArtifactRepository, verify_artifact_path
+from utils.file_utils import list_all, get_file_info, relative_path_to_artifact_path
+
+
+class LocalArtifactRepository(ArtifactRepository):
+    def __init__(self, artifact_uri: str):
+        super().__init__(artifact_uri)
+        self._artifact_dir = artifact_uri
+
+    @property
+    def artifact_dir(self):
+        return self._artifact_dir
+
+    def log_artifact(self, local_file: str, artifact_path: Optional[str] = None):
+        verify_artifact_path(artifact_path)
+        if artifact_path:
+            artifact_path = os.path.normpath(artifact_path)
+
+        artifact_dir = (
+            os.path.join(self.artifact_dir, artifact_path)
+            if artifact_path
+            else self.artifact_dir
+        )
+        if not os.path.exists(artifact_dir):
+            os.makedirs(artifact_dir)
+        try:
+            shutil.copy2(
+                local_file, os.path.join(artifact_dir, os.path.basename(local_file))
+            )
+        except shutil.SameFileError:
+            pass
+
+    def list_artifacts(self, path: Optional[str] = None):
+        if path:
+            path = os.path.normpath(path)
+        list_dir = os.path.join(self.artifact_dir, path) if path else self.artifact_dir
+        if os.path.isdir(list_dir):
+            artifact_files = list_all(list_dir, full_path=True)
+            infos = [
+                get_file_info(
+                    f,
+                    relative_path_to_artifact_path(
+                        os.path.relpath(f, self.artifact_dir)
+                    ),
+                )
+                for f in artifact_files
+            ]
+            return sorted(infos, key=lambda f: f.path)
+        else:
+            return []
