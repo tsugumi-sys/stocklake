@@ -8,7 +8,7 @@ import setuptools
 
 setuptools.setup(
     name="stocklake",
-    version="0.0.4",
+    version="0.0.5",
     py_modules=["stocklake"],
     install_requires=[
         "polygon-api-client",
