@@ -1,10 +1,9 @@
 import logging
 from abc import ABC, abstractmethod
-from typing import Optional, List
+from typing import List, Optional
 
-
-from exceptions import AccountLoaderException
-from utils.validation import path_not_unique
+from stocklake.exceptions import StockLoaderException
+from stocklake.utils.validation import path_not_unique
 
 logger = logging.getLogger(__name__)
 
@@ -24,4 +23,4 @@ class ArtifactRepository(ABC):
 
 def verify_artifact_path(artifact_path: str):
     if artifact_path and path_not_unique(artifact_path):
-        raise AccountLoaderException(f"Invalid artifact path: {artifact_path}")
+        raise StockLoaderException(f"Invalid artifact path: {artifact_path}")

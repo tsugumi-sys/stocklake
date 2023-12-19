@@ -4,10 +4,8 @@ import tempfile
 
 import pandas as pd
 
-from stocklake.preprocessors.base import BasePreprocessor
+from stocklake.core.base_preprocessor import BasePreprocessor
 from stocklake.stores.artifact.base import ArtifactRepository
-
-PRPOCESSED_NASDAQ_SYMBOLS_DATA_DIR = "nasdaq/symbols"
 
 
 class NASDAQSymbolsPreprocessor(BasePreprocessor):
@@ -23,9 +21,7 @@ class NASDAQSymbolsPreprocessor(BasePreprocessor):
 
     @property
     def artifact_path(self):
-        return os.path.join(
-            self.artifact_repo.artifact_dir, self.artifact_filename_json
-        )
+        return os.path.join(self.artifact_repo.artifact_dir, self.artifact_filename_csv)
 
     def process(self):
         with open(self.source_artifact_path_json, "r") as f:
@@ -57,9 +53,7 @@ class NYSESymbolsPreprocessor(BasePreprocessor):
 
     @property
     def artifact_path(self):
-        return os.path.join(
-            self.artifact_repo.artifact_dir, self.artifact_filename_json
-        )
+        return os.path.join(self.artifact_repo.artifact_dir, self.artifact_filename_csv)
 
     def process(self):
         with open(self.source_artifact_path_json, "r") as f:
@@ -91,9 +85,7 @@ class AMEXSymbolsPreprocessor(BasePreprocessor):
 
     @property
     def artifact_path(self):
-        return os.path.join(
-            self.artifact_repo.artifact_dir, self.artifact_filename_json
-        )
+        return os.path.join(self.artifact_repo.artifact_dir, self.artifact_filename_csv)
 
     def process(self):
         with open(self.source_artifact_path_json, "r") as f:

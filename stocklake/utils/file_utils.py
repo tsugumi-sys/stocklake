@@ -1,10 +1,9 @@
 import os
 import posixpath
 from urllib.parse import unquote
-
 from urllib.request import pathname2url
 
-from entities.file_info import FileInfo
+from stocklake.entities.file_info import FileInfo
 
 
 def list_all(root: str, filter_func=lambda x: True, full_path: bool = False):

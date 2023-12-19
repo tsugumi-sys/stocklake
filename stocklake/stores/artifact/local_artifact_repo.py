@@ -2,8 +2,12 @@ import os
 import shutil
 from typing import Optional
 
-from stores.artifact.base import ArtifactRepository, verify_artifact_path
-from utils.file_utils import list_all, get_file_info, relative_path_to_artifact_path
+from stocklake.stores.artifact.base import ArtifactRepository, verify_artifact_path
+from stocklake.utils.file_utils import (
+    get_file_info,
+    list_all,
+    relative_path_to_artifact_path,
+)
 
 
 class LocalArtifactRepository(ArtifactRepository):

@@ -6,8 +6,8 @@ import tempfile
 
 import requests
 
-from stocklake.data_loaders.base import DataLoader
-from stocklake.pipelines.nasdaq.constants import Exchange
+from stocklake.core.base_data_loader import DataLoader
+from stocklake.nasdaqapi.constants import Exchange
 from stocklake.stores.artifact.base import ArtifactRepository
 
 logger = logging.getLogger(__name__)
