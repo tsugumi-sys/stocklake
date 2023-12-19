@@ -8,7 +8,7 @@ with open("dev-requirements.txt") as f:
 
 setuptools.setup(
     name="stocklake",
-    version="0.0.3",
+    version="0.0.4",
     py_modules=["stocklake"],
     install_requires=install_reqs,
     packages=setuptools.find_packages(),
