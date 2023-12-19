@@ -8,13 +8,14 @@ import setuptools
 
 setuptools.setup(
     name="stocklake",
-    version="0.0.5",
+    version="0.0.6",
     py_modules=["stocklake"],
     install_requires=[
         "polygon-api-client",
         "python-dotenv",
         "pandas",
         "click",
+        "requests",
     ],
     packages=setuptools.find_packages(),
     long_description=open("README.md").read(),
