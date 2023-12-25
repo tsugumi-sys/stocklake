@@ -1,3 +1,4 @@
+import contextlib
 import os
 import shutil
 from typing import Optional
@@ -31,12 +32,11 @@ class LocalArtifactRepository(ArtifactRepository):
         )
         if not os.path.exists(artifact_dir):
             os.makedirs(artifact_dir)
-        try:
+
+        with contextlib.suppress(shutil.SameFileError):
             shutil.copy2(
                 local_file, os.path.join(artifact_dir, os.path.basename(local_file))
             )
-        except shutil.SameFileError:
-            pass
 
     def list_artifacts(self, path: Optional[str] = None):
         if path:

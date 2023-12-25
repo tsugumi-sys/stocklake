@@ -10,9 +10,7 @@ from polygon import RESTClient
 from polygon.rest.models.financials import Financials
 
 from stocklake.data_loaders.base import DataLoader
-from stocklake.data_loaders.common import RAW_DATA_DIR
 from stocklake.stores.artifact.base import ArtifactRepository
-from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 
 logger = logging.getLogger(__name__)
 
@@ -20,9 +18,7 @@ logger = logging.getLogger(__name__)
 class PolygonFinancialsDataLoader(DataLoader):
     def __init__(
         self,
-        artifact_repo: ArtifactRepository = LocalArtifactRepository(
-            os.path.join(RAW_DATA_DIR, "polygon/financials")
-        ),
+        artifact_repo: ArtifactRepository,
     ):
         super().__init__(artifact_repo)
         self.polygon_client = RESTClient(dotenv_values(".env").get("POLYGON_API_KEY"))
