@@ -31,7 +31,7 @@ class NASDAQSymbolsPipeline(Pipeline):
         self.stdout = PrettyStdoutPrint()
 
     def run(self):
-        logger.info("{} NASDAQ pipline starts {}".format("=" * 30, "=" * 30))
+        logger.info("{} NASDAQ pipeline starts {}".format("=" * 30, "=" * 30))
         if self.exchange == Exchange.NASDAQ or self.exchange is None:
             self.stdout.step_start(f"{Exchange.NASDAQ} symbols with nasdapapi")
             exchange_repo = LocalArtifactRepository(
