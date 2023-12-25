@@ -2,7 +2,7 @@ name: CI
 on:
   push:
     paths:
-      - *.py
+      - '**.py'
 
 jobs:
   ci:
