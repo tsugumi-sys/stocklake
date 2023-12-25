@@ -24,7 +24,7 @@ class NASDAQSymbolsPreprocessor(BasePreprocessor):
         return os.path.join(self.artifact_repo.artifact_dir, self.artifact_filename_csv)
 
     def process(self):
-        with open(self.source_artifact_path_json, "r") as f:
+        with open(self.source_artifact_path_json) as f:
             data = json.load(f)
 
         symbols_data = {k: [v] for k, v in data[0].items()}
@@ -56,7 +56,7 @@ class NYSESymbolsPreprocessor(BasePreprocessor):
         return os.path.join(self.artifact_repo.artifact_dir, self.artifact_filename_csv)
 
     def process(self):
-        with open(self.source_artifact_path_json, "r") as f:
+        with open(self.source_artifact_path_json) as f:
             data = json.load(f)
 
         symbols_data = {k: [v] for k, v in data[0].items()}
@@ -88,7 +88,7 @@ class AMEXSymbolsPreprocessor(BasePreprocessor):
         return os.path.join(self.artifact_repo.artifact_dir, self.artifact_filename_csv)
 
     def process(self):
-        with open(self.source_artifact_path_json, "r") as f:
+        with open(self.source_artifact_path_json) as f:
             data = json.load(f)
 
         symbols_data = {k: [v] for k, v in data[0].items()}
