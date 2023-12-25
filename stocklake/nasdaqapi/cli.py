@@ -15,6 +15,6 @@ from stocklake.nasdaqapi.pipeline import NASDAQSymbolsPipeline
     default=None,
     help=f"The exchange name that you want to download, should be in {Exchange.exchanges()}",
 )
-def nasdaqapi(skip_download: bool, exchange: Optional[str]):
+def nasdaqapi(skip_download: bool, exchange: Optional[Exchange]):
     pipeline = NASDAQSymbolsPipeline(skip_download, exchange)
     pipeline.run()

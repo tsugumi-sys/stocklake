@@ -21,8 +21,8 @@ class LocalArtifactRepository(ArtifactRepository):
         return self._artifact_dir
 
     def log_artifact(self, local_file: str, artifact_path: Optional[str] = None):
-        verify_artifact_path(artifact_path)
         if artifact_path:
+            verify_artifact_path(artifact_path)
             artifact_path = os.path.normpath(artifact_path)
 
         artifact_dir = (

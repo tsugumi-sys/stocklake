@@ -1,7 +1,7 @@
 import json
 import logging
 import os
-from typing import List
+from typing import Any, List, TypedDict
 
 import pandas as pd
 
@@ -10,12 +10,22 @@ from stocklake.preprocessors.base import BasePreprocessor
 logger = logging.getLogger(__name__)
 
 
+class FinancialsTableData(TypedDict):
+    ticker: List[Any]
+    fiscal_period: List[Any]
+    fiscal_year: List[Any]
+    fiscal_date: List[Any]
+    revenue: List[Any]
+    gross_profit: List[Any]
+    unit: List[Any]
+
+
 class PolygonFinancialsDataPreprocessor(BasePreprocessor):
     def __init__(self, source_dir_path: str, save_dir: str = "polygon/financials/"):
         super().__init__(source_dir_path, save_dir)
 
     def preprocess(self, tickers: List[str]):
-        data = {
+        data: FinancialsTableData = {
             "ticker": [],
             "fiscal_period": [],
             "fiscal_year": [],
