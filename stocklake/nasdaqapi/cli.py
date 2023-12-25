@@ -6,7 +6,9 @@ from stocklake.nasdaqapi.pipeline import NASDAQSymbolsPipeline
 
 
 @click.command()
-@click.option("--skip_download", default=False, help="skip downloading data")
+@click.option(
+    "--skip_download", default=False, help="if true, downloading data will be skipped"
+)
 @click.option(
     "--exchange",
     default=None,
