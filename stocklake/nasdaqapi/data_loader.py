@@ -74,7 +74,7 @@ class NYSESymbolsDataLoader(DataLoader):
             self.artifact_repo.artifact_dir, self.artifact_filename_json
         )
 
-    def download(self) -> ArtifactRepository:
+    def download(self):
         logger.info(
             f"Loading {self.exchange_name.upper()} symbols data from `https://www.nasdaq.com/`"
         )
@@ -110,7 +110,7 @@ class AMEXSymbolsDataLoader(DataLoader):
             self.artifact_repo.artifact_dir, self.artifact_filename_json
         )
 
-    def download(self) -> ArtifactRepository:
+    def download(self):
         logger.info(
             f"Loading {self.exchange_name.upper()} symbols data from `https://www.nasdaq.com/`"
         )

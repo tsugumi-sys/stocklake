@@ -17,11 +17,11 @@ class FileInfo:
         return self._path
 
     @property
-    def is_dir(self) -> str:
+    def is_dir(self) -> bool:
         return self._is_dir
 
     @property
-    def file_size(self) -> int:
+    def file_size(self) -> Optional[int]:
         return self._bytes
 
     def __repr__(self):

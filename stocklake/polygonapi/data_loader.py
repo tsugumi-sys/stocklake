@@ -3,7 +3,7 @@ import logging
 import os
 import tempfile
 import time
-from typing import Any, Dict, Iterator, List
+from typing import Any, Dict, List
 
 from dotenv import dotenv_values
 from polygon import RESTClient
@@ -42,7 +42,7 @@ class PolygonFinancialsDataLoader(DataLoader):
                     json.dump(financials_data, f)
             self.artifact_repo.log_artifacts(tempdirname)
 
-    def _extract_data(self, data: Iterator[Financials]) -> Dict[str, Any]:
+    def _extract_data(self, data: List[Financials]) -> Dict[str, Any]:
         financials_data = {}
         for item in data:
             financial_data = {}
@@ -75,7 +75,7 @@ class PolygonFinancialsDataLoader(DataLoader):
         with open(os.path.join(self.save_dir_path, f"{ticker}.json"), "w") as f:
             json.dump(extracted_data, f)
 
-    def _request_financials_data(self, ticker: str) -> Iterator[Financials]:
+    def _request_financials_data(self, ticker: str) -> List[Financials]:
         rawdata = []
         for d in self.polygon_client.vx.list_stock_financials(
             ticker=ticker, filing_date_gte=self.filing_date_gte
