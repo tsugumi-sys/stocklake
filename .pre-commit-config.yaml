@@ -9,6 +9,10 @@ repos:
     # Run the formatter.
     - id: ruff-format
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: ''  # Use the sha / tag you want to point at
+  rev: v1.8.0
   hooks:
   -   id: mypy
+- repo: https://github.com/crate-ci/typos
+  rev: v1.16.25
+  hooks:
+    - id: typos
