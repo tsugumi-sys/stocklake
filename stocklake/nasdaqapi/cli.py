@@ -1,7 +1,8 @@
-import click
-from stocklake.nasdaqapi.constants import Exchange
 from typing import Optional
 
+import click
+
+from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.pipeline import NASDAQSymbolsPipeline
 
 

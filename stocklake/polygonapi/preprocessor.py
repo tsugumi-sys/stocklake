@@ -71,6 +71,6 @@ class PolygonFinancialsDataPreprocessor(BasePreprocessor):
         )
 
     def _load_data(self, ticker: str) -> dict:
-        with open(os.path.join(self.source_dir_path, f"{ticker}.json"), "r") as f:
+        with open(os.path.join(self.source_dir_path, f"{ticker}.json")) as f:
             data = json.load(f)
         return data
