@@ -16,7 +16,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["black", "ruff-lsp", "pre-commit", "mypy"]
+dev = ["black", "ruff-lsp", "pre-commit", "mypy", "pytest"]
 
 [project.scripts]
 stocklake = "stocklake.cli:cli"
@@ -60,5 +60,6 @@ namespace_packages = true
 ignore_missing_imports = true
 python_version = "3.11"
 
-[tool.mypy-requests]
+[[tool.mypy.overrides]]
+module = "requests.*"
 ignore_missing_imports = true
