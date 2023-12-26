@@ -10,7 +10,7 @@ from stocklake.utils.file_utils import (
 
 def test_list_all():
     with tempfile.TemporaryDirectory() as tempdirname:
-        example_filenames = ["example1.txt", "example2.txt"]
+        example_filenames = ["example1.txt", "example2.txt", "example3.txt"]
         example_filepaths = []
         for filename in example_filenames:
             filepath = os.path.join(tempdirname, filename)
