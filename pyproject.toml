@@ -60,5 +60,6 @@ namespace_packages = true
 ignore_missing_imports = true
 python_version = "3.11"
 
-[tool.mypy-requests]
+[[tool.mypy.overrides]]
+module = "requests.*"
 ignore_missing_imports = true
