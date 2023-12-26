@@ -16,7 +16,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["black", "ruff-lsp", "pre-commit", "mypy"]
+dev = ["black", "ruff-lsp", "pre-commit", "mypy", "pytest"]
 
 [project.scripts]
 stocklake = "stocklake.cli:cli"
