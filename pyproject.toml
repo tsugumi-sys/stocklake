@@ -16,7 +16,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["black", "ruff-lsp"]
+dev = ["black", "ruff-lsp", "pre-commit", "mypy"]
 
 [project.scripts]
 stocklake = "stocklake.cli:cli"
@@ -26,3 +26,31 @@ path = "stocklake/__init__.py"
 
 [tool.hatch.build.targets.sdist]
 include = ["/stocklake"]
+
+[tool.ruff]
+ignore = ["E501"]
+select = [
+  # pycodestyle
+  "E",
+  # Pyflakes
+  "F",
+  # pyupgrade
+  "UP",
+  # flake8-bugbear
+  "B",
+  # flake8-simplify
+  "SIM",
+  # isort
+  "I",
+]
+
+[tool.ruff.isort]
+combine-as-imports = true
+section-order = [
+  "future",
+  "standard-library",
+  "third-party",
+  "first-party",
+  "local-folder",
+]
+split-on-trailing-comma = true
