@@ -7,6 +7,7 @@ from stocklake.nasdaqapi.data_loader import (
     AMEXSymbolsDataLoader,
     NasdaqAPIResponse,
     NASDAQSymbolsDataLoader,
+    NYSESymbolsDataLoader,
 )
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 
@@ -51,6 +52,6 @@ def test_NasdaqAPIResponse(mock_get):
 @mock.patch("requests.get", side_effect=mock_requests_get)
 def test_NYSESymbolsDataLoader(mock_get):
     with tempfile.TemporaryDirectory() as tempdirpath:
-        data_loader = NASDAQSymbolsDataLoader(LocalArtifactRepository(tempdirpath))
+        data_loader = NYSESymbolsDataLoader(LocalArtifactRepository(tempdirpath))
         data_loader.download()
         assert os.path.exists(data_loader.artifact_path)
