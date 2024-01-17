@@ -37,7 +37,7 @@ class NASDAQSymbolsPreprocessor(BasePreprocessor):
             pd.DataFrame.from_dict(symbols_data).to_csv(
                 os.path.join(tempdirname, self.artifact_filename_csv)
             )
-            self.artifact_repo.log_artifact(local_file)
+            self.artifact_repo.save_artifact(local_file)
 
 
 class NYSESymbolsPreprocessor(BasePreprocessor):
@@ -69,7 +69,7 @@ class NYSESymbolsPreprocessor(BasePreprocessor):
             pd.DataFrame.from_dict(symbols_data).to_csv(
                 os.path.join(tempdirname, self.artifact_filename_csv)
             )
-            self.artifact_repo.log_artifact(local_file)
+            self.artifact_repo.save_artifact(local_file)
 
 
 class AMEXSymbolsPreprocessor(BasePreprocessor):
@@ -101,4 +101,4 @@ class AMEXSymbolsPreprocessor(BasePreprocessor):
             pd.DataFrame.from_dict(symbols_data).to_csv(
                 os.path.join(tempdirname, self.artifact_filename_csv)
             )
-            self.artifact_repo.log_artifact(local_file)
+            self.artifact_repo.save_artifact(local_file)

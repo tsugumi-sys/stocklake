@@ -40,7 +40,7 @@ class PolygonFinancialsDataLoader(DataLoader):
                 local_file = os.path.join(tempdirname, f"{ticker}_raw_data.json")
                 with open(local_file, "w") as f:
                     json.dump(financials_data, f)
-            self.artifact_repo.log_artifacts(tempdirname)
+            self.artifact_repo.save_artifact(tempdirname)
 
     def _extract_data(self, data: List[Financials]) -> Dict[str, Any]:
         financials_data = {}
