@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import tempfile
+from typing import Any, Dict, List, TypedDict
 
 import requests
 
@@ -11,6 +12,36 @@ from stocklake.nasdaqapi.constants import Exchange
 from stocklake.stores.artifact.base import ArtifactRepository
 
 logger = logging.getLogger(__name__)
+
+
+class _SymbolData(TypedDict):
+    symbol: str
+    name: str
+    lastsale: str
+    netchange: str
+    pctchange: str
+    marketCap: str
+    url: str
+
+
+class _ResponseDataTable(TypedDict):
+    asOf: str
+    headers: _SymbolData
+    rows: List[_SymbolData]
+
+
+class _ResponseData(TypedDict):
+    filters: str | None
+    table: _ResponseDataTable
+    totalrecords: int
+    asof: str
+
+
+class NasdaqAPIResponse(TypedDict):
+    data: _ResponseData
+    message: str
+    status: Dict[str, Any]
+
 
 CUSTOM_USER_AGENT = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:85.0) Gecko/20100101 Firefox/85.0"
@@ -51,10 +82,12 @@ class NASDAQSymbolsDataLoader(DataLoader):
                 f"Request Failed with status code: {res.status_code}. All response body is the following: {res.text}"
             )
 
+        response_body: NasdaqAPIResponse = res.json()
+
         with tempfile.TemporaryDirectory() as tempdirname:
             local_file = os.path.join(tempdirname, self.artifact_filename_json)
             with open(local_file, "w") as f:
-                json.dump(res.json().get("data").get("rows"), f)
+                json.dump(response_body["data"]["rows"], f)
             self.artifact_repo.log_artifact(local_file)
 
 
@@ -87,10 +120,12 @@ class NYSESymbolsDataLoader(DataLoader):
                 f"Request Failed with status code: {res.status_code}. All response body is the following: {res.text}"
             )
 
+        response_body: NasdaqAPIResponse = res.json()
+
         with tempfile.TemporaryDirectory() as tempdirname:
             local_file = os.path.join(tempdirname, self.artifact_filename_json)
-            with open(os.path.join(local_file), "w") as f:
-                json.dump(res.json().get("data").get("rows"), f)
+            with open(local_file, "w") as f:
+                json.dump(response_body["data"]["rows"], f)
             self.artifact_repo.log_artifact(local_file)
 
 
@@ -124,8 +159,10 @@ class AMEXSymbolsDataLoader(DataLoader):
                 f"Request Failed with status code: {res.status_code}. All response body is the following: {res.text}"
             )
 
+        response_body: NasdaqAPIResponse = res.json()
+
         with tempfile.TemporaryDirectory() as tempdirname:
             local_file = os.path.join(tempdirname, self.artifact_filename_json)
             with open(local_file, "w") as f:
-                json.dump(res.json().get("data").get("rows"), f)
+                json.dump(response_body["data"]["rows"], f)
             self.artifact_repo.log_artifact(local_file)
