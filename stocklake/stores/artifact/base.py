@@ -13,7 +13,7 @@ class ArtifactRepository(ABC):
         self.artifact_uri = artifact_uri
 
     @abstractmethod
-    def log_artifact(self, local_file: str, artifact_path: Optional[str] = None):
+    def save_artifact(self, local_file: str, artifact_path: Optional[str] = None):
         pass
 
     @abstractmethod

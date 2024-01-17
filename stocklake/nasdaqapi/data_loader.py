@@ -3,7 +3,7 @@ import json
 import logging
 import os
 import tempfile
-from typing import Any, Dict, List, TypedDict
+from typing import List, TypedDict
 
 import requests
 
@@ -24,23 +24,14 @@ class _SymbolData(TypedDict):
     url: str
 
 
-class _ResponseDataTable(TypedDict):
+class _ResponseData(TypedDict):
     asOf: str
     headers: _SymbolData
     rows: List[_SymbolData]
 
 
-class _ResponseData(TypedDict):
-    filters: str | None
-    table: _ResponseDataTable
-    totalrecords: int
-    asof: str
-
-
 class NasdaqAPIResponse(TypedDict):
     data: _ResponseData
-    message: str
-    status: Dict[str, Any]
 
 
 CUSTOM_USER_AGENT = (
@@ -81,6 +72,7 @@ class NASDAQSymbolsDataLoader(DataLoader):
             logger.error(
                 f"Request Failed with status code: {res.status_code}. All response body is the following: {res.text}"
             )
+            return
 
         response_body: NasdaqAPIResponse = res.json()
 
@@ -88,7 +80,7 @@ class NASDAQSymbolsDataLoader(DataLoader):
             local_file = os.path.join(tempdirname, self.artifact_filename_json)
             with open(local_file, "w") as f:
                 json.dump(response_body["data"]["rows"], f)
-            self.artifact_repo.log_artifact(local_file)
+            self.artifact_repo.save_artifact(local_file)
 
 
 class NYSESymbolsDataLoader(DataLoader):
@@ -126,7 +118,7 @@ class NYSESymbolsDataLoader(DataLoader):
             local_file = os.path.join(tempdirname, self.artifact_filename_json)
             with open(local_file, "w") as f:
                 json.dump(response_body["data"]["rows"], f)
-            self.artifact_repo.log_artifact(local_file)
+            self.artifact_repo.save_artifact(local_file)
 
 
 class AMEXSymbolsDataLoader(DataLoader):
@@ -165,4 +157,4 @@ class AMEXSymbolsDataLoader(DataLoader):
             local_file = os.path.join(tempdirname, self.artifact_filename_json)
             with open(local_file, "w") as f:
                 json.dump(response_body["data"]["rows"], f)
-            self.artifact_repo.log_artifact(local_file)
+            self.artifact_repo.save_artifact(local_file)

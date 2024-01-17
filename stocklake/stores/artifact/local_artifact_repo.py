@@ -20,7 +20,7 @@ class LocalArtifactRepository(ArtifactRepository):
     def artifact_dir(self):
         return self._artifact_dir
 
-    def log_artifact(self, local_file: str, artifact_path: Optional[str] = None):
+    def save_artifact(self, local_file: str, artifact_path: Optional[str] = None):
         if artifact_path:
             verify_artifact_path(artifact_path)
             artifact_path = os.path.normpath(artifact_path)
