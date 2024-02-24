@@ -3,3 +3,5 @@ python-dotenv
 pandas
 click
 requests
+alembic
+psycopg2
