@@ -1,9 +1,8 @@
 from logging.config import fileConfig
 
 from alembic import context
-from sqlalchemy import engine_from_config, pool
-
 from db.base_sql_model import Base
+from sqlalchemy import engine_from_config, pool
 
 # from ..db.models import NasdaqStock
 
