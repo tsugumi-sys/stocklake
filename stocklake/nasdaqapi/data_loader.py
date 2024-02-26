@@ -40,7 +40,7 @@ CUSTOM_USER_AGENT = (
 CUSTOM_HEADERS = {"user-agent": CUSTOM_USER_AGENT}
 
 
-def symbols_api_endpoint(exchange_name: Exchange):
+def symbols_api_endpoint(exchange_name: Exchange) -> str:
     return f"https://api.nasdaq.com/api/screener/stocks?tableonly=true&limit=25&offset=0&exchange={exchange_name}&download=true"
 
 
