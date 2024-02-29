@@ -1,7 +1,7 @@
 from sqlalchemy import Column, DateTime, Float, Integer, String
 from sqlalchemy.sql import func
 
-from stocklake.stores.db.base_sql_model import Base
+from stocklake.stores.db.database import Base
 
 
 class NasdaqAPIData(Base):
