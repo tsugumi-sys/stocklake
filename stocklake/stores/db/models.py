@@ -4,8 +4,8 @@ from sqlalchemy.sql import func
 from stocklake.stores.db.base_sql_model import Base
 
 
-class NasdaqStock(Base):
-    __tablename__ = "nasdaq_stocks"
+class NasdaqAPIData(Base):
+    __tablename__ = "nasdaq_api_data"
 
     id = Column(Integer, primary_key=True)
     symbol = Column(String(10), unique=True)
