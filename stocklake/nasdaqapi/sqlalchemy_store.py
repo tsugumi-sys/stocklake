@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlalchemy.orm import Session
+from sqlalchemy import orm
 
 from stocklake.core.base_sqlalchemy_store import SQLAlchemyStore
 from stocklake.stores.db import models, schemas
@@ -8,7 +8,7 @@ from stocklake.stores.db.database import LocalSession
 
 
 class NasdaqApiSQLAlchemyStore(SQLAlchemyStore):
-    def __init__(self, session: Session = LocalSession):
+    def __init__(self, session: orm.sessionmaker[orm.session.Session] = LocalSession):
         self.session = session
 
     def create(self, data: schemas.NasdaqStockCreate | List[schemas.NasdaqStockCreate]):
