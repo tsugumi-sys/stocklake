@@ -27,3 +27,7 @@ repos:
   rev: v1.16.25
   hooks:
     - id: typos
+- repo: https://github.com/rhysd/actionlint
+  rev: v1.6.27
+  hooks:
+    - id: actionlint
