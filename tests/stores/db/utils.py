@@ -27,5 +27,5 @@ def SessionLocal():
     SessionLocal = orm.sessionmaker(autocommit=False, bind=engine)
     yield SessionLocal
 
-    # Drop the test database after finishing test
+    # Drop the test database after finishing tests
     drop_database(TEST_SQLALCHEMY_URL)
