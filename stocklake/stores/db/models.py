@@ -4,7 +4,7 @@ from sqlalchemy.sql import func
 from stocklake.stores.db.database import Base
 
 
-class NasdaqAPIData(Base):
+class NasdaqApiData(Base):
     __tablename__ = "nasdaq_api_data"
 
     id = Column(Integer, primary_key=True)

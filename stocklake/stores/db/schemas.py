@@ -25,4 +25,4 @@ class NasdaqStock(NasdaqStockBase):
     updated_at: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True

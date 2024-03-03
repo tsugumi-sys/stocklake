@@ -5,3 +5,5 @@ click
 requests
 alembic
 psycopg2
+pydantic
+sqlalchemy-utils
