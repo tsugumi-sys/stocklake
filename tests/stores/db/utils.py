@@ -15,12 +15,14 @@ from stocklake.stores.db.models import Base
 def SessionLocal():
     TEST_SQLALCHEMY_URL = f"postgresql://{STOCKLAKE_POSTGRES_USER.get()}:{STOCKLAKE_POSTGRES_PASSWORD.get()}@{STOCKLAKE_POSTGRES_HOST.get()}/test"
     engine = create_engine(TEST_SQLALCHEMY_URL)
+
+    # Create database
     if not database_exists(engine.url):
         create_database(engine.url)
     else:
         raise StockLoaderException("Test database already exists")
 
-    # Create test database
+    # Create tables
     Base.metadata.create_all(engine)
     SessionLocal = orm.sessionmaker(autocommit=False, bind=engine)
     yield SessionLocal
