@@ -10,10 +10,11 @@ from stocklake.environment_variables import (
 from stocklake.exceptions import StockLoaderException
 from stocklake.stores.db.models import Base
 
+TEST_SQLALCHEMY_URL = f"postgresql://{STOCKLAKE_POSTGRES_USER.get()}:{STOCKLAKE_POSTGRES_PASSWORD.get()}@{STOCKLAKE_POSTGRES_HOST.get()}/test"
+
 
 @pytest.fixture(scope="function")
 def SessionLocal():
-    TEST_SQLALCHEMY_URL = f"postgresql://{STOCKLAKE_POSTGRES_USER.get()}:{STOCKLAKE_POSTGRES_PASSWORD.get()}@{STOCKLAKE_POSTGRES_HOST.get()}/test"
     engine = create_engine(TEST_SQLALCHEMY_URL)
 
     # Create database
