@@ -30,3 +30,19 @@ def SessionLocal():
 
     # Drop the test database after finishing tests
     drop_database(TEST_SQLALCHEMY_URL)
+
+
+@pytest.fixture(scope="function")
+def test_database():
+    engine = create_engine(TEST_SQLALCHEMY_URL)
+
+    # Create database
+    if not database_exists(engine.url):
+        create_database(engine.url)
+    else:
+        raise StockLoaderException("Test database already exists")
+
+    yield
+
+    # Drop the test database after finishing tests
+    drop_database(TEST_SQLALCHEMY_URL)
