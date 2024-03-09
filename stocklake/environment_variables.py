@@ -25,5 +25,5 @@ STOCKLAKE_POSTGRES_PASSWORD = _EnvironmentVariable(
     "STOCKLAKE_POSTGRES_PASSWOR", "password"
 )
 STOCKLAKE_POSTGRES_DATABASE = _EnvironmentVariable(
-    "STOCKLAKE_POSTGRES_DATABASE", "postgres"
+    "STOCKLAKE_POSTGRES_DATABASE", "stocklake"
 )
