@@ -18,8 +18,6 @@ from stocklake.stores.db import utils
 def upgrade(url: Optional[str], revision: str) -> None:
     if url is None:
         url = f"postgresql://{STOCKLAKE_POSTGRES_USER.get()}:{STOCKLAKE_POSTGRES_PASSWORD.get()}@{STOCKLAKE_POSTGRES_HOST.get()}/{STOCKLAKE_POSTGRES_DATABASE.get()}"
-    engine = sqlalchemy.create_engine(
-        f"postgresql://{STOCKLAKE_POSTGRES_USER.get()}:{STOCKLAKE_POSTGRES_PASSWORD.get()}@{STOCKLAKE_POSTGRES_HOST.get()}/{STOCKLAKE_POSTGRES_DATABASE.get()}"
-    )
+    engine = sqlalchemy.create_engine(url)
     utils.migrate(engine, revision)
     engine.dispose()
