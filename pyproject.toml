@@ -3,17 +3,22 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
+dependencies = [
+  "alembic",
+  "click",
+  "pandas",
+  "polygon-api-client",
+  "psycopg2-binary",
+  "pydantic",
+  "python-dotenv",
+  "requests",
+  "sqlalchemy-utils",
+]
+
 name = "stocklake"
 dynamic = ["version"]
 readme = "README.md"
 license = "MIT"
-dependencies = [
-  "click",
-  "pandas",
-  "polygon-api-client",
-  "python-dotenv",
-  "requests",
-]
 
 [project.optional-dependencies]
 dev = ["black", "ruff-lsp", "pre-commit", "mypy", "pytest"]
