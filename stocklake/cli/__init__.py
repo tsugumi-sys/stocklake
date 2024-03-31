@@ -15,11 +15,12 @@ def download():
 
 
 @click.group()
-def db():
+def database():
     pass
 
 
 download.add_command(nasdaqapi)
-db.add_command(upgrade)
+database.add_command(upgrade)
+
 cli.add_command(download)
-cli.add_command(upgrade)
+cli.add_command(database)

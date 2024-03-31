@@ -1,7 +1,7 @@
-from enum import StrEnum
+from enum import Enum
 
 
-class Exchange(StrEnum):
+class Exchange(str, Enum):
     NASDAQ = "nasdaq"
     NYSE = "nyse"
     AMEX = "amex"
