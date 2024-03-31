@@ -5,6 +5,7 @@ from typing import Optional
 from stocklake.core.base_pipeline import Pipeline
 from stocklake.core.constants import DATA_DIR
 from stocklake.core.stdout import PrettyStdoutPrint
+from stocklake.exceptions import StockLoaderException
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.data_loader import (
     AMEXSymbolsDataLoader,
@@ -17,16 +18,26 @@ from stocklake.nasdaqapi.preprocessor import (
     NYSESymbolsPreprocessor,
 )
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
+from stocklake.stores.constants import StoreType
 
 logger = logging.getLogger(__name__)
 
 
 class NASDAQSymbolsPipeline(Pipeline):
     def __init__(
-        self, skip_download: bool = False, exchange: Optional[Exchange] = None
+        self,
+        skip_download: bool = False,
+        exchange: Optional[Exchange] = None,
+        store_type: Optional[StoreType] = StoreType.LOCAL_ARTIFACT,
     ):
         self.exchange = exchange
         self.skip_download = skip_download
+
+        if store_type not in StoreType.types():
+            raise StockLoaderException(
+                f"Specified store type is invalid, {store_type}, valid types are {StoreType.types()}"
+            )
+        self.store_type = store_type
         self.save_dir = os.path.join(DATA_DIR, "nasdaqapi")
         self.stdout = PrettyStdoutPrint()
 
