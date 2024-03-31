@@ -22,15 +22,17 @@ def upgrade(url: Optional[str], revision: str) -> None:
         url = f"postgresql://{STOCKLAKE_POSTGRES_USER.get()}:{STOCKLAKE_POSTGRES_PASSWORD.get()}@{STOCKLAKE_POSTGRES_HOST.get()}/{STOCKLAKE_POSTGRES_DATABASE.get()}"
     engine = sqlalchemy.create_engine(url)
 
+    stdout = PrettyStdoutPrint()
     # test connection
     try:
         conn = engine.connect()
         conn.close()
     except exc.OperationalError:
-        PrettyStdoutPrint().warning_message(
+        stdout.warning_message(
             f"Cannot connect to database: {url}. You may forget to setup PostgreSQL, and see `Setup Database` section in the document (https://github.com/tsugumi-sys/stocklake/blob/main/README.md)."
         )
         return
 
     utils.migrate(engine, revision)
     engine.dispose()
+    stdout.success_message("Migration Completed :)")
