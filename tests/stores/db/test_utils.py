@@ -14,7 +14,8 @@ def test_upgrade():
     res = runner.invoke(
         cli.upgrade, ["--url", TEST_SQLALCHEMY_URL], catch_exceptions=False
     )
-    assert res.exit_code == 0, res.output
+    assert res.exit_code == 0
+    assert "Migration Completed :)" in res.output
 
 
 def test_upgrade_database_not_found():
