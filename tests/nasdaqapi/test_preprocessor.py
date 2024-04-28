@@ -1,7 +1,10 @@
 import json
 import os
 
-from stocklake.nasdaqapi.preprocessor import NASDAQSymbolsPreprocessor
+from stocklake.nasdaqapi.preprocessor import (
+    AMEXSymbolsPreprocessor,
+    NASDAQSymbolsPreprocessor,
+)
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 
 SAMPLE_RESPONSE_JSON = "./tests/nasdaqapi/sample_response.json"
@@ -20,6 +23,18 @@ def _download_data(dirpath: str, datafile: str = "data.json") -> str:
 def test_NASDAQSymbolsPreprocessor(tmpdir):
     datafile_path = _download_data(tmpdir)
     preprocessor = NASDAQSymbolsPreprocessor(
+        LocalArtifactRepository(tmpdir), datafile_path
+    )
+
+    # check no artifact exists before run
+    assert not os.path.exists(preprocessor.artifact_path)
+    preprocessor.process()
+    assert os.path.exists(preprocessor.artifact_path)
+
+
+def test_AMEXSymbolsPreprocessor(tmpdir):
+    datafile_path = _download_data(tmpdir)
+    preprocessor = AMEXSymbolsPreprocessor(
         LocalArtifactRepository(tmpdir), datafile_path
     )
 
