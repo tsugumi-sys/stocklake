@@ -29,7 +29,6 @@ def test_run_each_symbols_with_local_artifact(mock_get, exchange_name, tmpdir):
         store_type=StoreType.LOCAL_ARTIFACT,
     )
     pipeline.run()
-    print(os.listdir(SAVE_ARTIFACTS_DIR))
     assert os.path.exists(os.path.join(SAVE_ARTIFACTS_DIR, f"{exchange_name}_data.csv"))
 
 
