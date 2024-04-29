@@ -13,7 +13,7 @@ class NASDAQSymbolsPreprocessor(BasePreprocessor):
         self,
         artifact_repo: ArtifactRepository,
         source_artifact_path_json: str,
-        artifact_filename_csv: str = "data.csv",
+        artifact_filename_csv: str = "nasdaq_data.csv",
     ):
         super().__init__(artifact_repo)
         self.source_artifact_path_json = source_artifact_path_json
@@ -45,7 +45,7 @@ class NYSESymbolsPreprocessor(BasePreprocessor):
         self,
         artifact_repo: ArtifactRepository,
         source_artifact_path_json: str,
-        artifact_filename_csv: str = "data.csv",
+        artifact_filename_csv: str = "nyse_data.csv",
     ):
         super().__init__(artifact_repo)
         self.source_artifact_path_json = source_artifact_path_json
@@ -77,7 +77,7 @@ class AMEXSymbolsPreprocessor(BasePreprocessor):
         self,
         artifact_repo: ArtifactRepository,
         source_artifact_path_json: str,
-        artifact_filename_csv: str = "data.csv",
+        artifact_filename_csv: str = "amex_data.csv",
     ):
         super().__init__(artifact_repo)
         self.source_artifact_path_json = source_artifact_path_json

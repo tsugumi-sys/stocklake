@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from stocklake.stores.artifact.base import ArtifactRepository
 
 
-class DataLoader(ABC):
+class BaseDataLoader(ABC):
     def __init__(self, artifact_repo: ArtifactRepository):
         self._artifact_repo = artifact_repo
 
