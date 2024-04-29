@@ -29,9 +29,12 @@ def test_run_each_symbols_with_local_artifact(mock_get, exchange_name, tmpdir):
         data_dir=tmpdir,
     )
     pipeline.run()
-    data_dir = os.path.join(pipeline.save_dir_path, "nasdaq")
-    assert os.path.exists(os.path.join(data_dir, f"{exchange_name}_data.csv"))
-    assert os.path.exists(os.path.join(data_dir, f"raw_{exchange_name}_data.json"))
+    assert os.path.exists(
+        os.path.join(pipeline.save_dir_path, f"{exchange_name}_data.csv")
+    )
+    assert os.path.exists(
+        os.path.join(pipeline.save_dir_path, f"raw_{exchange_name}_data.json")
+    )
 
 
 @mock.patch("requests.get", side_effect=mock_requests_get)
@@ -42,7 +45,10 @@ def test_run_with_local_artifact(mock_get, tmpdir):
         data_dir=tmpdir,
     )
     pipeline.run()
-    data_dir = os.path.join(pipeline.save_dir_path, "nasdaq")
     for exchange_name in Exchange.exchanges():
-        assert os.path.exists(os.path.join(data_dir, f"{exchange_name}_data.csv"))
-        assert os.path.exists(os.path.join(data_dir, f"raw_{exchange_name}_data.json"))
+        assert os.path.exists(
+            os.path.join(pipeline.save_dir_path, f"{exchange_name}_data.csv")
+        )
+        assert os.path.exists(
+            os.path.join(pipeline.save_dir_path, f"raw_{exchange_name}_data.json")
+        )
