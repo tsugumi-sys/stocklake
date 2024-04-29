@@ -4,6 +4,7 @@ from typing import Optional
 from stocklake.core.base_data_loader import BaseDataLoader
 from stocklake.core.base_pipeline import BasePipeline
 from stocklake.core.base_preprocessor import BasePreprocessor
+from stocklake.core.base_store import BaseStore
 from stocklake.core.stdout import PrettyStdoutPrint
 from stocklake.exceptions import StockLoaderException
 from stocklake.nasdaqapi.constants import Exchange
@@ -11,9 +12,7 @@ from stocklake.nasdaqapi.data_loader import (
     NASDAQSymbolsDataLoader,
 )
 from stocklake.nasdaqapi.preprocessor import (
-    AMEXSymbolsPreprocessor,
     NASDAQSymbolsPreprocessor,
-    NYSESymbolsPreprocessor,
 )
 from stocklake.nasdaqapi.store import NASDAQDataStore
 from stocklake.stores.constants import StoreType
@@ -43,30 +42,28 @@ class NASDAQSymbolsPipeline(BasePipeline):
             self.run_all()
             return
 
-        data_loader = NASDAQSymbolsDataLoader(exchange_name=self.exchange)
-        if self.exchange == Exchange.NASDAQ or self.exchange is None:
-            preprocessor = NASDAQSymbolsPreprocessor()
-            self._run(Exchange.NASDAQ, data_loader, preprocessor)
-
-        if self.exchange == Exchange.NYSE or self.exchange is None:
-            preprocessor = NYSESymbolsPreprocessor()
-            self._run(Exchange.NYSE, data_loader, preprocessor)
-
-        if self.exchange == Exchange.AMEX or self.exchange is None:
-            preprocessor = AMEXSymbolsPreprocessor()
-            self._run(Exchange.AMEX, data_loader, preprocessor)
+        self._run(
+            self.exchange,
+            NASDAQSymbolsDataLoader(exchange_name=self.exchange),
+            NASDAQSymbolsPreprocessor(),
+            NASDAQDataStore(),
+        )
 
     def run_all(self):
         for exchange in Exchange.exchanges():
-            data_loader = NASDAQSymbolsDataLoader(exchange_name=exchange)
-            preprocessor = NYSESymbolsPreprocessor()
-            self._run(exchange, data_loader, preprocessor)
+            self._run(
+                exchange,
+                NASDAQSymbolsDataLoader(exchange_name=exchange),
+                NASDAQSymbolsPreprocessor(),
+                NASDAQDataStore(),
+            )
 
     def _run(
         self,
         exchange: Exchange,
         data_loader: BaseDataLoader,
         preprocessor: BasePreprocessor,
+        store: BaseStore,
     ):
         self.stdout.step_start(f"NASDAQ API for {exchange.upper()} exchange symbols")
         if not self.skip_download:
@@ -77,6 +74,5 @@ class NASDAQSymbolsPipeline(BasePipeline):
             # TODO: fetch from cached file
             return
         data = preprocessor.process(raw_data)
-        store = NASDAQDataStore()
         store.save(self.store_type, exchange, data)
         self.stdout.success_message("- Completed🐳.")
