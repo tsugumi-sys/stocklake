@@ -2,11 +2,10 @@ import json
 import os
 from unittest import mock
 
-from stocklake.nasdaqapi.data_loader import (
-    AMEXSymbolsDataLoader,
-    NASDAQSymbolsDataLoader,
-    NYSESymbolsDataLoader,
-)
+import pytest
+
+from stocklake.nasdaqapi.constants import Exchange
+from stocklake.nasdaqapi.data_loader import NASDAQSymbolsDataLoader
 from stocklake.nasdaqapi.entities import NasdaqAPIResponse
 
 with open("./tests/nasdaqapi/sample_response.json") as f:
@@ -43,28 +42,9 @@ expected_cols = [
 
 
 @mock.patch("requests.get", side_effect=mock_requests_get)
-def test_AMEXSymbolsDataLoader(mock_get, tmpdir):
-    data_loader = AMEXSymbolsDataLoader(cache_dir=tmpdir)
-    data = data_loader.download()
-    assert os.path.exists(data_loader.cache_artifact_path)
-    for row in data:
-        for col in expected_cols:
-            assert col in row
-
-
-@mock.patch("requests.get", side_effect=mock_requests_get)
-def test_NASDAQSymbolsDataLoader(mock_get, tmpdir):
-    data_loader = NASDAQSymbolsDataLoader(cache_dir=tmpdir)
-    data = data_loader.download()
-    assert os.path.exists(data_loader.cache_artifact_path)
-    for row in data:
-        for col in expected_cols:
-            assert col in row
-
-
-@mock.patch("requests.get", side_effect=mock_requests_get)
-def test_NYSESymbolsDataLoader(mock_get, tmpdir):
-    data_loader = NYSESymbolsDataLoader(cache_dir=tmpdir)
+@pytest.mark.parametrize("exchange_name", Exchange.exchanges())
+def test_data_loader(mock_get, exchange_name, tmpdir):
+    data_loader = NASDAQSymbolsDataLoader(exchange_name=exchange_name, cache_dir=tmpdir)
     data = data_loader.download()
     assert os.path.exists(data_loader.cache_artifact_path)
     for row in data:

@@ -8,9 +8,7 @@ from stocklake.core.stdout import PrettyStdoutPrint
 from stocklake.exceptions import StockLoaderException
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.data_loader import (
-    AMEXSymbolsDataLoader,
     NASDAQSymbolsDataLoader,
-    NYSESymbolsDataLoader,
 )
 from stocklake.nasdaqapi.preprocessor import (
     AMEXSymbolsPreprocessor,
@@ -41,25 +39,28 @@ class NASDAQSymbolsPipeline(BasePipeline):
         self.stdout = PrettyStdoutPrint()
 
     def run(self):
-        logger.info("{} NASDAQ pipeline starts {}".format("=" * 30, "=" * 30))
+        if self.exchange is None:
+            self.run_all()
+            return
 
+        data_loader = NASDAQSymbolsDataLoader(exchange_name=self.exchange)
         if self.exchange == Exchange.NASDAQ or self.exchange is None:
-            self.stdout.step_start(f"{Exchange.NASDAQ} symbols with nasdapapi")
-            data_loader = NASDAQSymbolsDataLoader()
             preprocessor = NASDAQSymbolsPreprocessor()
             self._run(Exchange.NASDAQ, data_loader, preprocessor)
 
         if self.exchange == Exchange.NYSE or self.exchange is None:
-            self.stdout.step_start(f"{Exchange.NYSE} symbols with nasdapapi")
-            data_loader = NYSESymbolsDataLoader()
             preprocessor = NYSESymbolsPreprocessor()
             self._run(Exchange.NYSE, data_loader, preprocessor)
 
         if self.exchange == Exchange.AMEX or self.exchange is None:
-            self.stdout.step_start(f"{Exchange.AMEX} symbols with nasdapapi")
-            data_loader = AMEXSymbolsDataLoader()
             preprocessor = AMEXSymbolsPreprocessor()
             self._run(Exchange.AMEX, data_loader, preprocessor)
+
+    def run_all(self):
+        for exchange in Exchange.exchanges():
+            data_loader = NASDAQSymbolsDataLoader(exchange_name=exchange)
+            preprocessor = NYSESymbolsPreprocessor()
+            self._run(exchange, data_loader, preprocessor)
 
     def _run(
         self,
@@ -67,6 +68,7 @@ class NASDAQSymbolsPipeline(BasePipeline):
         data_loader: BaseDataLoader,
         preprocessor: BasePreprocessor,
     ):
+        self.stdout.step_start(f"NASDAQ API for {exchange.upper()} exchange symbols")
         if not self.skip_download:
             self.stdout.normal_message("- Downloading ...")
             raw_data = data_loader.download()
