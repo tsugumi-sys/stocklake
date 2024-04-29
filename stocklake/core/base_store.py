@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class BasePreprocessor(ABC):
+class BaseStore(ABC):
     @abstractmethod
-    def process(self, *args, **kwargs):
+    def save(self, *args, **kwargs):
         pass

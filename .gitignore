@@ -1,5 +1,7 @@
 # Custom files or directory
 data/
+stocklake-data/
+stocklake-cache/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
