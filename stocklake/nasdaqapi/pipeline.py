@@ -43,7 +43,7 @@ class NASDAQSymbolsPipeline(BasePipeline):
             return
 
         self._run(
-            Exchange.NASDAQ,
+            self.exchange,
             NASDAQSymbolsDataLoader(exchange_name=self.exchange),
             NASDAQSymbolsPreprocessor(),
             NASDAQDataStore(),
