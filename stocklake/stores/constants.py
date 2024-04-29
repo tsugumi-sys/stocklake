@@ -8,3 +8,6 @@ class StoreType(str, Enum):
     @staticmethod
     def types():
         return sorted([t.value for t in StoreType])
+
+    def __str__(self):
+        return self.value

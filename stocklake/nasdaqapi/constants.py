@@ -9,3 +9,6 @@ class Exchange(str, Enum):
     @classmethod
     def exchanges(self):
         return sorted([e.value for e in Exchange])
+
+    def __str__(self):
+        return self.value
