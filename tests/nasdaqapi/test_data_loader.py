@@ -1,6 +1,5 @@
 import json
 import os
-import tempfile
 from unittest import mock
 
 from stocklake.nasdaqapi.data_loader import (
@@ -9,7 +8,6 @@ from stocklake.nasdaqapi.data_loader import (
     NASDAQSymbolsDataLoader,
     NYSESymbolsDataLoader,
 )
-from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 
 with open("./tests/nasdaqapi/sample_response.json") as f:
     mock_response: NasdaqAPIResponse = json.load(f)
@@ -34,24 +32,21 @@ def mock_requests_get(*args, **kwargs):
 
 
 @mock.patch("requests.get", side_effect=mock_requests_get)
-def test_AMEXSymbolsDataLoader(mock_get):
-    with tempfile.TemporaryDirectory() as tempdirpath:
-        data_loader = AMEXSymbolsDataLoader(LocalArtifactRepository(tempdirpath))
-        data_loader.download()
-        assert os.path.exists(data_loader.artifact_path)
+def test_AMEXSymbolsDataLoader(mock_get, tmpdir):
+    data_loader = AMEXSymbolsDataLoader(cache_dir=tmpdir)
+    data_loader.download()
+    assert os.path.exists(data_loader.cache_artifact_path)
 
 
 @mock.patch("requests.get", side_effect=mock_requests_get)
-def test_NasdaqAPIResponse(mock_get):
-    with tempfile.TemporaryDirectory() as tempdirpath:
-        data_loader = NASDAQSymbolsDataLoader(LocalArtifactRepository(tempdirpath))
-        data_loader.download()
-        assert os.path.exists(data_loader.artifact_path)
+def test_NASDAQSymbolsDataLoader(mock_get, tmpdir):
+    data_loader = NASDAQSymbolsDataLoader(cache_dir=tmpdir)
+    data_loader.download()
+    assert os.path.exists(data_loader.cache_artifact_path)
 
 
 @mock.patch("requests.get", side_effect=mock_requests_get)
-def test_NYSESymbolsDataLoader(mock_get):
-    with tempfile.TemporaryDirectory() as tempdirpath:
-        data_loader = NYSESymbolsDataLoader(LocalArtifactRepository(tempdirpath))
-        data_loader.download()
-        assert os.path.exists(data_loader.artifact_path)
+def test_NYSESymbolsDataLoader(mock_get, tmpdir):
+    data_loader = NYSESymbolsDataLoader(cache_dir=tmpdir)
+    data_loader.download()
+    assert os.path.exists(data_loader.cache_artifact_path)

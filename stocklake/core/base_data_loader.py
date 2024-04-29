@@ -1,15 +1,11 @@
 from abc import ABC, abstractmethod
 
-from stocklake.stores.artifact.base import ArtifactRepository
-
 
 class BaseDataLoader(ABC):
-    def __init__(self, artifact_repo: ArtifactRepository):
-        self._artifact_repo = artifact_repo
-
     @property
-    def artifact_repo(self):
-        return self._artifact_repo
+    @abstractmethod
+    def cache_artifact_path(self) -> str:
+        pass
 
     @abstractmethod
     def download(self, *args, **kwargs):

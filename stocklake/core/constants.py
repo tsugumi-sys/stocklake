@@ -1,1 +1,2 @@
-DATA_DIR = "./data"
+DATA_DIR = "./stocklake-data"
+CACHE_DIR = "./stocklake-cache"
