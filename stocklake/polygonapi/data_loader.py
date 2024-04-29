@@ -9,13 +9,13 @@ from dotenv import dotenv_values
 from polygon import RESTClient
 from polygon.rest.models.financials import Financials
 
-from stocklake.data_loaders.base import DataLoader
+from stocklake.data_loaders.base import BaseDataLoader
 from stocklake.stores.artifact.base import ArtifactRepository
 
 logger = logging.getLogger(__name__)
 
 
-class PolygonFinancialsDataLoader(DataLoader):
+class PolygonFinancialsDataLoader(BaseDataLoader):
     def __init__(
         self,
         artifact_repo: ArtifactRepository,

@@ -7,7 +7,7 @@ from typing import List, TypedDict
 
 import requests
 
-from stocklake.core.base_data_loader import DataLoader
+from stocklake.core.base_data_loader import BaseDataLoader
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.stores.artifact.base import ArtifactRepository
 
@@ -44,11 +44,11 @@ def symbols_api_endpoint(exchange_name: Exchange) -> str:
     return f"https://api.nasdaq.com/api/screener/stocks?tableonly=true&limit=25&offset=0&exchange={exchange_name}&download=true"
 
 
-class NASDAQSymbolsDataLoader(DataLoader):
+class NASDAQSymbolsDataLoader(BaseDataLoader):
     def __init__(
         self,
         artifact_repo: ArtifactRepository,
-        artifact_filename_json: str = "data.json",
+        artifact_filename_json: str = "raw_nasdaq_data.json",
     ):
         super().__init__(artifact_repo)
         self.artifact_filename_json = artifact_filename_json
@@ -83,11 +83,11 @@ class NASDAQSymbolsDataLoader(DataLoader):
             self.artifact_repo.save_artifact(local_file)
 
 
-class NYSESymbolsDataLoader(DataLoader):
+class NYSESymbolsDataLoader(BaseDataLoader):
     def __init__(
         self,
         artifact_repo: ArtifactRepository,
-        artifact_filename_json: str = "data.json",
+        artifact_filename_json: str = "raw_nyse_data.json",
     ):
         super().__init__(artifact_repo)
         self.artifact_filename_json = artifact_filename_json
@@ -121,11 +121,11 @@ class NYSESymbolsDataLoader(DataLoader):
             self.artifact_repo.save_artifact(local_file)
 
 
-class AMEXSymbolsDataLoader(DataLoader):
+class AMEXSymbolsDataLoader(BaseDataLoader):
     def __init__(
         self,
         artifact_repo: ArtifactRepository,
-        artifact_filename_json: str = "data.json",
+        artifact_filename_json: str = "raw_amex_data.json",
     ):
         super().__init__(artifact_repo)
         self.artifact_filename_json = artifact_filename_json

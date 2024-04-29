@@ -8,4 +8,4 @@ class Exchange(str, Enum):
 
     @classmethod
     def exchanges(self):
-        return sorted([e for e in Exchange.__members__])
+        return sorted([e.value for e in Exchange])
