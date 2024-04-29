@@ -9,17 +9,3 @@ class NASDAQSymbolsPreprocessor(BasePreprocessor):
         self, data: List[RawNasdaqApiSymbolData]
     ) -> List[RawNasdaqApiSymbolData]:
         return data
-
-
-class NYSESymbolsPreprocessor(BasePreprocessor):
-    def process(
-        self, data: List[RawNasdaqApiSymbolData]
-    ) -> List[RawNasdaqApiSymbolData]:
-        return data
-
-
-class AMEXSymbolsPreprocessor(BasePreprocessor):
-    def process(
-        self, data: List[RawNasdaqApiSymbolData]
-    ) -> List[RawNasdaqApiSymbolData]:
-        return data
