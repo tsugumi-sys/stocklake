@@ -8,26 +8,20 @@ from typing import List, TypedDict
 import requests
 
 from stocklake.core.base_data_loader import BaseDataLoader
+from stocklake.core.constants import CACHE_DIR
 from stocklake.nasdaqapi.constants import Exchange
-from stocklake.stores.artifact.base import ArtifactRepository
+from stocklake.nasdaqapi.entities import NasdaqApiSymbolData
+from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 
 logger = logging.getLogger(__name__)
 
-
-class _SymbolData(TypedDict):
-    symbol: str
-    name: str
-    lastsale: str
-    netchange: str
-    pctchange: str
-    marketCap: str
-    url: str
+CACHE_DIR_PATH = os.path.join(CACHE_DIR, "nasdaqapi")
 
 
 class _ResponseData(TypedDict):
     asOf: str
-    headers: _SymbolData
-    rows: List[_SymbolData]
+    headers: NasdaqApiSymbolData
+    rows: List[NasdaqApiSymbolData]
 
 
 class NasdaqAPIResponse(TypedDict):
@@ -45,19 +39,15 @@ def symbols_api_endpoint(exchange_name: Exchange) -> str:
 
 
 class NASDAQSymbolsDataLoader(BaseDataLoader):
-    def __init__(
-        self,
-        artifact_repo: ArtifactRepository,
-        artifact_filename_json: str = "raw_nasdaq_data.json",
-    ):
-        super().__init__(artifact_repo)
-        self.artifact_filename_json = artifact_filename_json
+    def __init__(self, cache_dir: str = CACHE_DIR_PATH):
+        self._cache_artifact_repo = LocalArtifactRepository(cache_dir)
+        self._cache_artifact_filename = "raw_nasdaq_data.json"
         self.exchange_name = Exchange.NASDAQ
 
     @property
-    def artifact_path(self):
+    def cache_artifact_path(self) -> str:
         return os.path.join(
-            self.artifact_repo.artifact_dir, self.artifact_filename_json
+            self._cache_artifact_repo.artifact_dir, self._cache_artifact_filename
         )
 
     def download(self):
@@ -77,26 +67,22 @@ class NASDAQSymbolsDataLoader(BaseDataLoader):
         response_body: NasdaqAPIResponse = res.json()
 
         with tempfile.TemporaryDirectory() as tempdirname:
-            local_file = os.path.join(tempdirname, self.artifact_filename_json)
+            local_file = os.path.join(tempdirname, self._cache_artifact_filename)
             with open(local_file, "w") as f:
                 json.dump(response_body["data"]["rows"], f)
-            self.artifact_repo.save_artifact(local_file)
+            self._cache_artifact_repo.save_artifact(local_file)
 
 
 class NYSESymbolsDataLoader(BaseDataLoader):
-    def __init__(
-        self,
-        artifact_repo: ArtifactRepository,
-        artifact_filename_json: str = "raw_nyse_data.json",
-    ):
-        super().__init__(artifact_repo)
-        self.artifact_filename_json = artifact_filename_json
+    def __init__(self, cache_dir: str = CACHE_DIR_PATH):
+        self._cache_artifact_repo = LocalArtifactRepository(cache_dir)
+        self._cache_artifact_filename = "raw_nyse_data.json"
         self.exchange_name = Exchange.NYSE
 
     @property
-    def artifact_path(self):
+    def cache_artifact_path(self) -> str:
         return os.path.join(
-            self.artifact_repo.artifact_dir, self.artifact_filename_json
+            self._cache_artifact_repo.artifact_dir, self._cache_artifact_filename
         )
 
     def download(self):
@@ -115,26 +101,23 @@ class NYSESymbolsDataLoader(BaseDataLoader):
         response_body: NasdaqAPIResponse = res.json()
 
         with tempfile.TemporaryDirectory() as tempdirname:
-            local_file = os.path.join(tempdirname, self.artifact_filename_json)
+            local_file = os.path.join(tempdirname, self._cache_artifact_filename)
             with open(local_file, "w") as f:
                 json.dump(response_body["data"]["rows"], f)
-            self.artifact_repo.save_artifact(local_file)
+            self._cache_artifact_repo.save_artifact(local_file)
 
 
 class AMEXSymbolsDataLoader(BaseDataLoader):
-    def __init__(
-        self,
-        artifact_repo: ArtifactRepository,
-        artifact_filename_json: str = "raw_amex_data.json",
-    ):
-        super().__init__(artifact_repo)
-        self.artifact_filename_json = artifact_filename_json
+    def __init__(self, cache_dir: str = CACHE_DIR_PATH):
+        self._cache_artifact_repo = LocalArtifactRepository(cache_dir)
+        self._cache_artifact_filename = "raw_amex_data.json"
+
         self.exchange_name = Exchange.AMEX
 
     @property
-    def artifact_path(self):
+    def cache_artifact_path(self) -> str:
         return os.path.join(
-            self.artifact_repo.artifact_dir, self.artifact_filename_json
+            self._cache_artifact_repo.artifact_dir, self._cache_artifact_filename
         )
 
     def download(self):
@@ -154,7 +137,7 @@ class AMEXSymbolsDataLoader(BaseDataLoader):
         response_body: NasdaqAPIResponse = res.json()
 
         with tempfile.TemporaryDirectory() as tempdirname:
-            local_file = os.path.join(tempdirname, self.artifact_filename_json)
+            local_file = os.path.join(tempdirname, self._cache_artifact_filename)
             with open(local_file, "w") as f:
                 json.dump(response_body["data"]["rows"], f)
-            self.artifact_repo.save_artifact(local_file)
+            self._cache_artifact_repo.save_artifact(local_file)
