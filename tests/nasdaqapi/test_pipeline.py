@@ -6,7 +6,7 @@ import pytest
 from stocklake.exceptions import StockLoaderException
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.pipeline import NASDAQSymbolsPipeline
-from stocklake.nasdaqapi.store import SAVE_ARTIFACTS_DIR
+from stocklake.nasdaqapi.stores import SAVE_ARTIFACTS_DIR
 from stocklake.stores.constants import StoreType
 from tests.nasdaqapi.test_data_loader import mock_requests_get
 

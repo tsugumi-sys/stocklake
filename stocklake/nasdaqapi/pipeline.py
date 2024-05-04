@@ -14,7 +14,7 @@ from stocklake.nasdaqapi.data_loader import (
 from stocklake.nasdaqapi.preprocessor import (
     NASDAQSymbolsPreprocessor,
 )
-from stocklake.nasdaqapi.store import NASDAQDataStore
+from stocklake.nasdaqapi.stores import NASDAQDataStore
 from stocklake.stores.constants import StoreType
 
 logger = logging.getLogger(__name__)
