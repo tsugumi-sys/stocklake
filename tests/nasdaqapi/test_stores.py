@@ -1,6 +1,6 @@
 import copy
 
-from stocklake.nasdaqapi.store import NasdaqApiSQLAlchemyStore
+from stocklake.nasdaqapi.stores import NasdaqApiSQLAlchemyStore
 from stocklake.stores.db.models import NasdaqApiData
 from stocklake.stores.db.schemas import NasdaqStockCreate
 from tests.stores.db.utils import SessionLocal  # noqa: F401
