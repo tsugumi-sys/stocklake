@@ -10,6 +10,7 @@ def test_NasdaqAPISQLAlchemyStore_create(SessionLocal):  # noqa: F811
     store = NasdaqApiSQLAlchemyStore(SessionLocal)
     data = {
         "symbol": "TEST",
+        "name": "Test Company",
         "last_sale": 0.88,
         "pct_change": 0.5,
         "net_change": 0.35,
@@ -30,6 +31,7 @@ def test_NasdaqAPISQLAlchemyStore_create(SessionLocal):  # noqa: F811
 
         stored_data = res[0]
         assert stored_data.symbol == data["symbol"]
+        assert stored_data.name == data["name"]
         assert stored_data.last_sale == data["last_sale"]
         assert stored_data.pct_change == data["pct_change"]
         assert stored_data.net_change == data["net_change"]
