@@ -29,7 +29,7 @@ jobs:
           python -m pip install --upgrade pip && pip install -r dev-requirements.txt && pip install -r requirements.txt
       - name: Run Ruff Linter
         run: |
-          ruff check .
+          ruff check --exclude=stocklake/stores/db_migrations .
       - name: Run mypy Type Checking
         run: |
           mypy .

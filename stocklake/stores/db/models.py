@@ -9,6 +9,7 @@ class NasdaqApiData(Base):
 
     id = Column(Integer, primary_key=True)
     symbol = Column(String(10), unique=True)
+    name = Column(String(256))
     last_sale = Column(Float)
     pct_change = Column(Float)
     net_change = Column(Float)

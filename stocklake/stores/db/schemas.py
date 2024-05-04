@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 class NasdaqStockBase(BaseModel):
     symbol: str
+    name: str
     last_sale: float
     pct_change: float
     net_change: float
