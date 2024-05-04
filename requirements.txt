@@ -4,6 +4,6 @@ pandas
 click
 requests
 alembic
-psycopg2
+psycopg2-binary
 pydantic
 sqlalchemy-utils
