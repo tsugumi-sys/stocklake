@@ -7,17 +7,27 @@ class RawNasdaqApiSymbolData(TypedDict):
     lastsale: str
     netchange: str
     pctchange: str
+    volume: str
     marketCap: str
+    country: str
+    ipo_year: str
+    industry: str
+    sector: str
     url: str
 
 
 class NasdaqApiSymbolData(TypedDict):
     symbol: str
     name: str
-    lastsale: float
-    netchange: float
-    pctchange: float
-    marketCap: float
+    last_sale: float
+    net_change: float
+    pct_change: float
+    marketcap: float
+    volume: float
+    country: str
+    ipo_year: int
+    industry: str
+    sector: str
     url: str
 
 

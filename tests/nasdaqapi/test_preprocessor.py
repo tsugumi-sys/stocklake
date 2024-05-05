@@ -11,7 +11,9 @@ def test_process():
     data = preprocessor.process(mock_raw_data)
     for data_dic in data:
         for key, val in data_dic.items():
-            if key in ["lastsale", "netchange", "pctchange", "marketCap"]:
+            if key in ["last_sale", "net_change", "pct_change", "marketcap", "volume"]:
                 assert isinstance(val, float)
+            elif key in ["ipo_year"]:
+                assert isinstance(val, int)
             else:
                 assert isinstance(val, str)
