@@ -10,7 +10,7 @@ class RawNasdaqApiSymbolData(TypedDict):
     volume: str
     marketCap: str
     country: str
-    ipo_year: str
+    ipoyear: str
     industry: str
     sector: str
     url: str
