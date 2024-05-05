@@ -1,6 +1,8 @@
 import copy
 import os
 
+import pytest
+
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.stores import (
     SAVE_ARTIFACTS_DIR,
@@ -70,10 +72,11 @@ def test_nasdaqdatastore_postgresql(SessionLocal):  # noqa: F811
 
 
 def test_NasdaqAPISQLAlchemyStore_create(SessionLocal):  # noqa: F811
-    store = NasdaqApiSQLAlchemyStore(SessionLocal)
+    exchange = Exchange.NASDAQ
+    store = NasdaqApiSQLAlchemyStore(exchange, SessionLocal)
     data = {
         "symbol": "TEST",
-        "exchange": Exchange.NASDAQ,
+        "exchange": exchange,
         "name": "Test Company",
         "last_sale": 0.88,
         "pct_change": 0.5,
@@ -119,11 +122,12 @@ def test_NasdaqAPISQLAlchemyStore_create(SessionLocal):  # noqa: F811
         assert len(session.query(NasdaqApiData).all()) == 3
 
 
-def test_NasdaqAPISQLAlchemyStore_delete(SessionLocal):  # noqa: F811
-    store = NasdaqApiSQLAlchemyStore(SessionLocal)
+@pytest.mark.parametrize("exchange", Exchange.exchanges())
+def test_NasdaqAPISQLAlchemyStore_delete(exchange, SessionLocal):  # noqa: F811
+    store = NasdaqApiSQLAlchemyStore(exchange, SessionLocal)
     data = {
         "symbol": "TEST",
-        "exchange": Exchange.NASDAQ,
+        "exchange": exchange,
         "name": "Test Company",
         "last_sale": 0.88,
         "pct_change": 0.5,

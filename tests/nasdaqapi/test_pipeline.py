@@ -48,16 +48,16 @@ def test_run_with_local_artifact(mock_get, tmpdir):
 
 
 @mock.patch("requests.get", side_effect=mock_requests_get)
-@pytest.mark.parametrize("exchange_name", Exchange.exchanges())
+@pytest.mark.parametrize("exchange", Exchange.exchanges())
 def test_run_each_symbols_with_postgresql(
     mock_get,
-    exchange_name,
+    exchange,
     tmpdir,
     SessionLocal,  # noqa: F811
 ):
     pipeline = NASDAQSymbolsPipeline(
         skip_download=False,
-        exchange=exchange_name,
+        exchange=exchange,
         store_type=StoreType.POSTGRESQL,
         sqlalchemy_session=SessionLocal,
     )
