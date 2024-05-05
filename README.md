@@ -50,6 +50,21 @@ And run the following command:
 docker compose up -d
 ```
 
+## Setup metabase
+
+### 2. Connect stocklake PostgreSQL database
+
+| section | value |
+| :----: | :----: |
+| Database Type | `PostgreSQL` |
+| Host | `stocklake-db` |
+| Port | `5432` |
+| Database name | `stocklake` |
+| Username | `postgres` |
+| Password | `password` |
+
+Other settings can be theier default values.
+
 ## License
 
 `stocklake` is distributed under the terms of the [MIT](https://spdx.org/licenses/MIT.html) license.
