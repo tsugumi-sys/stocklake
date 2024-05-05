@@ -4,6 +4,7 @@ import click
 
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.pipeline import NASDAQSymbolsPipeline
+from stocklake.stores.constants import StoreType
 
 
 @click.command()
@@ -15,6 +16,11 @@ from stocklake.nasdaqapi.pipeline import NASDAQSymbolsPipeline
     default=None,
     help=f"The exchange name that you want to download, should be in {Exchange.exchanges()}",
 )
-def nasdaqapi(skip_download: bool, exchange: Optional[Exchange]):
-    pipeline = NASDAQSymbolsPipeline(skip_download, exchange)
+@click.option(
+    "--store_type",
+    default=StoreType.LOCAL_ARTIFACT,
+    help=f"The storege type, should be in {StoreType.types()}",
+)
+def nasdaqapi(skip_download: bool, exchange: Optional[Exchange], store_type: StoreType):
+    pipeline = NASDAQSymbolsPipeline(skip_download, exchange, store_type)
     pipeline.run()
