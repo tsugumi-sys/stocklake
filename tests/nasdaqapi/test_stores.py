@@ -22,6 +22,7 @@ def test_nasdaqdatastore_local_artifact():
         [
             {
                 "symbol": "TEST",
+                "exchange": Exchange.NASDAQ,
                 "name": "Test Company",
                 "last_sale": 0.88,
                 "pct_change": 0.5,
@@ -48,6 +49,7 @@ def test_nasdaqdatastore_postgresql(SessionLocal):  # noqa: F811
         [
             {
                 "symbol": "TEST",
+                "exchange": Exchange.NASDAQ,
                 "name": "Test Company",
                 "last_sale": 0.88,
                 "pct_change": 0.5,
@@ -71,6 +73,7 @@ def test_NasdaqAPISQLAlchemyStore_create(SessionLocal):  # noqa: F811
     store = NasdaqApiSQLAlchemyStore(SessionLocal)
     data = {
         "symbol": "TEST",
+        "exchange": Exchange.NASDAQ,
         "name": "Test Company",
         "last_sale": 0.88,
         "pct_change": 0.5,
@@ -120,6 +123,7 @@ def test_NasdaqAPISQLAlchemyStore_delete(SessionLocal):  # noqa: F811
     store = NasdaqApiSQLAlchemyStore(SessionLocal)
     data = {
         "symbol": "TEST",
+        "exchange": Exchange.NASDAQ,
         "name": "Test Company",
         "last_sale": 0.88,
         "pct_change": 0.5,
