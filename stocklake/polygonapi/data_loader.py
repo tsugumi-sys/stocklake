@@ -24,6 +24,9 @@ class PolygonFinancialsDataLoader(BaseDataLoader):
     def cache_artifact_path(self) -> str:
         return "dummy"
 
+    def download(self):
+        pass
+
     # def download(self, tickers: List[str]):
     #     request_count = 0
     #     with tempfile.TemporaryDirectory() as tempdirname:
