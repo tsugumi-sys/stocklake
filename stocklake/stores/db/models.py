@@ -8,7 +8,8 @@ class NasdaqApiData(Base):
     __tablename__ = "nasdaq_api_data"
 
     id = Column(Integer, primary_key=True)
-    symbol = Column(String(10), unique=True)
+    exchange = Column(String(10))
+    symbol = Column(String(10))
     name = Column(String(256))
     last_sale = Column(Float)
     pct_change = Column(Float)
