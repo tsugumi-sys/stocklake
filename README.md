@@ -41,9 +41,9 @@ This command builds the following containers.
 - [Metabase Web UI](http://localhost:3000)
 - PostgreSQL for metabase.
 
-### 2. download NASDAQ API data.
+### 2. Download NASDAQ API data.
 
-Run the following command to store database to PostgreSQL Container.
+Run the following command to download data from [nasdaq API](https://www.nasdaq.com/) and save into PostgreSQL.
 
 ```
 stocklake download nasdaqapi --exchange nasdaq --store_type postgresql
