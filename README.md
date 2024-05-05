@@ -16,43 +16,42 @@
 pip install stocklake
 ```
 
-## Setup Database
+## Quick start
 
-Stocklake only supports PostgreSQL.
+pre requesties:
+- docker && docker compose
 
-You can use official PostgreSQL container. For example;
+### 1. setup docker compose
 
-```yaml
-# docker-compose.yml
-version: '3'
+Let's create docker compose file.
 
-services:
-  db:
-    image: postgres:16
-    container_name: postgres
-    ports:
-      - 5432:5432
-    restart: always
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: stocklake
-
-volumes:
-  postgres_data:
+```sh
+touch docker-compose.yml
 ```
 
-And run the following command:
+Then, copy the docker compose file contents from this repository and run docker containers.
 
 ```sh
 docker compose up -d
 ```
 
-## Setup metabase
+This command builds the following containers.
 
-### 2. Connect stocklake PostgreSQL database
+- PostgreSQL for stocklake data.
+- [Metabase Web UI](http://localhost:3000)
+- PostgreSQL for metabase.
+
+### 2. download NASDAQ API data.
+
+Run the following command to store database to PostgreSQL Container.
+
+```
+stocklake download nasdaqapi --exchange nasdaq --store_type postgresql
+```
+
+### 3. Setup metabase
+
+Accessign the metabase web ui ([Metabase Web UI](http://localhost:3000)) and setup connection of stocklake PostgreSQL database with the following settings.
 
 | section | value |
 | :----: | :----: |
