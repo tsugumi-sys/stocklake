@@ -79,6 +79,6 @@ class NASDAQSymbolsPipeline(BasePipeline):
             self.stdout.warning_message("- Skip Downloading")
             # TODO: fetch from cached file
             return
-        data = preprocessor.process(raw_data)
+        data = preprocessor.process(exchange, raw_data)
         store.save(self.store_type, exchange, data)
         self.stdout.success_message("- Completed🐳.")

@@ -18,6 +18,7 @@ class RawNasdaqApiSymbolData(TypedDict):
 
 class NasdaqApiSymbolData(TypedDict):
     symbol: str
+    exchange: str
     name: str
     last_sale: float
     net_change: float
