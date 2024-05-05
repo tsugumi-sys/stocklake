@@ -1,9 +1,70 @@
 import copy
+import os
 
-from stocklake.nasdaqapi.stores import NasdaqApiSQLAlchemyStore
+from stocklake.nasdaqapi.constants import Exchange
+from stocklake.nasdaqapi.stores import (
+    SAVE_ARTIFACTS_DIR,
+    NasdaqApiSQLAlchemyStore,
+    NASDAQDataStore,
+)
+from stocklake.stores.constants import StoreType
 from stocklake.stores.db.models import NasdaqApiData
 from stocklake.stores.db.schemas import NasdaqStockCreate
 from tests.stores.db.utils import SessionLocal  # noqa: F401
+
+
+def test_nasdaqdatastore_local_artifact():
+    exchange_name = Exchange.NASDAQ
+    store = NASDAQDataStore()
+    store.save(
+        StoreType.LOCAL_ARTIFACT,
+        exchange_name,
+        [
+            {
+                "symbol": "TEST",
+                "name": "Test Company",
+                "last_sale": 0.88,
+                "pct_change": 0.5,
+                "net_change": 0.35,
+                "volume": 100.5,
+                "marketcap": 0.75,
+                "country": "US",
+                "ipo_year": 1999,
+                "industry": "Tech",
+                "sector": "Health",
+                "url": "https://example.com",
+            }
+        ],
+    )
+    assert os.path.exists(os.path.join(SAVE_ARTIFACTS_DIR, f"{exchange_name}_data.csv"))
+
+
+def test_nasdaqdatastore_postgresql(SessionLocal):  # noqa: F811
+    exchange_name = Exchange.NASDAQ
+    store = NASDAQDataStore(SessionLocal)
+    store.save(
+        StoreType.POSTGRESQL,
+        exchange_name,
+        [
+            {
+                "symbol": "TEST",
+                "name": "Test Company",
+                "last_sale": 0.88,
+                "pct_change": 0.5,
+                "net_change": 0.35,
+                "volume": 100.5,
+                "marketcap": 0.75,
+                "country": "US",
+                "ipo_year": 1999,
+                "industry": "Tech",
+                "sector": "Health",
+                "url": "https://example.com",
+            }
+        ],
+    )
+    with SessionLocal() as session, session.begin():
+        res = session.query(NasdaqApiData).all()
+        assert len(res) == 1
 
 
 def test_NasdaqAPISQLAlchemyStore_create(SessionLocal):  # noqa: F811
