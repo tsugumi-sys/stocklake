@@ -17,7 +17,7 @@ class NASDAQSymbolsPreprocessor(BasePreprocessor):
                 "pct_change": float(data_dic["pctchange"].replace("%", "")),
                 "net_change": float(data_dic["netchange"]),
                 "volume": float(data_dic["volume"]),
-                "marketcap": float(data_dic["marketCap"].replace(",", "")),
+                "marketcap": self._market_cap(data_dic),
                 "country": data_dic["country"],
                 "ipo_year": self._ipo_year(data_dic),
                 "industry": data_dic["industry"],
@@ -32,3 +32,9 @@ class NASDAQSymbolsPreprocessor(BasePreprocessor):
         if ipo_year == "":
             return 0
         return int(ipo_year)
+
+    def _market_cap(self, data_dic: RawNasdaqApiSymbolData) -> float:
+        market_cap = data_dic["marketCap"].replace(",", "")
+        if market_cap == "":
+            return 0.0
+        return float(market_cap)
