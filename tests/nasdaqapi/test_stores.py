@@ -53,3 +53,33 @@ def test_NasdaqAPISQLAlchemyStore_create(SessionLocal):  # noqa: F811
     store.create([NasdaqStockCreate(**data2), NasdaqStockCreate(**data3)])
     with SessionLocal() as session, session.begin():
         assert len(session.query(NasdaqApiData).all()) == 3
+
+
+def test_NasdaqAPISQLAlchemyStore_delete(SessionLocal):  # noqa: F811
+    store = NasdaqApiSQLAlchemyStore(SessionLocal)
+    data = {
+        "symbol": "TEST",
+        "name": "Test Company",
+        "last_sale": 0.88,
+        "pct_change": 0.5,
+        "net_change": 0.35,
+        "volume": 100.5,
+        "marketcap": 0.75,
+        "country": "US",
+        "ipo_year": 1999,
+        "industry": "Tech",
+        "sector": "Health",
+        "url": "https://example.com",
+    }
+
+    # Add item
+    store.create(NasdaqStockCreate(**data))
+    with SessionLocal() as session, session.begin():
+        res = session.query(NasdaqApiData).all()
+        assert len(res) == 1
+
+    # delete item
+    store.delete()
+    with SessionLocal() as session, session.begin():
+        res = session.query(NasdaqApiData).all()
+        assert len(res) == 0

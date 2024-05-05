@@ -51,4 +51,5 @@ class NasdaqApiSQLAlchemyStore(SQLAlchemyStore):
         raise NotImplementedError()
 
     def delete(self):
-        raise NotImplementedError()
+        with self.session() as session, session.begin():
+            session.query(models.NasdaqApiData).delete()
