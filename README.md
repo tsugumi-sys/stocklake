@@ -51,7 +51,7 @@ stocklake download nasdaqapi --exchange nasdaq --store_type postgresql
 
 ### 3. Setup metabase
 
-Accessign the metabase web ui ([Metabase Web UI](http://localhost:3000)) and setup connection of stocklake PostgreSQL database with the following settings.
+Accessing the metabase web ui ([Metabase Web UI](http://localhost:3000)) and setup connection of stocklake PostgreSQL database with the following settings.
 
 | section | value |
 | :----: | :----: |
