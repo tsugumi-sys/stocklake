@@ -7,34 +7,46 @@ from sqlalchemy import orm
 from stocklake.core.base_sqlalchemy_store import SQLAlchemyStore
 from stocklake.core.base_store import BaseStore
 from stocklake.core.constants import DATA_DIR
+from stocklake.exceptions import StockLoaderException
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.entities import NasdaqApiSymbolData
 from stocklake.nasdaqapi.utils import save_data_to_csv
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 from stocklake.stores.constants import StoreType
-from stocklake.stores.db import models, schemas  # noqa: E402
-from stocklake.stores.db.database import LocalSession
+from stocklake.stores.db import models, schemas
+from stocklake.stores.db.database import LocalSession  # noqa: E402
 
 SAVE_ARTIFACTS_DIR = os.path.join(DATA_DIR, "nasdaqapi")
 
 
 class NASDAQDataStore(BaseStore):
+    def __init__(
+        self, sqlalchemy_session: orm.sessionmaker[orm.session.Session] = LocalSession
+    ):
+        self.sqlalchemy_session = sqlalchemy_session
+
     def save(
         self,
         store_type: StoreType,
         exchange_name: Exchange,
         data: List[NasdaqApiSymbolData],
     ):
-        if StoreType.LOCAL_ARTIFACT:
+        if store_type == StoreType.LOCAL_ARTIFACT:
             repository = LocalArtifactRepository(SAVE_ARTIFACTS_DIR)
             with tempfile.TemporaryDirectory() as tmpdir:
                 csv_file_path = os.path.join(tmpdir, f"{exchange_name}_data.csv")
                 save_data_to_csv(data, csv_file_path)
                 repository.save_artifact(csv_file_path)
+        if store_type == StoreType.POSTGRESQL:
+            if self.sqlalchemy_session is None:
+                raise StockLoaderException("`sqlalchemy_session` is None.")
+            sqlstore = NasdaqApiSQLAlchemyStore(self.sqlalchemy_session)
+            sqlstore.delete()
+            sqlstore.create([schemas.NasdaqStockCreate(**d) for d in data])
 
 
 class NasdaqApiSQLAlchemyStore(SQLAlchemyStore):
-    def __init__(self, session: orm.sessionmaker[orm.session.Session] = LocalSession):
+    def __init__(self, session: orm.sessionmaker[orm.session.Session]):
         self.session = session
 
     def create(self, data: schemas.NasdaqStockCreate | List[schemas.NasdaqStockCreate]):
