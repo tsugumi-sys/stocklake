@@ -1,6 +1,6 @@
 import os
 import tempfile
-from typing import List, Optional
+from typing import List
 
 from sqlalchemy import orm
 
@@ -14,13 +14,14 @@ from stocklake.nasdaqapi.utils import save_data_to_csv
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db import models, schemas
+from stocklake.stores.db.database import LocalSession  # noqa: E402
 
 SAVE_ARTIFACTS_DIR = os.path.join(DATA_DIR, "nasdaqapi")
 
 
 class NASDAQDataStore(BaseStore):
     def __init__(
-        self, sqlalchemy_session: Optional[orm.sessionmaker[orm.session.Session]] = None
+        self, sqlalchemy_session: orm.sessionmaker[orm.session.Session] = LocalSession
     ):
         self.sqlalchemy_session = sqlalchemy_session
 
