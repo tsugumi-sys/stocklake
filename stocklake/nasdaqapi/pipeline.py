@@ -1,6 +1,8 @@
 import logging
 from typing import Optional
 
+from sqlalchemy import orm
+
 from stocklake.core.base_data_loader import BaseDataLoader
 from stocklake.core.base_pipeline import BasePipeline
 from stocklake.core.base_preprocessor import BasePreprocessor
@@ -16,6 +18,7 @@ from stocklake.nasdaqapi.preprocessor import (
 )
 from stocklake.nasdaqapi.stores import NASDAQDataStore
 from stocklake.stores.constants import StoreType
+from stocklake.stores.db.database import LocalSession  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +29,7 @@ class NASDAQSymbolsPipeline(BasePipeline):
         skip_download: bool = False,
         exchange: Optional[Exchange] = None,
         store_type: StoreType = StoreType.LOCAL_ARTIFACT,
+        sqlalchemy_session: orm.sessionmaker[orm.session.Session] = LocalSession,
     ):
         self.exchange = exchange
         self.skip_download = skip_download
@@ -35,6 +39,8 @@ class NASDAQSymbolsPipeline(BasePipeline):
                 f"Specified store type is invalid, {store_type}, valid types are {StoreType.types()}"
             )
         self.store_type = store_type
+        self.preprocessor = NASDAQSymbolsPreprocessor()
+        self.store = NASDAQDataStore(sqlalchemy_session)
         self.stdout = PrettyStdoutPrint()
 
     def run(self):
@@ -45,8 +51,8 @@ class NASDAQSymbolsPipeline(BasePipeline):
         self._run(
             self.exchange,
             NASDAQSymbolsDataLoader(exchange_name=self.exchange),
-            NASDAQSymbolsPreprocessor(),
-            NASDAQDataStore(),
+            self.preprocessor,
+            self.store,
         )
 
     def run_all(self):
@@ -54,8 +60,8 @@ class NASDAQSymbolsPipeline(BasePipeline):
             self._run(
                 exchange,
                 NASDAQSymbolsDataLoader(exchange_name=exchange),
-                NASDAQSymbolsPreprocessor(),
-                NASDAQDataStore(),
+                self.preprocessor,
+                self.store,
             )
 
     def _run(
