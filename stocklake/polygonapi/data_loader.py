@@ -41,35 +41,6 @@ class PolygonFinancialsDataLoader(BaseDataLoader):
             data[ticker] = self._request_financials_data(ticker)
         return data
 
-    # def _extract_data(self, data: List[Financials]) -> Dict[str, Any]:
-    #     financials_data = {}
-    #     for item in data:
-    #         financial_data = {}
-    #         financial_data["date"] = item.filing_date
-    #         financial_data["fiscal_period"] = item.fiscal_period
-    #         financial_data["fiscal_year"] = item.fiscal_year
-
-    #         income_statement = item.financials.income_statement
-    #         financial_data["revenues"] = {
-    #             "formula": income_statement.revenues.formula,
-    #             "label": income_statement.revenues.label,
-    #             "order": income_statement.revenues.order,
-    #             "unit": income_statement.revenues.unit,
-    #             "value": income_statement.revenues.value,
-    #             "xpath": income_statement.revenues.xpath,
-    #         }
-
-    #         financial_data["gross_profit"] = {
-    #             "formula": income_statement.gross_profit.formula,
-    #             "label": income_statement.gross_profit.label,
-    #             "order": income_statement.gross_profit.order,
-    #             "unit": income_statement.gross_profit.unit,
-    #             "value": income_statement.gross_profit.value,
-    #             "xpath": income_statement.gross_profit.xpath,
-    #         }
-    #         financials_data[item.filing_date] = financial_data
-    #     return financials_data
-
     def _request_financials_data(self, ticker: str) -> List[StockFinancial]:
         rawdata = []
         for d in self.polygon_client.vx.list_stock_financials(

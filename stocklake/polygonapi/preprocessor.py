@@ -1,86 +1,49 @@
-import json
 import logging
-import os
-from typing import Any, List, TypedDict
+from typing import Dict, List
 
-import pandas as pd
+from polygon.rest.models.financials import StockFinancial
 
-from stocklake.preprocessors.base import BasePreprocessor
+from stocklake.core.base_preprocessor import BasePreprocessor
+from stocklake.polygonapi.entities import PolygonFinancialsData
 
 logger = logging.getLogger(__name__)
 
 
-class FinancialsTableData(TypedDict):
-    ticker: List[Any]
-    fiscal_period: List[Any]
-    fiscal_year: List[Any]
-    fiscal_date: List[Any]
-    revenue: List[Any]
-    gross_profit: List[Any]
-    unit: List[Any]
-
-
 class PolygonFinancialsDataPreprocessor(BasePreprocessor):
-    def __init__(self, source_dir_path: str, save_dir: str = "polygon/financials/"):
-        super().__init__(source_dir_path, save_dir)
-
-    def preprocess(self, tickers: List[str]):
-        data: FinancialsTableData = {
-            "ticker": [],
-            "fiscal_period": [],
-            "fiscal_year": [],
-            "fiscal_date": [],
-            "revenue": [],
-            "gross_profit": [],
-            "unit": [],
-        }
-        for ticker in tickers:
-            logger.info(f"Preprocessing {ticker} data ...")
-            raw_data = self._load_data(ticker)
-            for date, item in raw_data.items():
-                logger.debug(f"{'=' * 20} {date} {'=' * 20}")
-                logger.debug("Fiscal Period: {}".format(item.get("fiscal_period")))
-                logger.debug("Fiscal Year: {}".format(item.get("fiscal_year")))
-                # Calculate revenue
-                if item.get("revenues").get("formula") is not None:
-                    logger.warning(
-                        "formula exists on revenues: {}".format(
-                            item.get("revenues").get("formula")
-                        )
-                    )
-                logger.debug(
-                    "Revenue: {} {}".format(
-                        item.get("revenues").get("value"),
-                        item.get("revenues").get("unit"),
-                    )
-                )
-                # Calculate gross profit
-                if item.get("gross_profit").get("formula") is not None:
-                    logger.warning(
-                        "formula exists on gross profit: {}".format(
-                            item.get("gross_profit").get("formula")
-                        )
-                    )
-                logger.debug(
-                    "Revenue: {} {}".format(
-                        item.get("gross_profit").get("value"),
-                        item.get("gross_profit").get("unit"),
-                    )
+    def process(
+        self, data: Dict[str, List[StockFinancial]]
+    ) -> List[PolygonFinancialsData]:
+        processed_data: List[PolygonFinancialsData] = []
+        for ticker, _data in data.items():
+            ticker_financial_data: PolygonFinancialsData = {}
+            ticker_financial_data["ticker"] = ticker
+            for d in _data:
+                ticker_financial_data["start_date"] = d.start_date
+                ticker_financial_data["end_data"] = d.end_date
+                ticker_financial_data["filling_date"] = d.filing_date
+                ticker_financial_data["cik"] = d.cik
+                ticker_financial_data["company_name"] = d.company_name
+                ticker_financial_data["fiscal_period"] = d.fiscal_period
+                ticker_financial_data["fiscal_year"] = d.fiscal_year
+                ticker_financial_data["source_filing_url"] = d.source_filing_url
+                ticker_financial_data["source_filing_file_url"] = (
+                    d.source_filing_file_url
                 )
 
-                data["ticker"].append(ticker)
-                data["fiscal_period"].append(item.get("fiscal_period"))
-                data["fiscal_year"].append(item.get("fiscal_year"))
-                data["fiscal_date"].append(date)
-                data["revenue"].append(item.get("revenues").get("value"))
-                data["gross_profit"].append(item.get("gross_profit").get("value"))
-                data["unit"].append(item.get("revenues").get("unit"))
-
-        pd.DataFrame.from_dict(data).to_csv(
-            os.path.join(self.save_dir_path, "financials.csv")
-        )
-
-    def _load_data(self, ticker: str) -> dict:
-        with open(os.path.join(self.source_dir_path, f"{ticker}.json")) as f:
-            data = json.load(f)
-        return data
+                for base_name, financial_data in d.financials.__dict__.items():
+                    if not isinstance(financial_data, dict):
+                        financial_data = financial_data.__dict__
+                    for financial_name, metadata in financial_data.items():
+                        metadata = metadata.__dict__
+                        if financial_name not in (
+                            "balance_sheet",
+                            "cash_flow_statement",
+                            "comprehensive_income",
+                            "income_statement",
+                        ):
+                            continue
+                        ticker_financial_data[f"{base_name}_{financial_name}"] = (
+                            metadata.value * metadata.order
+                        )
+            processed_data.append(ticker_financial_data)
+        return processed_data
