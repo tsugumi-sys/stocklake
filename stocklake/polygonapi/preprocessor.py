@@ -20,7 +20,7 @@ class PolygonFinancialsDataPreprocessor(BasePreprocessor):
             for d in _data:
                 ticker_financial_data["start_date"] = d.start_date
                 ticker_financial_data["end_data"] = d.end_date
-                ticker_financial_data["filling_date"] = d.filing_date
+                ticker_financial_data["filing_date"] = d.filing_date
                 ticker_financial_data["cik"] = d.cik
                 ticker_financial_data["company_name"] = d.company_name
                 ticker_financial_data["fiscal_period"] = d.fiscal_period
