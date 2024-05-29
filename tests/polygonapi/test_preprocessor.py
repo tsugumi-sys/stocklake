@@ -8,4 +8,23 @@ def test_preprocessor(MockPolygonAPIServer, monkeypatch):  # noqa: F811
     dataloader = PolygonFinancialsDataLoader()
     preprocessor = PolygonFinancialsDataPreprocessor()
     data = preprocessor.process(dataloader.download(["MSFT"]))
-    print(data)
+    for d in data:
+        for col, val in d.items():
+            if col in [
+                "ticker",
+                "start_date",
+                "end_date",
+                "filing_date",
+                "cik",
+                "company_name",
+                "fiscal_period",
+                "fiscal_year",
+                "source_filing_url",
+                "source_filing_file_url",
+            ]:
+                # check string data
+                assert isinstance(val, str)
+            else:
+                print(col, val)
+                # check float data
+                assert isinstance(val, float)
