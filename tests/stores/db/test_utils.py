@@ -36,16 +36,21 @@ def test_upgrade_database_not_found():
     )
 
 
-# @pytest.mark.usefixtures("test_database")
-# def test_autogenerate_revision():
-#     runner = CliRunner()
-#     res = runner.invoke(
-#         cli.autogenerate_revision,
-#         ["--url", TEST_SQLALCHEMY_URL, "--message", "auto generation of revision"],
-#         catch_exceptions=False,
-#     )
-#     assert res.exit_code == 0
-
-
-def test_revision(SessionLocal):  # noqa: F811
-    cli.autogenerate_revision(message="test")
+@pytest.mark.usefixtures("test_database")
+def test_revision(monkeypatch):  # noqa: F811
+    # set environment as test (to mock alembic script location)
+    monkeypatch.setenv("_STOCKLAKE_ENVIRONMENT", "test")
+    runner = CliRunner()
+    # you need to sync the current latest migration first.
+    _ = runner.invoke(
+        cli.upgrade, ["--url", TEST_SQLALCHEMY_URL], catch_exceptions=False
+    )
+    # autogenerate revision file
+    revision_message = "Auto generate Test Revision"
+    res = runner.invoke(
+        cli.autogenerate_revision,
+        ["--message", revision_message, "--url", TEST_SQLALCHEMY_URL],
+    )
+    print(res.output)
+    assert res.exit_code == 0
+    assert "Auto generation of migration Completed :)" in res.output

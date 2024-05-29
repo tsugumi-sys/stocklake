@@ -1,11 +1,14 @@
 # This code is highly inspired by https://github.com/mlflow/mlflow/blob/master/mlflow/server/auth/db/utils.py
+import os
+import shutil
 from pathlib import Path
 
 from alembic.command import revision, upgrade
 from alembic.config import Config
-from alembic.runtime.environment import EnvironmentContext
-from alembic.script import ScriptDirectory
 from sqlalchemy.engine.base import Engine
+
+from stocklake.core.constants import _MOCK_ALEMBIC_SCRIPT_LOCATION
+from stocklake.environment_variables import _STOCKLAKE_ENVIRONMENT
 
 
 def _get_alembic_dir() -> Path:
@@ -16,9 +19,20 @@ def _get_alembic_config(url: str) -> Config:
     alembic_dir = _get_alembic_dir()
     alembic_ini_path = alembic_dir.parent / "alembic.ini"
     alembic_cfg = Config(alembic_ini_path)
-    alembic_cfg.set_main_option(
-        "script_location", str(alembic_dir.parent / "db_migrations")
-    )
+    script_location = str(alembic_dir.parent / "db_migrations")
+    if _STOCKLAKE_ENVIRONMENT.get() == "test":
+        os.makedirs(_MOCK_ALEMBIC_SCRIPT_LOCATION, exist_ok=True)
+        os.makedirs(
+            os.path.join(_MOCK_ALEMBIC_SCRIPT_LOCATION, "versions"), exist_ok=True
+        )
+        for filename in ["env.py", "script.py.mako"]:
+            shutil.copy(
+                os.path.join(script_location, filename),
+                os.path.join(_MOCK_ALEMBIC_SCRIPT_LOCATION, filename),
+            )
+        script_location = _MOCK_ALEMBIC_SCRIPT_LOCATION
+    alembic_cfg.set_main_option("script_location", script_location)
+
     url = url.replace("%", "%%")
     alembic_cfg.set_main_option("sqlalchemy.url", url)
     return alembic_cfg
@@ -32,30 +46,8 @@ def migrate(engine: Engine, revision: str) -> None:
 
 
 def autogenerate_revision(engine: Engine, message: str):
-    alembic_cfg = _get_alembic_config(engine.url.render_as_string(hide_password=False))
-    alembic_script_dir = ScriptDirectory.from_config(alembic_cfg)
-
-    def process_revision_directives(context, revision, directives):
-        if directives[0].upgrade_ops.is_empty():
-            directives[:] = []
-        else:
-            script = directives[0]
-            script.rev_id = alembic_script_dir.generate_revision_id()
-
-    print(alembic_script_dir.get_revisions("heads"))
-    print(alembic_script_dir.get_revisions("head"))
-    print(
-        set(alembic_script_dir.get_revisions("heads"))
-        != set(alembic_script_dir.get_revisions("head"))
+    revision(
+        _get_alembic_config(engine.url.render_as_string(hide_password=False)),
+        message,
+        autogenerate=True,
     )
-
-    with EnvironmentContext(
-        alembic_cfg,
-        alembic_script_dir,
-        fn=process_revision_directives,
-        as_sql=False,
-        starting_rev=None,
-        destination_rev="head",
-        tag=None,
-    ):
-        revision(alembic_cfg, message, autogenerate=True)

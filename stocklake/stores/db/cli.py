@@ -32,9 +32,9 @@ def _is_db_connectable(engine: Engine, url: str, stdout: PrettyStdoutPrint) -> b
 
 
 @click.command()
-@click.option("--url", default=None)
 @click.option("--revision", default="head")
-def upgrade(url: Optional[str], revision: str) -> None:
+@click.option("--url", default=None)
+def upgrade(revision: str, url: Optional[str] = None) -> None:
     if url is None:
         url = _default_postgresql_url()
     engine = sqlalchemy.create_engine(url)
@@ -50,11 +50,9 @@ def upgrade(url: Optional[str], revision: str) -> None:
     stdout.success_message("Migration Completed :)")
 
 
-# @click.command()
-# @click.option("--url", default=None)
-# @click.option("--message", default=None)
-
-
+@click.command()
+@click.option("--message", default=None)
+@click.option("--url", default=None)
 def autogenerate_revision(message: str, url: Optional[str] = None):
     if url is None:
         url = _default_postgresql_url()
