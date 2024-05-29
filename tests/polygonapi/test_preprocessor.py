@@ -25,6 +25,5 @@ def test_preprocessor(MockPolygonAPIServer, monkeypatch):  # noqa: F811
                 # check string data
                 assert isinstance(val, str)
             else:
-                print(col, val)
                 # check float data
                 assert isinstance(val, float)
