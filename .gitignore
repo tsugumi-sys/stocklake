@@ -2,6 +2,7 @@
 data/
 stocklake-data/
 stocklake-cache/
+mock_alembic_script_location/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -28,3 +28,11 @@ STOCKLAKE_POSTGRES_DATABASE = _EnvironmentVariable(
     "STOCKLAKE_POSTGRES_DATABASE", "stocklake"
 )
 STOCKLAKE_POLYGON_API_KEY = _EnvironmentVariable("STOCKLAKE_POLYGON_API_KEY", None)
+
+
+###
+# Internal Environment Variable
+###
+_STOCKLAKE_ENVIRONMENT = _EnvironmentVariable(
+    "_STOCKLAKE_ENVIRONMENT", "production"
+)  # or test
