@@ -62,7 +62,7 @@ class PolygonFinancialsData(TypedDict):
     # meta data
     ticker: str
     start_date: str
-    end_data: str
+    end_date: str
     filing_date: str
     cik: str
     company_name: str
