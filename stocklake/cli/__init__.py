@@ -1,7 +1,7 @@
 import click
 
 from stocklake.nasdaqapi.cli import nasdaqapi
-from stocklake.stores.db.cli import upgrade
+from stocklake.stores.db.cli import autogenerate_revision, upgrade
 
 
 @click.group()
@@ -21,6 +21,7 @@ def database():
 
 download.add_command(nasdaqapi)
 database.add_command(upgrade)
+database.add_command(autogenerate_revision)
 
 cli.add_command(download)
 cli.add_command(database)
