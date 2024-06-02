@@ -25,4 +25,6 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material mkdocs-click 'mkdocstrings[python]'
+      - name: List root directory contents
+        run: ls .
       - run: mkdocs gh-deploy --force
