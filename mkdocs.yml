@@ -1,5 +1,12 @@
-site_name: Stocklake CLI
+site_name: Stocklake
 theme: material
 
 markdown_extensions:
     - mkdocs-click
+
+plugins:
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [stocklake]
