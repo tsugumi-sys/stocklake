@@ -5,3 +5,5 @@ pre-commit
 mypy
 pytest
 python-lsp-server
+mkdocs-click
+mkdocstrings[python]

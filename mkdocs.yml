@@ -1,0 +1,5 @@
+site_name: Stocklake CLI
+theme: readthedocs
+
+markdown_extensions:
+    - mkdocs-click
