@@ -6,4 +6,5 @@ mypy
 pytest
 python-lsp-server
 mkdocs-click
+mkdocs-material
 mkdocstrings[python]
