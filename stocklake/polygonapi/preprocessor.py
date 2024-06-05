@@ -46,6 +46,6 @@ class PolygonFinancialsDataPreprocessor(BasePreprocessor):
                             metadata.value * metadata.order
                         )
             processed_data.append(
-                PreprocessedPolygonFinancialsData(**ticker_financial_data)
+                PreprocessedPolygonFinancialsData(**ticker_financial_data)  # type: ignore
             )
         return processed_data
