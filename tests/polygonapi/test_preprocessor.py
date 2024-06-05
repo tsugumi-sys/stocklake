@@ -9,7 +9,7 @@ def test_preprocessor(MockPolygonAPIServer, monkeypatch):  # noqa: F811
     preprocessor = PolygonFinancialsDataPreprocessor()
     data = preprocessor.process(dataloader.download(["MSFT"]))
     for d in data:
-        for col, val in d.items():
+        for col, val in d.dict().items():
             if col in [
                 "ticker",
                 "start_date",
