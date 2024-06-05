@@ -13,6 +13,10 @@ class _EnvironmentVariable:
     def defined(self):
         return self.name in os.environ
 
+    @property
+    def env_name(self) -> str:
+        return self.name
+
     def get(self):
         if (val := os.getenv(self.name)) is not None:
             return val

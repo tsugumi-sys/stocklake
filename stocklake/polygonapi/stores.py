@@ -4,11 +4,13 @@ from typing import List
 
 from sqlalchemy import orm
 
+from stocklake.core.base_sqlalchemy_store import SQLAlchemyStore
 from stocklake.core.base_store import BaseStore
 from stocklake.core.constants import DATA_DIR
 from stocklake.polygonapi.entities import PolygonFinancialsData
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 from stocklake.stores.constants import StoreType
+from stocklake.stores.db import models, schemas
 from stocklake.stores.db.database import LocalSession  # noqa: E402
 from stocklake.utils.file_utils import save_data_to_csv
 
@@ -30,3 +32,24 @@ class PolygonFinancialsDataStore(BaseStore):
                 repository.save_artifact(csv_file_path)
         else:
             raise NotImplementedError
+
+
+class PolygonFinancialsDataSQLAlchemyStore(SQLAlchemyStore):
+    def __init__(self, session: orm.sessionmaker[orm.session.Session]):
+        self.session = session
+
+    def create(self, data: List[schemas.PolygonFinancialsDataCreate]):
+        with self.session() as session, session.begin():
+            session.add_all(
+                [models.PolygonFinancialsData(**d.model_dump()) for d in data]
+            )
+
+    def read(self):
+        raise NotImplementedError()
+
+    def update(self):
+        raise NotImplementedError()
+
+    def delete(self):
+        with self.session() as session, session.begin():
+            session.query(models.PolygonFinancialsData).delete()
