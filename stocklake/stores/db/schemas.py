@@ -101,6 +101,10 @@ class PolygonFinancialsDataCreate(PolygonFinancialsDataBase):
     pass
 
 
+class PreprocessedPolygonFinancialsData(PolygonFinancialsDataBase):
+    pass
+
+
 class PolygonFinancialsData(PolygonFinancialsDataBase):
     id: int
     created_at: int
