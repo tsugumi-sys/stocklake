@@ -46,44 +46,44 @@ class PolygonFinancialsDataBase(BaseModel):
     equity: float
     current_liabilities: float
     # - cash flow statement
-    net_cash_flow_from_investing_activities: float
-    net_cash_flow_from_operating_activities_continuing: float
+    # net_cash_flow_from_investing_activities: float
+    # net_cash_flow_from_operating_activities_continuing: float
     exchange_gains_losses: float
-    net_cash_flow_continuing: float
+    # net_cash_flow_continuing: float
     net_cash_flow: float
     net_cash_flow_from_financing_activities: float
-    net_cash_flow_from_investing_activities_continuing: float
-    net_cash_flow_from_operating_activities: float
-    net_cash_flow_from_financing_activities_continuing: float
+    # net_cash_flow_from_investing_activities_continuing: float
+    # net_cash_flow_from_operating_activities: float
+    # net_cash_flow_from_financing_activities_continuing: float
     # - comprehensive income
-    income_loss_attributable_to_noncontrolling_interest: float
+    # income_loss_attributable_to_noncontrolling_interest: float
     comprehensive_income_loss_attributable_to_parent: float
     other_comprehensive_income_loss: float
-    other_comprehensive_income_loss_attributable_to_parent: float
+    # other_comprehensive_income_loss_attributable_to_parent: float
     comprehensive_income_loss: float
     # - income statement
-    income_loss_before_equity_method_investments: float
-    diluted_earnings_per_share: float
-    income_loss_from_equity_method_investments: float
+    # income_loss_before_equity_method_investments: float
+    # diluted_earnings_per_share: float
+    # income_loss_from_equity_method_investments: float
     operating_expenses: float
-    income_loss_from_continuing_operations_after_tax: float
-    preferred_stock_dividends_and_other_adjustments: float
+    # income_loss_from_continuing_operations_after_tax: float
+    # preferred_stock_dividends_and_other_adjustments: float
     basic_earnings_per_share: float
     cost_of_revenue: float
-    net_income_loss_attributable_to_parent: float
-    income_loss_from_continuing_operations_before_tax: float
-    income_tax_expense_benefit_deferred: float
-    costs_and_expenses: float
+    # net_income_loss_attributable_to_parent: float
+    # income_loss_from_continuing_operations_before_tax: float
+    # income_tax_expense_benefit_deferred: float
+    # costs_and_expenses: float
     gross_profit: float
-    benefits_costs_expenses: float
-    participating_securities_distributed_and_undistributed_earnings_loss_basic: float
-    income_tax_expense_benefit: float
-    net_income_loss_attributable_to_noncontrolling_interest: float
-    interest_expense_operating: float
-    net_income_loss_available_to_common_stockholders_basic: float
+    # benefits_costs_expenses: float
+    # participating_securities_distributed_and_undistributed_earnings_loss_basic: float
+    # income_tax_expense_benefit: float
+    # net_income_loss_attributable_to_noncontrolling_interest: float
+    # interest_expense_operating: float
+    # net_income_loss_available_to_common_stockholders_basic: float
     revenues: float
-    net_income_loss: float
-    operating_income_loss: float
+    # net_income_loss: float
+    # operating_income_loss: float
     # meta data
     ticker: str
     start_date: str

@@ -15,7 +15,7 @@ class PolygonFinancialsDataPreprocessor(BasePreprocessor):
     ) -> List[PreprocessedPolygonFinancialsData]:
         processed_data: List[PreprocessedPolygonFinancialsData] = []
         for ticker, _data in data.items():
-            ticker_financial_data: PreprocessedPolygonFinancialsData = {}  # type: ignore
+            ticker_financial_data = {}  # type: ignore
             ticker_financial_data["ticker"] = ticker
             for d in _data:
                 ticker_financial_data["start_date"] = d.start_date
@@ -31,12 +31,12 @@ class PolygonFinancialsDataPreprocessor(BasePreprocessor):
                 ] = d.source_filing_file_url
 
                 for base_name, financial_data in d.financials.__dict__.items():
-                    if base_name not in (
+                    if base_name not in [
                         "balance_sheet",
                         "cash_flow_statement",
                         "comprehensive_income",
                         "income_statement",
-                    ):
+                    ]:
                         continue
 
                     if not isinstance(financial_data, dict):
@@ -45,5 +45,7 @@ class PolygonFinancialsDataPreprocessor(BasePreprocessor):
                         ticker_financial_data[financial_name] = float(  # type: ignore
                             metadata.value * metadata.order
                         )
-            processed_data.append(ticker_financial_data)
+            processed_data.append(
+                PreprocessedPolygonFinancialsData(**ticker_financial_data)
+            )
         return processed_data

@@ -28,7 +28,7 @@ class PolygonFinancialsDataStore(BaseStore):
             repository = LocalArtifactRepository(SAVE_ARTIFACTS_DIR)
             with tempfile.TemporaryDirectory() as tempdir:
                 csv_file_path = os.path.join(tempdir, "financials_data.csv")
-                save_data_to_csv(data, csv_file_path)
+                save_data_to_csv([d.dict() for d in data], csv_file_path)
                 repository.save_artifact(csv_file_path)
         else:
             raise NotImplementedError
