@@ -4,12 +4,13 @@ from typing import List
 
 from sqlalchemy import orm
 
+from stocklake.core.base_sqlalchemy_store import SQLAlchemyStore
 from stocklake.core.base_store import BaseStore
 from stocklake.core.constants import DATA_DIR
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 from stocklake.stores.constants import StoreType
+from stocklake.stores.db import models, schemas
 from stocklake.stores.db.database import LocalSession  # noqa: E402
-from stocklake.stores.db.schemas import PreprocessedPolygonFinancialsData
 from stocklake.utils.file_utils import save_data_to_csv
 
 SAVE_ARTIFACTS_DIR = os.path.join(DATA_DIR, "nasdaqapi")
@@ -22,7 +23,9 @@ class PolygonFinancialsDataStore(BaseStore):
         self.sqlalchemy_session = sqlalchemy_session
 
     def save(
-        self, store_type: StoreType, data: List[PreprocessedPolygonFinancialsData]
+        self,
+        store_type: StoreType,
+        data: List[schemas.PreprocessedPolygonFinancialsData],
     ):
         if store_type == StoreType.LOCAL_ARTIFACT:
             repository = LocalArtifactRepository(SAVE_ARTIFACTS_DIR)
@@ -32,3 +35,24 @@ class PolygonFinancialsDataStore(BaseStore):
                 repository.save_artifact(csv_file_path)
         else:
             raise NotImplementedError
+
+
+class PolygonFinancialsDataSQLAlchemyStore(SQLAlchemyStore):
+    def __init__(self, session: orm.sessionmaker[orm.session.Session]):
+        self.session = session
+
+    def create(self, data: List[schemas.PolygonFinancialsDataCreate]):
+        with self.session() as session, session.begin():
+            session.add_all(
+                [models.PolygonFinancialsData(**d.model_dump()) for d in data]
+            )
+
+    def read(self):
+        raise NotImplementedError()
+
+    def update(self):
+        raise NotImplementedError()
+
+    def delete(self):
+        with self.session() as session, session.begin():
+            session.query(models.PolygonFinancialsData).delete()
