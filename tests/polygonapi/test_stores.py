@@ -11,7 +11,7 @@ from stocklake.polygonapi.stores import (
     PolygonFinancialsDataStore,
 )
 from stocklake.stores.constants import StoreType
-from stocklake.stores.db import schemas
+from stocklake.stores.db import models, schemas
 from tests.polygonapi.test_data_loader import MockPolygonAPIServer  # noqa: F401
 from tests.stores.db.utils import SessionLocal  # noqa: F401
 
@@ -40,6 +40,11 @@ def test_PolygonFinancialsDataSQLAlchemyStore_create(
     polygon_financials_data,
     SessionLocal,  # noqa: F811
 ):
+    data_length = len(polygon_financials_data)
+    with SessionLocal() as session, session.begin():
+        res = session.query(models.PolygonFinancialsData).all()
+        assert len(res) == 0
+
     store = PolygonFinancialsDataSQLAlchemyStore(SessionLocal)
     store.create(
         [
@@ -47,3 +52,38 @@ def test_PolygonFinancialsDataSQLAlchemyStore_create(
             for d in polygon_financials_data
         ]
     )
+
+    with SessionLocal() as session, session.begin():
+        res = session.query(models.PolygonFinancialsData).all()
+        assert len(res) == data_length
+
+
+def test_PolygonFinancialsDataSQLAlchemyStore_delete(
+    polygon_financials_data,
+    SessionLocal,  # noqa: F811
+):
+    data_length = len(polygon_financials_data)
+    with SessionLocal() as session, session.begin():
+        res = session.query(models.PolygonFinancialsData).all()
+        assert len(res) == 0
+
+    store = PolygonFinancialsDataSQLAlchemyStore(SessionLocal)
+    store.create(
+        [
+            schemas.PolygonFinancialsDataCreate(**d.dict())
+            for d in polygon_financials_data
+        ]
+    )
+
+    # check data is created
+    with SessionLocal() as session, session.begin():
+        res = session.query(models.PolygonFinancialsData).all()
+        assert len(res) == data_length
+
+    # delete all rows
+    store.delete()
+
+    # check successfully deleted.
+    with SessionLocal() as session, session.begin():
+        res = session.query(models.PolygonFinancialsData).all()
+        assert len(res) == 0
