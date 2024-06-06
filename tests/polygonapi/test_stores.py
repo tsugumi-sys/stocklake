@@ -42,5 +42,8 @@ def test_PolygonFinancialsDataSQLAlchemyStore_create(
 ):
     store = PolygonFinancialsDataSQLAlchemyStore(SessionLocal)
     store.create(
-        [schemas.PolygonFinancialsDataCreate(**d) for d in polygon_financials_data]
+        [
+            schemas.PolygonFinancialsDataCreate(**d.dict())
+            for d in polygon_financials_data
+        ]
     )

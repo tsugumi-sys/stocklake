@@ -55,13 +55,14 @@ class PolygonFinancialsData(Base):
     # net_cash_flow_from_operating_activities = Column(Float)
     # net_cash_flow_from_financing_activities_continuing = Column(Float)
     # - comprehensive income
-    loss_attributable_to_noncontrolling_interest = Column(Float)
-    loss_attributable_to_parent = Column(Float)
+    # loss_attributable_to_noncontrolling_interest = Column(Float)
+    # loss_attributable_to_parent = Column(Float)
+    comprehensive_income_loss_attributable_to_parent = Column(Float)
     other_comprehensive_income_loss = Column(Float)
     # other_comprehensive_income_loss_attributable_to_parent = Column(Float)
     comprehensive_income_loss = Column(Float)
     # - income statement
-    income_loss_before_equity_method_investments = Column(Float)
+    # income_loss_before_equity_method_investments = Column(Float)
     # diluted_earnings_per_share = Column(Float)
     # income_loss_from_equity_method_investments = Column(Float)
     operating_expenses = Column(Float)
