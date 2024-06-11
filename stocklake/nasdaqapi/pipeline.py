@@ -7,7 +7,7 @@ from stocklake.core.base_data_loader import BaseDataLoader
 from stocklake.core.base_pipeline import BasePipeline
 from stocklake.core.base_preprocessor import BasePreprocessor
 from stocklake.core.base_store import BaseStore
-from stocklake.core.stdout import PrettyStdoutPrint
+from stocklake.core.stdout import PipelineStdOut
 from stocklake.exceptions import StockLoaderException
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.data_loader import (
@@ -41,7 +41,7 @@ class NASDAQSymbolsPipeline(BasePipeline):
         self.store_type = store_type
         self.preprocessor = NASDAQSymbolsPreprocessor()
         self.store = NASDAQDataStore(sqlalchemy_session)
-        self.stdout = PrettyStdoutPrint()
+        self.stdout = PipelineStdOut()
 
     def run(self):
         if self.exchange is None:
@@ -71,14 +71,14 @@ class NASDAQSymbolsPipeline(BasePipeline):
         preprocessor: BasePreprocessor,
         store: BaseStore,
     ):
-        self.stdout.step_start(f"NASDAQ API for {exchange.upper()} exchange symbols")
+        self.stdout.starting(f"NASDAQ API of {exchange.upper()}")
         if not self.skip_download:
-            self.stdout.normal_message("- Downloading ...")
+            self.stdout.downloading()
             raw_data = data_loader.download()
         else:
-            self.stdout.warning_message("- Skip Downloading")
+            self.stdout.skip_downloading()
             # TODO: fetch from cached file
             return
         data = preprocessor.process(exchange, raw_data)
         store.save(self.store_type, exchange, data)
-        self.stdout.success_message("- Completed🐳.")
+        self.stdout.completed()

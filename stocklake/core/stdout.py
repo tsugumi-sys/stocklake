@@ -46,3 +46,20 @@ class PrettyStdoutPrint:
                 self.msg_colors.get("DEFAULT"),
             )
         )
+
+
+class PipelineStdOut:
+    def __init__(self):
+        self.stdout = PrettyStdoutPrint()
+
+    def starting(self, pipeline_name: str):
+        self.stdout.step_start(f"Pipeline: {pipeline_name} is starting ...")
+
+    def skip_downloading(self):
+        self.stdout.warning_message("- Skip Downloading")
+
+    def downloading(self):
+        self.stdout.normal_message("- Downloading ...")
+
+    def completed(self):
+        self.stdout.success_message("- Completed🐳.")
