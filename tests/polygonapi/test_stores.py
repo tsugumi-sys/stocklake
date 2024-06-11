@@ -36,6 +36,17 @@ def test_polygon_financials_store_local_artifact(
     assert os.path.exists(os.path.join(SAVE_ARTIFACTS_DIR, "financials_data.csv"))
 
 
+def test_polygon_financials_store_postgresql(
+    SessionLocal,  # noqa: F811
+    polygon_financials_data,
+):
+    store = PolygonFinancialsDataStore(SessionLocal)
+    store.save(StoreType.POSTGRESQL, polygon_financials_data)
+    with SessionLocal() as session, session.begin():
+        res = session.query(models.PolygonFinancialsData).all()
+    assert len(res) == 1
+
+
 def test_PolygonFinancialsDataSQLAlchemyStore_create(
     polygon_financials_data,
     SessionLocal,  # noqa: F811
