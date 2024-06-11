@@ -36,7 +36,9 @@ class PolygonFinancialsDataStore(BaseStore):
         elif store_type == StoreType.POSTGRESQL:
             sqlstore = PolygonFinancialsDataSQLAlchemyStore(self.sqlalchemy_session)
             sqlstore.delete()
-            sqlstore.create(data)
+            sqlstore.create(
+                [schemas.PolygonFinancialsDataCreate(**d.dict()) for d in data]
+            )
         else:
             raise NotImplementedError
 
