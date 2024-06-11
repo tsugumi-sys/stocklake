@@ -33,6 +33,12 @@ class PolygonFinancialsDataStore(BaseStore):
                 csv_file_path = os.path.join(tempdir, "financials_data.csv")
                 save_data_to_csv([d.dict() for d in data], csv_file_path)
                 repository.save_artifact(csv_file_path)
+        elif store_type == StoreType.POSTGRESQL:
+            sqlstore = PolygonFinancialsDataSQLAlchemyStore(self.sqlalchemy_session)
+            sqlstore.delete()
+            sqlstore.create(
+                [schemas.PolygonFinancialsDataCreate(**d.dict()) for d in data]
+            )
         else:
             raise NotImplementedError
 
