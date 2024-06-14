@@ -57,7 +57,7 @@ class PolygonFinancialsDataPipeline(BasePipeline):
         self.stdout.starting(f"Polygon Finaqncials API of {symbol}")
         if not self.skip_download:
             self.stdout.downloading()
-            raw_data = data_loader.download()
+            raw_data = data_loader.download(self.symbols)
         else:
             self.stdout.skip_downloading()
             # TODO: fetch from cached file
