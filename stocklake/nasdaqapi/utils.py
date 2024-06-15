@@ -8,9 +8,11 @@ from stocklake.nasdaqapi.entities import NasdaqAPIResponse
 
 logger = logging.getLogger(__name__)
 
+BASE_URL = "https://api.nasdaq.com/api"
+
 
 def symbols_api_endpoint(exchange_name: Exchange) -> str:
-    return f"https://api.nasdaq.com/api/screener/stocks?tableonly=true&limit=25&offset=0&exchange={exchange_name}&download=true"
+    return f"{BASE_URL}/screener/stocks?tableonly=true&limit=25&offset=0&exchange={exchange_name}&download=true"
 
 
 CUSTOM_USER_AGENT = (
