@@ -1,15 +1,13 @@
-import json
-
 from stocklake.nasdaqapi.constants import Exchange
+from stocklake.nasdaqapi.data_loader import NASDAQSymbolsDataLoader
 from stocklake.nasdaqapi.preprocessor import NASDAQSymbolsPreprocessor
-
-with open("./tests/nasdaqapi/sample_response.json") as f:
-    mock_raw_data = json.load(f)["data"]["rows"]
+from tests.nasdaqapi.test_data_loader import MockNasdaqAPIServer  # noqa: F401
 
 
-def test_process():
+def test_process(tmpdir, MockNasdaqAPIServer):  # noqa: F811
+    data_loader = NASDAQSymbolsDataLoader(exchange_name=Exchange.AMEX, cache_dir=tmpdir)
     preprocessor = NASDAQSymbolsPreprocessor()
-    data = preprocessor.process(exchange=Exchange.NASDAQ, data=mock_raw_data)
+    data = preprocessor.process(exchange=Exchange.NASDAQ, data=data_loader.download())
     for data_dic in data:
         for key, val in data_dic.items():
             if key in ["last_sale", "net_change", "pct_change", "marketcap", "volume"]:

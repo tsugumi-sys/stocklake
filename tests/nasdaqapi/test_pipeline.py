@@ -1,5 +1,4 @@
 import os
-from unittest import mock
 
 import pytest
 
@@ -9,7 +8,9 @@ from stocklake.nasdaqapi.pipeline import NASDAQSymbolsPipeline
 from stocklake.nasdaqapi.stores import SAVE_ARTIFACTS_DIR
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db.models import NasdaqApiData
-from tests.nasdaqapi.test_data_loader import mock_requests_get
+from tests.nasdaqapi.test_data_loader import (
+    MockNasdaqAPIServer,  # noqa: F401
+)
 from tests.stores.db.utils import SessionLocal  # noqa: F401
 
 
@@ -22,9 +23,12 @@ def test_invalid_store_type_specified():
     )
 
 
-@mock.patch("requests.get", side_effect=mock_requests_get)
 @pytest.mark.parametrize("exchange_name", Exchange.exchanges())
-def test_run_each_symbols_with_local_artifact(mock_get, exchange_name, tmpdir):
+def test_run_each_symbols_with_local_artifact(
+    exchange_name,
+    tmpdir,
+    MockNasdaqAPIServer,  # noqa: F811
+):
     pipeline = NASDAQSymbolsPipeline(
         skip_download=False,
         exchange=exchange_name,
@@ -34,8 +38,7 @@ def test_run_each_symbols_with_local_artifact(mock_get, exchange_name, tmpdir):
     assert os.path.exists(os.path.join(SAVE_ARTIFACTS_DIR, f"{exchange_name}_data.csv"))
 
 
-@mock.patch("requests.get", side_effect=mock_requests_get)
-def test_run_with_local_artifact(mock_get, tmpdir):
+def test_run_with_local_artifact(tmpdir, MockNasdaqAPIServer):  # noqa: F811
     pipeline = NASDAQSymbolsPipeline(
         skip_download=False,
         store_type=StoreType.LOCAL_ARTIFACT,
@@ -47,13 +50,12 @@ def test_run_with_local_artifact(mock_get, tmpdir):
         )
 
 
-@mock.patch("requests.get", side_effect=mock_requests_get)
 @pytest.mark.parametrize("exchange", Exchange.exchanges())
 def test_run_each_symbols_with_postgresql(
-    mock_get,
     exchange,
     tmpdir,
-    SessionLocal,  # noqa: F811
+    SessionLocal,  # noqa: F811,
+    MockNasdaqAPIServer,  # noqa: F811
 ):
     pipeline = NASDAQSymbolsPipeline(
         skip_download=False,
@@ -67,8 +69,7 @@ def test_run_each_symbols_with_postgresql(
         assert len(res) > 0
 
 
-@mock.patch("requests.get", side_effect=mock_requests_get)
-def test_run_with_postgresql(mock_get, tmpdir, SessionLocal):  # noqa: F811
+def test_run_with_postgresql(tmpdir, SessionLocal, MockNasdaqAPIServer):  # noqa: F811
     pipeline = NASDAQSymbolsPipeline(
         skip_download=False,
         store_type=StoreType.POSTGRESQL,

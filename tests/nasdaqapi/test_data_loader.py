@@ -1,33 +1,21 @@
-import json
 import os
-from unittest import mock
 
+import pook
 import pytest
 
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.data_loader import NASDAQSymbolsDataLoader
-from stocklake.nasdaqapi.entities import NasdaqAPIResponse
-
-with open("./tests/nasdaqapi/sample_response.json") as f:
-    mock_response: NasdaqAPIResponse = json.load(f)
+from stocklake.nasdaqapi.utils import BASE_URL
+from tests.mocks.mock_api_server import mock_responses
 
 
-def mock_requests_get(*args, **kwargs):
-    class MockNasdaqAPIResponse:
-        def __init__(
-            self, json_data: NasdaqAPIResponse = mock_response, status_code: int = 200
-        ):
-            self._json_data = json_data
-            self._status_code = status_code
-
-        @property
-        def status_code(self) -> int:
-            return self._status_code
-
-        def json(self) -> NasdaqAPIResponse:
-            return self._json_data
-
-    return MockNasdaqAPIResponse()
+@pytest.fixture(scope="function")
+def MockNasdaqAPIServer():
+    pook.on()
+    mock_resp = mock_responses(os.path.join(os.path.dirname(__file__), "mocks"))
+    for mock in mock_resp:
+        pook.get(BASE_URL + mock[0], reply=200, response_body=mock[1], times=10)
+    yield MockNasdaqAPIServer
 
 
 expected_cols = [
@@ -41,9 +29,8 @@ expected_cols = [
 ]
 
 
-@mock.patch("requests.get", side_effect=mock_requests_get)
 @pytest.mark.parametrize("exchange_name", Exchange.exchanges())
-def test_data_loader(mock_get, exchange_name, tmpdir):
+def test_data_loader(exchange_name, tmpdir, MockNasdaqAPIServer):
     data_loader = NASDAQSymbolsDataLoader(exchange_name=exchange_name, cache_dir=tmpdir)
     data = data_loader.download()
     assert os.path.exists(data_loader.cache_artifact_path)

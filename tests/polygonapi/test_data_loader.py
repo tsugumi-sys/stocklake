@@ -1,5 +1,4 @@
 import os
-import re
 
 import pook
 import pytest
@@ -7,34 +6,13 @@ from polygon import RESTClient
 
 from stocklake.exceptions import StockLoaderException
 from stocklake.polygonapi.data_loader import PolygonFinancialsDataLoader
-
-# mocking polygon api server. See https://github.com/polygon-io/client-python/blob/master/test_rest/base.py
-polygonapi_mocks = []
-dirname = os.path.dirname(__file__)
-mockdir = os.path.join(dirname, "mocks")
-for dname, _, files in os.walk(mockdir):
-    for fname in files:
-        if fname.endswith(".json"):
-            abspath = os.path.join(dname, fname)
-            with open(abspath) as f:
-                urllpath = abspath.replace(mockdir, "").replace("\\", "/")
-                urllpath = re.sub(".json$", "", urllpath)
-                urllpath = re.sub("/index$", "", urllpath)
-                # Windows will be sad. We support dev on Windows.
-                if "?" in urllpath:
-                    raise Exception(f"use & instead of ? in path ${urllpath}")
-                urllpath = urllpath.replace("&", "?", 1)
-                if ":" in urllpath:
-                    raise Exception(f"use ; instead of : in path ${urllpath}")
-                urllpath = urllpath.replace(";", ":", 1)
-                # print(abspath, urllpath)
-                polygonapi_mocks.append((urllpath, f.read()))
+from tests.mocks.mock_api_server import mock_responses
 
 
 @pytest.fixture(scope="function")
 def MockPolygonAPIServer():
     pook.on()
-    for mock in polygonapi_mocks:
+    for mock in mock_responses(os.path.join(os.path.dirname(__file__), "mocks")):
         pook.get(
             RESTClient("").BASE + mock[0],
             reply=200,
