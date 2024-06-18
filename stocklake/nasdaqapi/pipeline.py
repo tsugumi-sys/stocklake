@@ -18,7 +18,7 @@ from stocklake.nasdaqapi.preprocessor import (
 )
 from stocklake.nasdaqapi.stores import NASDAQDataStore
 from stocklake.stores.constants import StoreType
-from stocklake.stores.db.database import LocalSession  # noqa: E402
+from stocklake.stores.db.database import local_session
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ class NASDAQSymbolsPipeline(BasePipeline):
         skip_download: bool = False,
         exchange: Optional[Exchange] = None,
         store_type: StoreType = StoreType.LOCAL_ARTIFACT,
-        sqlalchemy_session: orm.sessionmaker[orm.session.Session] = LocalSession,
+        sqlalchemy_session: Optional[orm.sessionmaker[orm.session.Session]] = None,
     ):
         self.exchange = exchange
         self.skip_download = skip_download
@@ -40,6 +40,8 @@ class NASDAQSymbolsPipeline(BasePipeline):
             )
         self.store_type = store_type
         self.preprocessor = NASDAQSymbolsPreprocessor()
+        if sqlalchemy_session is None:
+            sqlalchemy_session = local_session()
         self.store = NASDAQDataStore(sqlalchemy_session)
         self.stdout = PipelineStdOut()
 

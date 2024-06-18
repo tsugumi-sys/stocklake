@@ -2,20 +2,15 @@ import pytest
 from sqlalchemy import create_engine, orm
 from sqlalchemy_utils import create_database, database_exists, drop_database
 
-from stocklake.environment_variables import (
-    STOCKLAKE_POSTGRES_HOST,
-    STOCKLAKE_POSTGRES_PASSWORD,
-    STOCKLAKE_POSTGRES_USER,
-)
 from stocklake.exceptions import StockLoaderException
+from stocklake.stores.db.database import database_url
 from stocklake.stores.db.models import Base
-
-TEST_SQLALCHEMY_URL = f"postgresql://{STOCKLAKE_POSTGRES_USER.get()}:{STOCKLAKE_POSTGRES_PASSWORD.get()}@{STOCKLAKE_POSTGRES_HOST.get()}/test"
 
 
 @pytest.fixture(scope="function")
-def SessionLocal():
-    engine = create_engine(TEST_SQLALCHEMY_URL)
+def SessionLocal(monkeypatch):
+    monkeypatch.setenv("_STOCKLAKE_ENVIRONMENT", "test")
+    engine = create_engine(database_url())
 
     # Create database
     if not database_exists(engine.url):
@@ -29,12 +24,13 @@ def SessionLocal():
     yield SessionLocal
 
     # Drop the test database after finishing tests
-    drop_database(TEST_SQLALCHEMY_URL)
+    drop_database(database_url())
 
 
 @pytest.fixture(scope="function")
-def test_database():
-    engine = create_engine(TEST_SQLALCHEMY_URL)
+def test_database(monkeypatch):
+    monkeypatch.setenv("_STOCKLAKE_ENVIRONMENT", "test")
+    engine = create_engine(database_url())
 
     # Create database
     if not database_exists(engine.url):
@@ -45,4 +41,4 @@ def test_database():
     yield
 
     # Drop the test database after finishing tests
-    drop_database(TEST_SQLALCHEMY_URL)
+    drop_database(database_url())

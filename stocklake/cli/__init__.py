@@ -1,6 +1,7 @@
 import click
 
 from stocklake.nasdaqapi.cli import nasdaqapi
+from stocklake.polygonapi.cli import polygonapi
 from stocklake.stores.db.cli import autogenerate_revision, upgrade
 
 
@@ -20,6 +21,7 @@ def database():
 
 
 download.add_command(nasdaqapi)
+download.add_command(polygonapi)
 database.add_command(upgrade)
 database.add_command(autogenerate_revision)
 

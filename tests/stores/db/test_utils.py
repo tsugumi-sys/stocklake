@@ -3,20 +3,17 @@ from click.testing import CliRunner
 
 from stocklake.core.stdout import PrettyStdoutPrint
 from stocklake.stores.db import cli
-from tests.stores.db.utils import (
-    TEST_SQLALCHEMY_URL,
-    SessionLocal,  # noqa: F401
-)
+from stocklake.stores.db.database import database_url
+from tests.stores.db.utils import SessionLocal  # noqa: F401
 
 pytest_plugins = ("tests.stores.db.utils",)
 
 
 @pytest.mark.usefixtures("test_database")
-def test_upgrade():
+def test_upgrade(monkeypatch):
+    monkeypatch.setenv("_STOCKLAKE_ENVIRONMENT", "test")
     runner = CliRunner()
-    res = runner.invoke(
-        cli.upgrade, ["--url", TEST_SQLALCHEMY_URL], catch_exceptions=False
-    )
+    res = runner.invoke(cli.upgrade, ["--url", database_url()], catch_exceptions=False)
     assert res.exit_code == 0
     assert "Migration Completed :)" in res.output
 
@@ -42,15 +39,12 @@ def test_revision(monkeypatch):  # noqa: F811
     monkeypatch.setenv("_STOCKLAKE_ENVIRONMENT", "test")
     runner = CliRunner()
     # you need to sync the current latest migration first.
-    _ = runner.invoke(
-        cli.upgrade, ["--url", TEST_SQLALCHEMY_URL], catch_exceptions=False
-    )
+    _ = runner.invoke(cli.upgrade, ["--url", database_url()], catch_exceptions=False)
     # autogenerate revision file
     revision_message = "Auto generate Test Revision"
     res = runner.invoke(
         cli.autogenerate_revision,
-        ["--message", revision_message, "--url", TEST_SQLALCHEMY_URL],
+        ["--message", revision_message, "--url", database_url()],
     )
-    print(res.output)
     assert res.exit_code == 0
     assert "Auto generation of migration Completed :)" in res.output
