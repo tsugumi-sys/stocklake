@@ -1,6 +1,6 @@
 import os
 import tempfile
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy import orm
 
@@ -10,7 +10,7 @@ from stocklake.core.constants import DATA_DIR
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db import models, schemas
-from stocklake.stores.db.database import LocalSession  # noqa: E402
+from stocklake.stores.db.database import local_session
 from stocklake.utils.file_utils import save_data_to_csv
 
 SAVE_ARTIFACTS_DIR = os.path.join(DATA_DIR, "nasdaqapi")
@@ -18,8 +18,10 @@ SAVE_ARTIFACTS_DIR = os.path.join(DATA_DIR, "nasdaqapi")
 
 class PolygonFinancialsDataStore(BaseStore):
     def __init__(
-        self, sqlalchemy_session: orm.sessionmaker[orm.session.Session] = LocalSession
+        self, sqlalchemy_session: Optional[orm.sessionmaker[orm.session.Session]] = None
     ):
+        if sqlalchemy_session is None:
+            sqlalchemy_session = local_session()
         self.sqlalchemy_session = sqlalchemy_session
 
     def save(
