@@ -24,6 +24,6 @@ jobs:
           path: .cache
           restore-keys: |
             mkdocs-material-
-      - run: pip install mkdocs-material mkdocs-click 'mkdocstrings[python]'
+      - run: pip install mkdocs-material mkdocs-click 'mkdocstrings[python]' setuptools
       - run: pip install -e . # install stocklake
       - run: mkdocs gh-deploy --force
