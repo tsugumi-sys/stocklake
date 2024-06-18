@@ -51,6 +51,5 @@ def test_revision(monkeypatch):  # noqa: F811
         cli.autogenerate_revision,
         ["--message", revision_message, "--url", TEST_SQLALCHEMY_URL],
     )
-    print(res.output)
     assert res.exit_code == 0
     assert "Auto generation of migration Completed :)" in res.output
