@@ -58,21 +58,20 @@ def test_polygonapi_stock_financials_vx(
     monkeypatch,
     SessionLocal,  # noqa: F811
 ):
+    monkeypatch.setenv("_STOCKLAKE_ENVIRONMENT", "test")
     monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
-
-    with SessionLocal():
-        runner = CliRunner()
-        res = runner.invoke(
-            cli.polygonapi,
-            [
-                "--symbols",
-                "MSFT",
-                "--api_type",
-                PolygonAPIType.STOCK_FINANCIALS_VX,
-                "--store_type",
-                store_type,
-            ],
-            catch_exceptions=False,
-        )
+    runner = CliRunner()
+    res = runner.invoke(
+        cli.polygonapi,
+        [
+            "--symbols",
+            "MSFT",
+            "--api_type",
+            PolygonAPIType.STOCK_FINANCIALS_VX,
+            "--store_type",
+            store_type,
+        ],
+        catch_exceptions=False,
+    )
     assert res.exit_code == 0
     assert "- Completed🐳" in res.output
