@@ -12,11 +12,13 @@ def cli():
 
 @click.group()
 def download():
+    """Download data to several stores from APIs"""
     pass
 
 
 @click.group()
 def database():
+    """Manage database schemas"""
     pass
 
 
