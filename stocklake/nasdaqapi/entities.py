@@ -1,4 +1,4 @@
-from typing import List, TypedDict
+from typing import List, Optional, TypedDict
 
 
 class RawNasdaqApiSymbolData(TypedDict):
@@ -22,7 +22,7 @@ class NasdaqApiSymbolData(TypedDict):
     name: str
     last_sale: float
     net_change: float
-    pct_change: float
+    pct_change: Optional[float]
     marketcap: float
     volume: float
     country: str

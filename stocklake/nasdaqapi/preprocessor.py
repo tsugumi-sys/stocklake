@@ -18,7 +18,11 @@ class NASDAQSymbolsPreprocessor(BasePreprocessor):
                 "last_sale": float(
                     data_dic["lastsale"].replace("$", "").replace(",", "")
                 ),
-                "pct_change": float(data_dic["pctchange"].replace("%", "")),
+                "pct_change": (
+                    None
+                    if data_dic["pctchange"] == ""
+                    else float(data_dic["pctchange"].replace("%", ""))
+                ),
                 "net_change": float(data_dic["netchange"]),
                 "volume": float(data_dic["volume"]),
                 "marketcap": self._market_cap(data_dic),

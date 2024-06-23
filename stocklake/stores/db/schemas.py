@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -6,7 +8,7 @@ class NasdaqStockBase(BaseModel):
     exchange: str
     name: str
     last_sale: float
-    pct_change: float
+    pct_change: Optional[float]
     net_change: float
     volume: float
     marketcap: float
