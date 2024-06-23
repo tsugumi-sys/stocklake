@@ -12,7 +12,7 @@ class NasdaqApiData(Base):
     symbol = Column(String(10))
     name = Column(String(256))
     last_sale = Column(Float)
-    pct_change = Column(Float)
+    pct_change = Column(Float, nullable=True)
     net_change = Column(Float)
     volume = Column(Float)
     marketcap = Column(Float)
