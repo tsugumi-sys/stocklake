@@ -10,9 +10,9 @@ from stocklake.stores.constants import StoreType
 
 @click.command()
 @click.option(
-    "--skip_download", default=False, help="if true, downloading data will be skipped"
+    "--skip_download", default=False, help="if true, downloading data will be skipped."
 )
-@click.option("--symbols", default=None, help="symbols split by comma. ex MSFT,AAPL")
+@click.option("--symbols", default=None, help="symbols split by comma. ex `MSFT,AAPL`.")
 @click.option(
     "--api_type",
     default=None,
@@ -21,7 +21,7 @@ from stocklake.stores.constants import StoreType
 @click.option(
     "--store_type",
     default=StoreType.LOCAL_ARTIFACT,
-    help=f"The storege type, should be in {StoreType.types()}",
+    help=f"The storege type, should be in `{StoreType.types()}`.",
 )
 def polygonapi(
     skip_download: bool,

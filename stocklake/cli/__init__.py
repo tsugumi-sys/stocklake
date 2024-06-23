@@ -12,13 +12,23 @@ def stocklake():
 
 @click.group()
 def download():
-    """Download data to several stores from APIs"""
+    """
+    Download data to several stores from APIs.
+
+    e.g.
+
+    The following command downloads table data of Nasdaq API data into local csv file.
+
+    ```bash
+    stocklake download nasdaqapi --exchange nasdaq
+    ```
+    """
     pass
 
 
 @click.group()
 def database():
-    """Manage database schemas"""
+    """Manage database schemas."""
     pass
 
 

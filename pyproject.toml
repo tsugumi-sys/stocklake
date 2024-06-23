@@ -24,7 +24,7 @@ license = "MIT"
 dev = ["black", "ruff-lsp", "pre-commit", "mypy", "pytest"]
 
 [project.scripts]
-stocklake = "stocklake.cli:cli"
+stocklake = "stocklake.cli:stocklake"
 
 [tool.hatch.version]
 path = "stocklake/__init__.py"
