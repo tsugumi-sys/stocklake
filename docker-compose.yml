@@ -2,7 +2,7 @@ version: '3'
 
 services:
   metabase:
-    image: metabase/metabase:latest
+    image: scurrilous/metabase # official image does not support arm64 :(. See https://github.com/metabase/metabase/issues/13119
     container_name: metabase
     hostname: metabase
     volumes:
