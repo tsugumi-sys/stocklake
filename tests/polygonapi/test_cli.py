@@ -25,7 +25,7 @@ def test_polygonapi_api_type():
     with pytest.raises(StockLoaderException) as exc:
         _ = runner.invoke(
             cli.polygonapi,
-            ["--symbols", "MSFT", "--api_type", "INVALID_API_TYPE"],
+            ["--symbols", "AAPL", "--api_type", "INVALID_API_TYPE"],
             catch_exceptions=False,
         )
     assert (
@@ -41,7 +41,7 @@ def test_polygonapi_invalid_store_type():
             cli.polygonapi,
             [
                 "--symbols",
-                "MSFT",
+                "AAPL",
                 "--api_type",
                 "INVALID_API_TYPE",
                 "--store_type",
@@ -65,7 +65,7 @@ def test_polygonapi_stock_financials_vx(
         cli.polygonapi,
         [
             "--symbols",
-            "MSFT",
+            "AAPL",
             "--api_type",
             PolygonAPIType.STOCK_FINANCIALS_VX,
             "--store_type",

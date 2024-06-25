@@ -24,7 +24,7 @@ def polygon_financials_data(
     monkeypatch.setenv(STOCKLAKE_POLYGON_API_KEY.env_name, "dummy_key")
     dataloader = PolygonFinancialsDataLoader()
     preprocessor = PolygonFinancialsDataPreprocessor()
-    data = preprocessor.process(dataloader.download(["MSFT"]))
+    data = preprocessor.process(dataloader.download(["AAPL"]))
     yield data
 
 
@@ -44,7 +44,7 @@ def test_polygon_financials_store_postgresql(
     store.save(StoreType.POSTGRESQL, polygon_financials_data)
     with SessionLocal() as session, session.begin():
         res = session.query(models.PolygonFinancialsData).all()
-    assert len(res) == 1
+    assert len(res) == 10
 
 
 def test_PolygonFinancialsDataSQLAlchemyStore_create(

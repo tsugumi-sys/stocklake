@@ -43,9 +43,7 @@ class PolygonFinancialsDataLoader(BaseDataLoader):
 
     def _request_financials_data(self, ticker: str) -> List[StockFinancial]:
         rawdata = []
-        for d in self.polygon_client.vx.list_stock_financials(
-            ticker=ticker, filing_date_gte=self.filing_date_gte
-        ):
+        for d in self.polygon_client.vx.list_stock_financials(ticker=ticker, limit=100):
             rawdata.append(d)
         return rawdata
 

@@ -90,13 +90,13 @@ class PolygonFinancialsDataBase(BaseModel):
     ticker: str
     start_date: str
     end_date: str
-    filing_date: str
+    filing_date: Optional[str]
     cik: str
     company_name: str
     fiscal_period: str
     fiscal_year: str
-    source_filing_url: str
-    source_filing_file_url: str
+    source_filing_url: Optional[str]
+    source_filing_file_url: Optional[str]
 
 
 class PolygonFinancialsDataCreate(PolygonFinancialsDataBase):

@@ -14,7 +14,7 @@ from tests.stores.db.utils import SessionLocal  # noqa: F401
 def test_invalid_store_type_specified():
     with pytest.raises(StockLoaderException) as exc:
         _ = PolygonFinancialsDataPipeline(
-            symbols=["MSFT"], store_type="INVALID_STORE_TYPE"
+            symbols=["AAPL"], store_type="INVALID_STORE_TYPE"
         )
         assert (
             str(exc.value)
@@ -25,7 +25,7 @@ def test_invalid_store_type_specified():
 def test_run_with_local_artifact(MockPolygonAPIServer, monkeypatch):  # noqa: F811
     monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
     pipeline = PolygonFinancialsDataPipeline(
-        symbols=["MSFT"],
+        symbols=["AAPL"],
         skip_download=False,
         store_type=StoreType.LOCAL_ARTIFACT,
     )
@@ -40,7 +40,7 @@ def test_run_with_postgresql(
 ):
     monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
     pipeline = PolygonFinancialsDataPipeline(
-        symbols=["MSFT"],
+        symbols=["AAPL"],
         skip_download=False,
         store_type=StoreType.POSTGRESQL,
         sqlalchemy_session=SessionLocal,
