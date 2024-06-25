@@ -13,7 +13,7 @@ from stocklake.stores.db import models, schemas
 from stocklake.stores.db.database import local_session
 from stocklake.utils.file_utils import save_data_to_csv
 
-SAVE_ARTIFACTS_DIR = os.path.join(DATA_DIR, "nasdaqapi")
+SAVE_ARTIFACTS_DIR = os.path.join(DATA_DIR, "polygonapi")
 
 
 class PolygonFinancialsDataStore(BaseStore):
