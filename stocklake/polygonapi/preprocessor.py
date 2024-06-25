@@ -50,7 +50,7 @@ class PolygonFinancialsDataPreprocessor(BasePreprocessor):
                             ticker_financial_data[financial_name] = None  # type: ignore
                             continue
                         ticker_financial_data[financial_name] = float(  # type: ignore
-                            metadata.value * metadata.order
+                            metadata.value
                         )
                     for field in PreprocessedPolygonFinancialsData.model_fields:
                         if field not in ticker_financial_data:
