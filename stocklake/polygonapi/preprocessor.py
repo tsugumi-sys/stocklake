@@ -15,9 +15,9 @@ class PolygonFinancialsDataPreprocessor(BasePreprocessor):
     ) -> List[PreprocessedPolygonFinancialsData]:
         processed_data: List[PreprocessedPolygonFinancialsData] = []
         for ticker, _data in data.items():
-            ticker_financial_data = {}  # type: ignore
-            ticker_financial_data["ticker"] = ticker
             for d in _data:
+                ticker_financial_data = {}  # type: ignore
+                ticker_financial_data["ticker"] = ticker
                 ticker_financial_data["start_date"] = d.start_date
                 ticker_financial_data["end_date"] = d.end_date
                 ticker_financial_data["filing_date"] = d.filing_date
@@ -31,12 +31,16 @@ class PolygonFinancialsDataPreprocessor(BasePreprocessor):
                 )
 
                 for base_name, financial_data in d.financials.__dict__.items():
-                    if base_name not in [
-                        "balance_sheet",
-                        "cash_flow_statement",
-                        "comprehensive_income",
-                        "income_statement",
-                    ]:
+                    if (
+                        base_name
+                        not in [
+                            "balance_sheet",
+                            "cash_flow_statement",
+                            "comprehensive_income",
+                            "income_statement",
+                        ]
+                        or financial_data is None
+                    ):
                         continue
 
                     if not isinstance(financial_data, dict):
@@ -51,7 +55,7 @@ class PolygonFinancialsDataPreprocessor(BasePreprocessor):
                     for field in PreprocessedPolygonFinancialsData.model_fields:
                         if field not in ticker_financial_data:
                             ticker_financial_data[field] = None  # type: ignore
-            processed_data.append(
-                PreprocessedPolygonFinancialsData(**ticker_financial_data)  # type: ignore
-            )
+                processed_data.append(
+                    PreprocessedPolygonFinancialsData(**ticker_financial_data)  # type: ignore
+                )
         return processed_data

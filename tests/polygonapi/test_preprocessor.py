@@ -7,23 +7,28 @@ def test_preprocessor(MockPolygonAPIServer, monkeypatch):  # noqa: F811
     monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
     dataloader = PolygonFinancialsDataLoader()
     preprocessor = PolygonFinancialsDataPreprocessor()
-    data = preprocessor.process(dataloader.download(["MSFT"]))
+    data = dataloader.download(["AAPL"])
+    data = preprocessor.process(data)
+    assert len(data) == 10
     for d in data:
         for col, val in d.dict().items():
             if col in [
                 "ticker",
                 "start_date",
                 "end_date",
-                "filing_date",
                 "cik",
                 "company_name",
                 "fiscal_period",
                 "fiscal_year",
-                "source_filing_url",
-                "source_filing_file_url",
             ]:
                 # check string data
                 assert isinstance(val, str)
+            elif col in [
+                "filing_date",
+                "source_filing_url",
+                "source_filing_file_url",
+            ]:
+                assert isinstance(val, str) or val is None
             else:
                 # check float data
-                assert isinstance(val, float)
+                assert isinstance(val, float) or val is None

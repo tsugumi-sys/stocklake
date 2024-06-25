@@ -29,7 +29,6 @@ def test_raise_error_when_polygon_api_key_missing():
 def test_download(MockPolygonAPIServer, monkeypatch):
     monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
     dataloader = PolygonFinancialsDataLoader()
-    res = dataloader.download(["MSFT"])
-    assert "MSFT" in res
-    assert len(res["MSFT"]) == 1
-    assert res["MSFT"][0].cik == "0001413447"
+    res = dataloader.download(["AAPL"])
+    assert "AAPL" in res
+    assert len(res["AAPL"]) == 10
