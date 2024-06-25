@@ -26,9 +26,9 @@ class PolygonFinancialsDataPreprocessor(BasePreprocessor):
                 ticker_financial_data["fiscal_period"] = d.fiscal_period
                 ticker_financial_data["fiscal_year"] = d.fiscal_year
                 ticker_financial_data["source_filing_url"] = d.source_filing_url
-                ticker_financial_data[
-                    "source_filing_file_url"
-                ] = d.source_filing_file_url
+                ticker_financial_data["source_filing_file_url"] = (
+                    d.source_filing_file_url
+                )
 
                 for base_name, financial_data in d.financials.__dict__.items():
                     if base_name not in [
@@ -42,6 +42,9 @@ class PolygonFinancialsDataPreprocessor(BasePreprocessor):
                     if not isinstance(financial_data, dict):
                         financial_data = financial_data.__dict__
                     for financial_name, metadata in financial_data.items():
+                        if metadata is None:
+                            ticker_financial_data[financial_name] = None  # type: ignore
+                            continue
                         ticker_financial_data[financial_name] = float(  # type: ignore
                             metadata.value * metadata.order
                         )
