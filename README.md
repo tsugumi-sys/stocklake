@@ -29,13 +29,15 @@ Let's create docker compose file.
 touch docker-compose.yml
 ```
 
-Then, copy the docker compose file contents from this repository and run docker containers.
+Copy [this docker compose file](https://github.com/tsugumi-sys/stocklake/blob/main/docker-compose.yml) contents into the your docker compose file.
+
+Then, run docker containers.
 
 ```sh
 docker compose up -d
 ```
 
-This command builds the following containers.
+This command builds the following 3 containers.
 
 - PostgreSQL for stocklake data.
 - [Metabase Web UI](http://localhost:3000)
@@ -54,7 +56,7 @@ stocklake download nasdaqapi --exchange nasdaq --store_type postgresql
 Accessing the metabase web ui ([Metabase Web UI](http://localhost:3000)) and setup connection of stocklake PostgreSQL database with the following settings.
 
 | section | value |
-| :----: | :----: |
+| :---- | :---- |
 | Database Type | `PostgreSQL` |
 | Host | `stocklake-db` |
 | Port | `5432` |
@@ -63,6 +65,17 @@ Accessing the metabase web ui ([Metabase Web UI](http://localhost:3000)) and set
 | Password | `password` |
 
 Other settings can be theier default values.
+
+Now you can see the Nasdaq API data on your metabase dashborad!
+
+## supported APIs
+
+| name | status | documentation url |
+| :--- | :---: | :--- |
+| Nasdaq API (Screener) | :white_check_mark: | https://www.nasdaq.com/market-activity/stocks/screener |
+| Polygon API (Stock Financials Vx) | :white_check_mark: | https://polygon.io/docs/stocks/get_vx_reference_financials |
+| Polygon API (Tickers) | :construction: | https://polygon.io/docs/stocks/get_v3_reference_tickers |
+
 
 ## License
 
