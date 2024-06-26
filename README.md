@@ -68,13 +68,27 @@ Other settings can be theier default values.
 
 Now you can see the Nasdaq API data on your metabase dashborad!
 
-## supported APIs
+## Supported APIs
 
-| name | status | documentation url |
+| name | status | API Docs |
 | :--- | :---: | :--- |
-| Nasdaq API (Screener) | :white_check_mark: | https://www.nasdaq.com/market-activity/stocks/screener |
-| Polygon API (Stock Financials Vx) | :white_check_mark: | https://polygon.io/docs/stocks/get_vx_reference_financials |
-| Polygon API (Tickers) | :construction: | https://polygon.io/docs/stocks/get_v3_reference_tickers |
+| Nasdaq API (Screener) | :white_check_mark: | [URL](https://www.nasdaq.com/market-activity/stocks/screener) |
+| Polygon API (Stock Financials Vx) | :white_check_mark: | [URL](https://polygon.io/docs/stocks/get_vx_reference_financials) |
+| Polygon API (Tickers) | :construction: | [URL](https://polygon.io/docs/stocks/get_v3_reference_tickers) |
+
+## Examples
+
+### Nasdaq API (Screener)
+
+```bash
+stocklake download nasdaqapi --exchange nasdaq --store_type postgresql
+```
+
+### Polygon API (Stock Financials Vx)
+
+```bash
+stocklake download polygonapi --symbols AAPL --api_type stock_financials_vx --store_type postgresql
+```
 
 
 ## License
