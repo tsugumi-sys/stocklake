@@ -2,7 +2,7 @@ from typing import Optional
 
 import click
 
-from stocklake.exceptions import StockLoaderException
+from stocklake.exceptions import StockLakeException
 from stocklake.polygonapi.constants import PolygonAPIType
 from stocklake.polygonapi.pipeline import PolygonFinancialsDataPipeline
 from stocklake.stores.constants import StoreType
@@ -30,14 +30,14 @@ def polygonapi(
     store_type: StoreType,
 ):
     if symbols is None:
-        raise StockLoaderException("`symbols` must be given.")
+        raise StockLakeException("`symbols` must be given.")
 
     if api_type is None:
-        raise StockLoaderException(
+        raise StockLakeException(
             f"`api_type` must be given, supported type is {PolygonAPIType.types()}"
         )
     if api_type not in PolygonAPIType.types():
-        raise StockLoaderException(
+        raise StockLakeException(
             f"Invalid `api_type` {api_type}, supported type is {PolygonAPIType.types()}"
         )
 

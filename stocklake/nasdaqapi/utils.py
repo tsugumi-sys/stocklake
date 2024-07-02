@@ -2,7 +2,7 @@ import logging
 
 import requests
 
-from stocklake.exceptions import StockLoaderException
+from stocklake.exceptions import StockLakeException
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.entities import NasdaqAPIResponse
 
@@ -24,7 +24,7 @@ CUSTOM_HEADERS = {"user-agent": CUSTOM_USER_AGENT}
 def nasdaq_api_get_request(exchange: Exchange) -> NasdaqAPIResponse:
     res = requests.get(symbols_api_endpoint(exchange), headers=CUSTOM_HEADERS)
     if res.status_code != 200:
-        raise StockLoaderException(
+        raise StockLakeException(
             f"Request Failed with status code: {res.status_code}. All response body is the following: {res.text}"
         )
 

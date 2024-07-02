@@ -7,7 +7,7 @@ from sqlalchemy import orm
 from stocklake.core.base_sqlalchemy_store import SQLAlchemyStore
 from stocklake.core.base_store import BaseStore
 from stocklake.core.constants import DATA_DIR
-from stocklake.exceptions import StockLoaderException
+from stocklake.exceptions import StockLakeException
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.entities import NasdaqApiSymbolData
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
@@ -45,7 +45,7 @@ class NASDAQDataStore(BaseStore):
             return repository.list_artifacts()[0].path
         elif store_type == StoreType.POSTGRESQL:
             if self.sqlalchemy_session is None:
-                raise StockLoaderException("`sqlalchemy_session` is None.")
+                raise StockLakeException("`sqlalchemy_session` is None.")
             sqlstore = NasdaqApiSQLAlchemyStore(exchange, self.sqlalchemy_session)
             sqlstore.delete()
             sqlstore.create([schemas.NasdaqStockCreate(**d) for d in data])

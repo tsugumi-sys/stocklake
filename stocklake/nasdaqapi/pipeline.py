@@ -8,7 +8,7 @@ from stocklake.core.base_pipeline import BasePipeline
 from stocklake.core.base_preprocessor import BasePreprocessor
 from stocklake.core.base_store import BaseStore
 from stocklake.core.stdout import PipelineStdOut
-from stocklake.exceptions import StockLoaderException
+from stocklake.exceptions import StockLakeException
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.data_loader import (
     NASDAQSymbolsDataLoader,
@@ -31,11 +31,16 @@ class NASDAQSymbolsPipeline(BasePipeline):
         store_type: StoreType = StoreType.LOCAL_ARTIFACT,
         sqlalchemy_session: Optional[orm.sessionmaker[orm.session.Session]] = None,
     ):
+        print(exchange)
+        if exchange is not None and exchange not in Exchange.exchanges():
+            raise StockLakeException(
+                f"Specified exchange is invalid, but got {exchange}. The valid exchanges are {Exchange.exchanges()}"
+            )
         self.exchange = exchange
         self.skip_download = skip_download
 
         if store_type not in StoreType.types():
-            raise StockLoaderException(
+            raise StockLakeException(
                 f"Specified store type is invalid, {store_type}, valid types are {StoreType.types()}"
             )
         self.store_type = store_type

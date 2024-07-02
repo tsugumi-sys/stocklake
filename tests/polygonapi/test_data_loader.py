@@ -4,7 +4,7 @@ import pook
 import pytest
 from polygon import RESTClient
 
-from stocklake.exceptions import StockLoaderException
+from stocklake.exceptions import StockLakeException
 from stocklake.polygonapi.data_loader import PolygonFinancialsDataLoader
 from tests.mocks.mock_api_server import mock_responses
 
@@ -22,7 +22,7 @@ def MockPolygonAPIServer():
 
 
 def test_raise_error_when_polygon_api_key_missing():
-    with pytest.raises(StockLoaderException):
+    with pytest.raises(StockLakeException):
         _ = PolygonFinancialsDataLoader()
 
 

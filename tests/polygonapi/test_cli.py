@@ -1,7 +1,7 @@
 import pytest
 from click.testing import CliRunner
 
-from stocklake.exceptions import StockLoaderException
+from stocklake.exceptions import StockLakeException
 from stocklake.polygonapi import cli
 from stocklake.polygonapi.constants import PolygonAPIType
 from stocklake.stores.constants import StoreType
@@ -11,7 +11,7 @@ from tests.stores.db.utils import SessionLocal  # noqa: F401
 
 def test_polygonapi_empty_symbols():
     runner = CliRunner()
-    with pytest.raises(StockLoaderException) as exc:
+    with pytest.raises(StockLakeException) as exc:
         _ = runner.invoke(
             cli.polygonapi,
             ["--api_type", PolygonAPIType.STOCK_FINANCIALS_VX],
@@ -22,7 +22,7 @@ def test_polygonapi_empty_symbols():
 
 def test_polygonapi_api_type():
     runner = CliRunner()
-    with pytest.raises(StockLoaderException) as exc:
+    with pytest.raises(StockLakeException) as exc:
         _ = runner.invoke(
             cli.polygonapi,
             ["--symbols", "AAPL", "--api_type", "INVALID_API_TYPE"],
@@ -36,7 +36,7 @@ def test_polygonapi_api_type():
 
 def test_polygonapi_invalid_store_type():
     runner = CliRunner()
-    with pytest.raises(StockLoaderException):
+    with pytest.raises(StockLakeException):
         _ = runner.invoke(
             cli.polygonapi,
             [
