@@ -1,0 +1,10 @@
+version: '3'
+
+tasks:
+  pytest:
+    cmds:
+      - pytest tests
+
+  pytest-with-log:
+    cmds:
+      - pytest --log-cli-level=INFO tests

@@ -8,5 +8,5 @@ class BaseStore(ABC):
         self.sqlalchemy_session = sqlalchemy_session
 
     @abstractmethod
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> str:
         pass

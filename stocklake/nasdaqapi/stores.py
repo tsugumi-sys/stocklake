@@ -13,7 +13,10 @@ from stocklake.nasdaqapi.entities import NasdaqApiSymbolData
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db import models, schemas
-from stocklake.stores.db.database import local_session
+from stocklake.stores.db.database import (
+    local_session,
+    safe_database_url_from_sessionmaker,
+)
 from stocklake.utils.file_utils import save_data_to_csv
 
 SAVE_ARTIFACTS_DIR = os.path.join(DATA_DIR, "nasdaqapi")
@@ -32,19 +35,24 @@ class NASDAQDataStore(BaseStore):
         store_type: StoreType,
         exchange: Exchange,
         data: List[NasdaqApiSymbolData],
-    ):
+    ) -> str:
         if store_type == StoreType.LOCAL_ARTIFACT:
             repository = LocalArtifactRepository(SAVE_ARTIFACTS_DIR)
             with tempfile.TemporaryDirectory() as tmpdir:
                 csv_file_path = os.path.join(tmpdir, f"{exchange}_data.csv")
                 save_data_to_csv(data, csv_file_path)
                 repository.save_artifact(csv_file_path)
+            return repository.list_artifacts()[0].path
         elif store_type == StoreType.POSTGRESQL:
             if self.sqlalchemy_session is None:
                 raise StockLoaderException("`sqlalchemy_session` is None.")
             sqlstore = NasdaqApiSQLAlchemyStore(exchange, self.sqlalchemy_session)
             sqlstore.delete()
             sqlstore.create([schemas.NasdaqStockCreate(**d) for d in data])
+            return os.path.join(
+                safe_database_url_from_sessionmaker(self.sqlalchemy_session),
+                models.NasdaqApiData.__tablename__,
+            )
         else:
             raise NotImplementedError
 

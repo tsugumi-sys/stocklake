@@ -21,6 +21,12 @@ def database_url():
     return f"postgresql://{STOCKLAKE_POSTGRES_USER.get()}:{STOCKLAKE_POSTGRES_PASSWORD.get()}@{STOCKLAKE_POSTGRES_HOST.get()}/{DATABASE_NAME}"
 
 
+def safe_database_url_from_sessionmaker(
+    sessionmaker: orm.sessionmaker[orm.session.Session],
+) -> str:
+    return str(sessionmaker.kw["bind"].url)
+
+
 def local_session() -> orm.sessionmaker[orm.session.Session]:
     LocalEngine = create_engine(database_url())
     return orm.sessionmaker(autocommit=False, bind=LocalEngine)

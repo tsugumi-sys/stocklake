@@ -82,5 +82,5 @@ class NASDAQSymbolsPipeline(BasePipeline):
             # TODO: fetch from cached file
             return
         data = preprocessor.process(exchange, raw_data)
-        store.save(self.store_type, exchange, data)
-        self.stdout.completed()
+        stored_location = store.save(self.store_type, exchange, data)
+        self.stdout.completed(stored_location)
