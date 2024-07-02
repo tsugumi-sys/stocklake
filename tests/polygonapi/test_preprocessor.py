@@ -19,7 +19,6 @@ def test_preprocessor(MockPolygonAPIServer, monkeypatch):  # noqa: F811
                 "cik",
                 "company_name",
                 "fiscal_period",
-                "fiscal_year",
             ]:
                 # check string data
                 assert isinstance(val, str)
@@ -29,6 +28,8 @@ def test_preprocessor(MockPolygonAPIServer, monkeypatch):  # noqa: F811
                 "source_filing_file_url",
             ]:
                 assert isinstance(val, str) or val is None
+            elif col in ["fiscal_year"]:
+                assert isinstance(val, int) or val is None
             else:
                 # check float data
                 assert isinstance(val, float) or val is None

@@ -94,7 +94,7 @@ class PolygonFinancialsDataBase(BaseModel):
     cik: str
     company_name: str
     fiscal_period: str
-    fiscal_year: str
+    fiscal_year: Optional[int]
     source_filing_url: Optional[str]
     source_filing_file_url: Optional[str]
 

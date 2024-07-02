@@ -94,6 +94,6 @@ class PolygonFinancialsData(Base):
     cik = Column(String)
     company_name = Column(String)
     fiscal_period = Column(String)
-    fiscal_year = Column(String)
+    fiscal_year = Column(Integer, nullable=True)
     source_filing_url = Column(String, nullable=True)
     source_filing_file_url = Column(String, nullable=True)

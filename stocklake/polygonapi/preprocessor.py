@@ -24,7 +24,9 @@ class PolygonFinancialsDataPreprocessor(BasePreprocessor):
                 ticker_financial_data["cik"] = d.cik
                 ticker_financial_data["company_name"] = d.company_name
                 ticker_financial_data["fiscal_period"] = d.fiscal_period
-                ticker_financial_data["fiscal_year"] = d.fiscal_year
+                ticker_financial_data["fiscal_year"] = (
+                    None if d.fiscal_year == "" else int(d.fiscal_year)  # type: ignore
+                )
                 ticker_financial_data["source_filing_url"] = d.source_filing_url
                 ticker_financial_data["source_filing_file_url"] = (
                     d.source_filing_file_url
