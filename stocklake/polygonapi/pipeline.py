@@ -8,7 +8,7 @@ from stocklake.core.base_pipeline import BasePipeline
 from stocklake.core.base_preprocessor import BasePreprocessor
 from stocklake.core.base_store import BaseStore
 from stocklake.core.stdout import PipelineStdOut
-from stocklake.exceptions import StockLoaderException
+from stocklake.exceptions import StockLakeException
 from stocklake.polygonapi.data_loader import (
     PolygonFinancialsDataLoader,
 )
@@ -34,7 +34,7 @@ class PolygonFinancialsDataPipeline(BasePipeline):
         self.skip_download = skip_download
 
         if store_type not in StoreType.types():
-            raise StockLoaderException(
+            raise StockLakeException(
                 f"Specified store type is invalid, {store_type}, valid types are {StoreType.types()}"
             )
         self.store_type = store_type

@@ -6,7 +6,7 @@ from urllib.parse import unquote
 from urllib.request import pathname2url
 
 from stocklake.entities.file_info import FileInfo
-from stocklake.exceptions import StockLoaderException
+from stocklake.exceptions import StockLakeException
 
 
 def list_all(
@@ -29,7 +29,7 @@ def relative_path_to_artifact_path(path: str) -> str:
     if os.path == posixpath:
         return path
     if os.path.abspath(path) == path:
-        raise StockLoaderException("This method only works with relative paths.")
+        raise StockLakeException("This method only works with relative paths.")
     return unquote(pathname2url(path))
 
 

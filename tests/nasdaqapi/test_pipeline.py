@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from stocklake.exceptions import StockLoaderException
+from stocklake.exceptions import StockLakeException
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.pipeline import NASDAQSymbolsPipeline
 from stocklake.nasdaqapi.stores import SAVE_ARTIFACTS_DIR
@@ -15,7 +15,7 @@ from tests.stores.db.utils import SessionLocal  # noqa: F401
 
 
 def test_invalid_store_type_specified():
-    with pytest.raises(StockLoaderException) as exc:
+    with pytest.raises(StockLakeException) as exc:
         _ = NASDAQSymbolsPipeline(store_type="INVALID_STORE_TYPE")
     assert (
         str(exc.value)

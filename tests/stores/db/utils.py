@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy import create_engine, orm
 from sqlalchemy_utils import create_database, database_exists, drop_database
 
-from stocklake.exceptions import StockLoaderException
+from stocklake.exceptions import StockLakeException
 from stocklake.stores.db.database import database_url
 from stocklake.stores.db.models import Base
 
@@ -16,7 +16,7 @@ def SessionLocal(monkeypatch):
     if not database_exists(engine.url):
         create_database(engine.url)
     else:
-        raise StockLoaderException("Test database already exists")
+        raise StockLakeException("Test database already exists")
 
     # Create tables
     Base.metadata.create_all(engine)
@@ -36,7 +36,7 @@ def test_database(monkeypatch):
     if not database_exists(engine.url):
         create_database(engine.url)
     else:
-        raise StockLoaderException("Test database already exists")
+        raise StockLakeException("Test database already exists")
 
     yield
 

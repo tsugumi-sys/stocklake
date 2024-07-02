@@ -10,7 +10,7 @@ from stocklake.core.base_data_loader import BaseDataLoader
 from stocklake.core.constants import CACHE_DIR
 from stocklake.core.stdout import PrettyStdoutPrint
 from stocklake.environment_variables import STOCKLAKE_POLYGON_API_KEY
-from stocklake.exceptions import StockLoaderException
+from stocklake.exceptions import StockLakeException
 
 CACHE_DIR_PATH = os.path.join(CACHE_DIR, "polygonapi_finalcials")
 
@@ -21,7 +21,7 @@ class PolygonFinancialsDataLoader(BaseDataLoader):
     def __init__(self):
         super().__init__()
         if STOCKLAKE_POLYGON_API_KEY.get() is None:
-            raise StockLoaderException(
+            raise StockLakeException(
                 "You need to set an environment variable `STOCKLAKE_POLYGON_API_KEY`."
             )
         self.polygon_client = RESTClient(STOCKLAKE_POLYGON_API_KEY.get())

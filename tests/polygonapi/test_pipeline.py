@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from stocklake.exceptions import StockLoaderException
+from stocklake.exceptions import StockLakeException
 from stocklake.polygonapi.pipeline import PolygonFinancialsDataPipeline
 from stocklake.polygonapi.stores import SAVE_ARTIFACTS_DIR
 from stocklake.stores.constants import StoreType
@@ -12,7 +12,7 @@ from tests.stores.db.utils import SessionLocal  # noqa: F401
 
 
 def test_invalid_store_type_specified():
-    with pytest.raises(StockLoaderException) as exc:
+    with pytest.raises(StockLakeException) as exc:
         _ = PolygonFinancialsDataPipeline(
             symbols=["AAPL"], store_type="INVALID_STORE_TYPE"
         )
