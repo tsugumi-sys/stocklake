@@ -65,5 +65,5 @@ class PolygonFinancialsDataPipeline(BasePipeline):
             # TODO: fetch from cached file
             return
         data = preprocessor.process(raw_data)
-        store.save(self.store_type, data)
-        self.stdout.completed()
+        saved_location = store.save(self.store_type, data)
+        self.stdout.completed(saved_location)

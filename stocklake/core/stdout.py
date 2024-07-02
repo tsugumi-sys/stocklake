@@ -61,5 +61,7 @@ class PipelineStdOut:
     def downloading(self):
         self.stdout.normal_message("- Downloading ...")
 
-    def completed(self):
-        self.stdout.success_message("- Completed🐳.")
+    def completed(self, stored_location: str):
+        self.stdout.success_message(
+            f"- Completed🐳. The data is stored into {stored_location}"
+        )
