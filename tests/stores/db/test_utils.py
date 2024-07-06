@@ -1,12 +1,10 @@
 import pytest
 from click.testing import CliRunner
 
+from conftest import SessionLocal  # noqa: F401
 from stocklake.core.stdout import PrettyStdoutPrint
 from stocklake.stores.db import cli
 from stocklake.stores.db.database import database_url
-from tests.stores.db.utils import SessionLocal  # noqa: F401
-
-pytest_plugins = ("tests.stores.db.utils",)
 
 
 @pytest.mark.usefixtures("test_database")

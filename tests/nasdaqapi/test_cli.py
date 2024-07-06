@@ -3,6 +3,7 @@ from itertools import product
 import pytest
 from click.testing import CliRunner
 
+from conftest import SessionLocal  # noqa: F401
 from stocklake.exceptions import StockLakeException
 from stocklake.nasdaqapi import cli
 from stocklake.nasdaqapi.constants import Exchange
@@ -10,7 +11,6 @@ from stocklake.stores.constants import StoreType
 from tests.nasdaqapi.test_data_loader import (
     MockNasdaqAPIServer,  # noqa: F401
 )
-from tests.stores.db.utils import SessionLocal  # noqa: F401
 
 
 def test_nasdaqapi_invalid_exchange():

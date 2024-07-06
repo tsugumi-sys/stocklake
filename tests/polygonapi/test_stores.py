@@ -2,6 +2,7 @@ import os
 
 import pytest
 
+from conftest import SessionLocal  # noqa: F401
 from stocklake.environment_variables import STOCKLAKE_POLYGON_API_KEY
 from stocklake.polygonapi.data_loader import PolygonFinancialsDataLoader
 from stocklake.polygonapi.preprocessor import PolygonFinancialsDataPreprocessor
@@ -13,7 +14,6 @@ from stocklake.polygonapi.stores import (
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db import models, schemas
 from tests.polygonapi.test_data_loader import MockPolygonAPIServer  # noqa: F401
-from tests.stores.db.utils import SessionLocal  # noqa: F401
 
 
 @pytest.fixture
