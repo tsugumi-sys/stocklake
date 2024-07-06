@@ -8,3 +8,4 @@ python-lsp-server
 mkdocs-click
 mkdocs-material
 mkdocstrings[python]
+pymdown-extensions

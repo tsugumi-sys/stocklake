@@ -3,6 +3,12 @@ theme: material
 
 markdown_extensions:
     - mkdocs-click
+    - pymdownx.emoji:
+        emoji_index: !!python/name:materialx.emoji.twemoji
+        emoji_generator: !!python/name:materialx.emoji.to_svg
+
+extra_css:
+  - https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/2/twemoji.min.css
 
 plugins:
   - mkdocstrings:
