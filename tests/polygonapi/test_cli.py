@@ -1,12 +1,12 @@
 import pytest
 from click.testing import CliRunner
 
+from conftest import SessionLocal  # noqa: F401
 from stocklake.exceptions import StockLakeException
 from stocklake.polygonapi import cli
 from stocklake.polygonapi.constants import PolygonAPIType
 from stocklake.stores.constants import StoreType
 from tests.polygonapi.test_data_loader import MockPolygonAPIServer  # noqa: F401
-from tests.stores.db.utils import SessionLocal  # noqa: F401
 
 
 def test_polygonapi_empty_symbols():

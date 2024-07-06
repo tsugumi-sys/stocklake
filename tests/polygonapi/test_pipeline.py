@@ -2,13 +2,13 @@ import os
 
 import pytest
 
+from conftest import SessionLocal  # noqa: F401
 from stocklake.exceptions import StockLakeException
 from stocklake.polygonapi.pipeline import PolygonFinancialsDataPipeline
 from stocklake.polygonapi.stores import SAVE_ARTIFACTS_DIR
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db.models import PolygonFinancialsData
 from tests.polygonapi.test_data_loader import MockPolygonAPIServer  # noqa: F401
-from tests.stores.db.utils import SessionLocal  # noqa: F401
 
 
 def test_invalid_store_type_specified():

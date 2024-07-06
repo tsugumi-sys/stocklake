@@ -3,6 +3,7 @@ import os
 
 import pytest
 
+from conftest import SessionLocal  # noqa: F401
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.stores import (
     SAVE_ARTIFACTS_DIR,
@@ -12,7 +13,6 @@ from stocklake.nasdaqapi.stores import (
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db.models import NasdaqApiData
 from stocklake.stores.db.schemas import NasdaqStockCreate
-from tests.stores.db.utils import SessionLocal  # noqa: F401
 
 
 def test_nasdaqdatastore_local_artifact():

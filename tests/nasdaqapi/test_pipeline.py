@@ -2,6 +2,7 @@ import os
 
 import pytest
 
+from conftest import SessionLocal  # noqa: F401
 from stocklake.exceptions import StockLakeException
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.pipeline import NASDAQSymbolsPipeline
@@ -11,7 +12,6 @@ from stocklake.stores.db.models import NasdaqApiData
 from tests.nasdaqapi.test_data_loader import (
     MockNasdaqAPIServer,  # noqa: F401
 )
-from tests.stores.db.utils import SessionLocal  # noqa: F401
 
 
 def test_invalid_store_type_specified():
