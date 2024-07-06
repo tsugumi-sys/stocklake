@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class NasdaqStockBase(BaseModel):
@@ -24,12 +24,11 @@ class NasdaqStockCreate(NasdaqStockBase):
 
 
 class NasdaqStock(NasdaqStockBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     created_at: int
     updated_at: int
-
-    class Config:
-        from_attributes = True
 
 
 class PolygonFinancialsDataBase(BaseModel):
@@ -108,9 +107,8 @@ class PreprocessedPolygonFinancialsData(PolygonFinancialsDataBase):
 
 
 class PolygonFinancialsData(PolygonFinancialsDataBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     created_at: int
     updated_at: int
-
-    class Config:
-        from_attributes = True
