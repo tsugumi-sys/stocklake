@@ -11,7 +11,7 @@ def test_preprocessor(MockPolygonAPIServer, monkeypatch):  # noqa: F811
     data = preprocessor.process(data)
     assert len(data) == 10
     for d in data:
-        for col, val in d.dict().items():
+        for col, val in d.model_dump().items():
             if col in [
                 "ticker",
                 "start_date",

@@ -36,14 +36,14 @@ class PolygonFinancialsDataStore(BaseStore):
             repository = LocalArtifactRepository(SAVE_ARTIFACTS_DIR)
             with tempfile.TemporaryDirectory() as tempdir:
                 csv_file_path = os.path.join(tempdir, "financials_data.csv")
-                save_data_to_csv([d.dict() for d in data], csv_file_path)
+                save_data_to_csv([d.model_dump() for d in data], csv_file_path)
                 repository.save_artifact(csv_file_path)
             return repository.list_artifacts()[0].path
         elif store_type == StoreType.POSTGRESQL:
             sqlstore = PolygonFinancialsDataSQLAlchemyStore(self.sqlalchemy_session)
             sqlstore.delete()
             sqlstore.create(
-                [schemas.PolygonFinancialsDataCreate(**d.dict()) for d in data]
+                [schemas.PolygonFinancialsDataCreate(**d.model_dump()) for d in data]
             )
             return os.path.join(
                 safe_database_url_from_sessionmaker(self.sqlalchemy_session),
