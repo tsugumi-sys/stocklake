@@ -72,9 +72,9 @@ Now you can see the Nasdaq API data on your metabase dashborad!
 
 | name | status | API Docs | Additional Information |
 | :--- | :---: | :--- | :--- |
-| Nasdaq API (Screener) | :white_check_mark: | [URL](https://www.nasdaq.com/market-activity/stocks/screener) | |
-| Polygon API (Stock Financials Vx) | :white_check_mark: | [URL](https://polygon.io/docs/stocks/get_vx_reference_financials) | [Data Fields Information](https://polygon.io/blog/financials-api-glossary-of-fields) |
-| Polygon API (Tickers) | :construction: | [URL](https://polygon.io/docs/stocks/get_v3_reference_tickers) | |
+| Nasdaq API (Screener) | ✅ | [URL](https://www.nasdaq.com/market-activity/stocks/screener) | |
+| Polygon API (Stock Financials Vx) | ✅ | [URL](https://polygon.io/docs/stocks/get_vx_reference_financials) | [Data Fields Information](https://polygon.io/blog/financials-api-glossary-of-fields) |
+| Polygon API (Tickers) | 🚧 | [URL](https://polygon.io/docs/stocks/get_v3_reference_tickers) | |
 
 ## Examples
 
