@@ -59,7 +59,7 @@ def test_PolygonFinancialsDataSQLAlchemyStore_create(
     store = PolygonFinancialsDataSQLAlchemyStore(SessionLocal)
     store.create(
         [
-            schemas.PolygonFinancialsDataCreate(**d.dict())
+            schemas.PolygonFinancialsDataCreate(**d.model_dump())
             for d in polygon_financials_data
         ]
     )
@@ -81,7 +81,7 @@ def test_PolygonFinancialsDataSQLAlchemyStore_delete(
     store = PolygonFinancialsDataSQLAlchemyStore(SessionLocal)
     store.create(
         [
-            schemas.PolygonFinancialsDataCreate(**d.dict())
+            schemas.PolygonFinancialsDataCreate(**d.model_dump())
             for d in polygon_financials_data
         ]
     )
