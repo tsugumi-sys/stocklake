@@ -2,7 +2,6 @@ import os
 
 import pytest
 
-from conftest import SessionLocal  # noqa: F401
 from stocklake.exceptions import StockLakeException
 from stocklake.polygonapi.pipeline import PolygonFinancialsDataPipeline
 from stocklake.polygonapi.stores import SAVE_ARTIFACTS_DIR
@@ -36,7 +35,7 @@ def test_run_with_local_artifact(MockPolygonAPIServer, monkeypatch):  # noqa: F8
 def test_run_with_postgresql(
     MockPolygonAPIServer,  # noqa: F811
     monkeypatch,
-    SessionLocal,  # noqa: F811
+    SessionLocal,
 ):
     monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
     pipeline = PolygonFinancialsDataPipeline(
