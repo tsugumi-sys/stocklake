@@ -5,6 +5,7 @@ import pytest
 
 from conftest import SessionLocal  # noqa: F401
 from stocklake.nasdaqapi.constants import Exchange
+from stocklake.nasdaqapi.entities import NasdaqApiDataCreate
 from stocklake.nasdaqapi.stores import (
     SAVE_ARTIFACTS_DIR,
     NasdaqApiSQLAlchemyStore,
@@ -12,7 +13,6 @@ from stocklake.nasdaqapi.stores import (
 )
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db.models import NasdaqApiData
-from stocklake.stores.db.schemas import NasdaqStockCreate
 
 
 def test_nasdaqdatastore_local_artifact():
@@ -22,21 +22,23 @@ def test_nasdaqdatastore_local_artifact():
         StoreType.LOCAL_ARTIFACT,
         exchange_name,
         [
-            {
-                "symbol": "TEST",
-                "exchange": Exchange.NASDAQ,
-                "name": "Test Company",
-                "last_sale": 0.88,
-                "pct_change": 0.5,
-                "net_change": 0.35,
-                "volume": 100.5,
-                "marketcap": 0.75,
-                "country": "US",
-                "ipo_year": 1999,
-                "industry": "Tech",
-                "sector": "Health",
-                "url": "https://example.com",
-            }
+            NasdaqApiDataCreate(
+                **{
+                    "symbol": "TEST",
+                    "exchange": Exchange.NASDAQ,
+                    "name": "Test Company",
+                    "last_sale": 0.88,
+                    "pct_change": 0.5,
+                    "net_change": 0.35,
+                    "volume": 100.5,
+                    "marketcap": 0.75,
+                    "country": "US",
+                    "ipo_year": 1999,
+                    "industry": "Tech",
+                    "sector": "Health",
+                    "url": "https://example.com",
+                }
+            )
         ],
     )
     assert os.path.exists(os.path.join(SAVE_ARTIFACTS_DIR, f"{exchange_name}_data.csv"))
@@ -49,21 +51,23 @@ def test_nasdaqdatastore_postgresql(SessionLocal):  # noqa: F811
         StoreType.POSTGRESQL,
         exchange_name,
         [
-            {
-                "symbol": "TEST",
-                "exchange": Exchange.NASDAQ,
-                "name": "Test Company",
-                "last_sale": 0.88,
-                "pct_change": 0.5,
-                "net_change": 0.35,
-                "volume": 100.5,
-                "marketcap": 0.75,
-                "country": "US",
-                "ipo_year": 1999,
-                "industry": "Tech",
-                "sector": "Health",
-                "url": "https://example.com",
-            }
+            NasdaqApiDataCreate(
+                **{
+                    "symbol": "TEST",
+                    "exchange": Exchange.NASDAQ,
+                    "name": "Test Company",
+                    "last_sale": 0.88,
+                    "pct_change": 0.5,
+                    "net_change": 0.35,
+                    "volume": 100.5,
+                    "marketcap": 0.75,
+                    "country": "US",
+                    "ipo_year": 1999,
+                    "industry": "Tech",
+                    "sector": "Health",
+                    "url": "https://example.com",
+                }
+            )
         ],
     )
     with SessionLocal() as session, session.begin():
@@ -91,7 +95,7 @@ def test_NasdaqAPISQLAlchemyStore_create(SessionLocal):  # noqa: F811
     }
 
     # Add item
-    store.create(NasdaqStockCreate(**data))
+    store.create(NasdaqApiDataCreate(**data))
     with SessionLocal() as session, session.begin():
         res = session.query(NasdaqApiData).all()
         assert len(res) == 1
@@ -117,7 +121,7 @@ def test_NasdaqAPISQLAlchemyStore_create(SessionLocal):  # noqa: F811
     data2["symbol"] = "TEST2"
     data3 = copy.deepcopy(data)
     data3["symbol"] = "TEST3"
-    store.create([NasdaqStockCreate(**data2), NasdaqStockCreate(**data3)])
+    store.create([NasdaqApiDataCreate(**data2), NasdaqApiDataCreate(**data3)])
     with SessionLocal() as session, session.begin():
         assert len(session.query(NasdaqApiData).all()) == 3
 
@@ -142,7 +146,7 @@ def test_NasdaqAPISQLAlchemyStore_delete(exchange, SessionLocal):  # noqa: F811
     }
 
     # Add item
-    store.create(NasdaqStockCreate(**data))
+    store.create(NasdaqApiDataCreate(**data))
     with SessionLocal() as session, session.begin():
         res = session.query(NasdaqApiData).all()
         assert len(res) == 1

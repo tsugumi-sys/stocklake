@@ -1,7 +1,9 @@
 from typing import List, Optional, TypedDict
 
+from pydantic import BaseModel, ConfigDict
 
-class RawNasdaqApiSymbolData(TypedDict):
+
+class RawNasdaqApiData(BaseModel):
     symbol: str
     name: str
     lastsale: str
@@ -16,7 +18,7 @@ class RawNasdaqApiSymbolData(TypedDict):
     url: str
 
 
-class NasdaqApiSymbolData(TypedDict):
+class NasdaqApiDataBase(BaseModel):
     symbol: str
     exchange: str
     name: str
@@ -32,10 +34,26 @@ class NasdaqApiSymbolData(TypedDict):
     url: str
 
 
+class PreprocessedNasdaqApiData(NasdaqApiDataBase):
+    pass
+
+
+class NasdaqApiDataCreate(NasdaqApiDataBase):
+    pass
+
+
+class NasdaqApiData(NasdaqApiDataBase):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    created_at: int
+    updated_at: int
+
+
 class _ResponseData(TypedDict):
     asOf: str
-    headers: RawNasdaqApiSymbolData
-    rows: List[RawNasdaqApiSymbolData]
+    headers: RawNasdaqApiData
+    rows: List[RawNasdaqApiData]
 
 
 class NasdaqAPIResponse(TypedDict):

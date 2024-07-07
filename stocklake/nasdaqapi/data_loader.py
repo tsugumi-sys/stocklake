@@ -8,7 +8,7 @@ from typing import List
 from stocklake.core.base_data_loader import BaseDataLoader
 from stocklake.core.constants import CACHE_DIR
 from stocklake.nasdaqapi.constants import Exchange
-from stocklake.nasdaqapi.entities import RawNasdaqApiSymbolData
+from stocklake.nasdaqapi.entities import RawNasdaqApiData
 from stocklake.nasdaqapi.utils import nasdaq_api_get_request
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 
@@ -29,7 +29,7 @@ class NASDAQSymbolsDataLoader(BaseDataLoader):
             self._cache_artifact_repo.artifact_dir, self._cache_artifact_filename
         )
 
-    def download(self) -> List[RawNasdaqApiSymbolData]:
+    def download(self) -> List[RawNasdaqApiData]:
         logger.info(
             f"Loading {self.exchange_name.upper()} symbols data from `https://www.nasdaq.com/`"
         )
@@ -40,4 +40,4 @@ class NASDAQSymbolsDataLoader(BaseDataLoader):
             with open(local_file, "w") as f:
                 json.dump(data, f)
             self._cache_artifact_repo.save_artifact(local_file)
-        return data
+        return [RawNasdaqApiData(**d) for d in data]

@@ -6,11 +6,11 @@ from stocklake.core.base_sqlalchemy_store import SQLAlchemyStore
 from stocklake.core.base_store import BaseStore
 from stocklake.core.constants import DATA_DIR
 from stocklake.exceptions import StockLakeException
+from stocklake.nasdaqapi import entities
 from stocklake.nasdaqapi.constants import Exchange
-from stocklake.nasdaqapi.entities import NasdaqApiSymbolData
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 from stocklake.stores.constants import StoreType
-from stocklake.stores.db import models, schemas
+from stocklake.stores.db import models
 from stocklake.stores.db.database import (
     DATABASE_SESSION_TYPE,
     local_session,
@@ -31,13 +31,13 @@ class NASDAQDataStore(BaseStore):
         self,
         store_type: StoreType,
         exchange: Exchange,
-        data: List[NasdaqApiSymbolData],
+        data: List[entities.PreprocessedNasdaqApiData],
     ) -> str:
         if store_type == StoreType.LOCAL_ARTIFACT:
             repository = LocalArtifactRepository(SAVE_ARTIFACTS_DIR)
             with tempfile.TemporaryDirectory() as tmpdir:
                 csv_file_path = os.path.join(tmpdir, f"{exchange}_data.csv")
-                save_data_to_csv(data, csv_file_path)
+                save_data_to_csv([d.model_dump() for d in data], csv_file_path)
                 repository.save_artifact(csv_file_path)
             return repository.list_artifacts()[0].path
         elif store_type == StoreType.POSTGRESQL:
@@ -45,7 +45,9 @@ class NASDAQDataStore(BaseStore):
                 raise StockLakeException("`sqlalchemy_session` is None.")
             sqlstore = NasdaqApiSQLAlchemyStore(exchange, self.sqlalchemy_session)
             sqlstore.delete()
-            sqlstore.create([schemas.NasdaqStockCreate(**d) for d in data])
+            sqlstore.create(
+                [entities.NasdaqApiDataCreate(**d.model_dump()) for d in data]
+            )
             return os.path.join(
                 safe_database_url_from_sessionmaker(self.sqlalchemy_session),
                 models.NasdaqApiData.__tablename__,
@@ -59,7 +61,9 @@ class NasdaqApiSQLAlchemyStore(SQLAlchemyStore):
         self.exchange = exchange
         self.session = session
 
-    def create(self, data: schemas.NasdaqStockCreate | List[schemas.NasdaqStockCreate]):
+    def create(
+        self, data: entities.NasdaqApiDataCreate | List[entities.NasdaqApiDataCreate]
+    ):
         with self.session() as session, session.begin():
             if isinstance(data, list):
                 session.add_all([models.NasdaqApiData(**d.model_dump()) for d in data])

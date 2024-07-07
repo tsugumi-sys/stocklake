@@ -3,34 +3,6 @@ from typing import Optional
 from pydantic import BaseModel, ConfigDict
 
 
-class NasdaqStockBase(BaseModel):
-    symbol: str
-    exchange: str
-    name: str
-    last_sale: float
-    pct_change: Optional[float]
-    net_change: float
-    volume: float
-    marketcap: float
-    country: str
-    ipo_year: int
-    industry: str
-    sector: str
-    url: str
-
-
-class NasdaqStockCreate(NasdaqStockBase):
-    pass
-
-
-class NasdaqStock(NasdaqStockBase):
-    model_config = ConfigDict(from_attributes=True)
-
-    id: int
-    created_at: int
-    updated_at: int
-
-
 class PolygonFinancialsDataBase(BaseModel):
     # financials data
     # - balance sheet
