@@ -1,7 +1,10 @@
-import os
+import os  # noqa: I001
 
 import pytest
 
+from stocklake.stores.db.database import (
+    database_url,
+)
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db import models
 from stocklake.wiki_sp500 import entities
@@ -21,6 +24,16 @@ def test_save_local_artifact_repo(wiki_sp500_data):
     store = WikiSP500Store()
     saved_path = store.save(StoreType.LOCAL_ARTIFACT, wiki_sp500_data)
     assert os.path.exists(saved_path)
+
+
+def test_save_postgresql(wiki_sp500_data, SessionLocal):
+    store = WikiSP500Store(SessionLocal)
+    saved_path = store.save(StoreType.POSTGRESQL, wiki_sp500_data)
+    assert saved_path == os.path.join(
+        database_url(), models.WikiSP500Data.__tablename__
+    )
+    with SessionLocal() as session, session.begin():
+        assert len(session.query(models.WikiSP500Data).all()) == len(wiki_sp500_data)
 
 
 def test_WikiSP500DataSQLAlchemyStore_delete(wiki_sp500_data, SessionLocal):

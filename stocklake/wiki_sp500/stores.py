@@ -10,6 +10,7 @@ from stocklake.stores.constants import StoreType
 from stocklake.stores.db import models
 from stocklake.stores.db.database import (
     DATABASE_SESSION_TYPE,
+    database_url,
     local_session,
 )
 from stocklake.utils.file_utils import save_data_to_csv
@@ -35,7 +36,10 @@ class WikiSP500Store(BaseStore):
                 repository.save_artifact(csv_file_path)
             return repository.list_artifacts()[0].path
         elif store_type == StoreType.POSTGRESQL:
-            raise NotImplementedError()
+            store = WikiSP500DataSQLAlchemyStore(self.sqlalchemy_session)
+            store.delete()
+            store.create([entities.WikiSP500DataCreate(**d.model_dump()) for d in data])
+            return os.path.join(database_url(), models.WikiSP500Data.__tablename__)
         else:
             raise NotImplementedError()
 
