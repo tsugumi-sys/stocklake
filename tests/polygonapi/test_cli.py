@@ -1,7 +1,6 @@
 import pytest
 from click.testing import CliRunner
 
-from conftest import SessionLocal  # noqa: F401
 from stocklake.exceptions import StockLakeException
 from stocklake.polygonapi import cli
 from stocklake.polygonapi.constants import PolygonAPIType
@@ -56,7 +55,7 @@ def test_polygonapi_stock_financials_vx(
     store_type,
     MockPolygonAPIServer,  # noqa: F811
     monkeypatch,
-    SessionLocal,  # noqa: F811
+    SessionLocal,
 ):
     monkeypatch.setenv("_STOCKLAKE_ENVIRONMENT", "test")
     monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")

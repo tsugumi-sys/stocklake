@@ -3,7 +3,6 @@ import os
 
 import pytest
 
-from conftest import SessionLocal  # noqa: F401
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.entities import NasdaqApiDataCreate
 from stocklake.nasdaqapi.stores import (

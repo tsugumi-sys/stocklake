@@ -2,7 +2,6 @@ import os
 
 import pytest
 
-from conftest import SessionLocal  # noqa: F401
 from stocklake.environment_variables import STOCKLAKE_POLYGON_API_KEY
 from stocklake.polygonapi import entities
 from stocklake.polygonapi.data_loader import PolygonFinancialsDataLoader
@@ -38,7 +37,7 @@ def test_polygon_financials_store_local_artifact(
 
 
 def test_polygon_financials_store_postgresql(
-    SessionLocal,  # noqa: F811
+    SessionLocal,
     polygon_financials_data,
 ):
     store = PolygonFinancialsDataStore(SessionLocal)
@@ -50,7 +49,7 @@ def test_polygon_financials_store_postgresql(
 
 def test_PolygonFinancialsDataSQLAlchemyStore_create(
     polygon_financials_data,
-    SessionLocal,  # noqa: F811
+    SessionLocal,
 ):
     data_length = len(polygon_financials_data)
     with SessionLocal() as session, session.begin():
@@ -72,7 +71,7 @@ def test_PolygonFinancialsDataSQLAlchemyStore_create(
 
 def test_PolygonFinancialsDataSQLAlchemyStore_delete(
     polygon_financials_data,
-    SessionLocal,  # noqa: F811
+    SessionLocal,
 ):
     data_length = len(polygon_financials_data)
     with SessionLocal() as session, session.begin():

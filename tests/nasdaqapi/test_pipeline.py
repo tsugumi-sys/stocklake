@@ -2,7 +2,6 @@ import os
 
 import pytest
 
-from conftest import SessionLocal  # noqa: F401
 from stocklake.exceptions import StockLakeException
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.pipeline import NASDAQSymbolsPipeline
@@ -54,7 +53,7 @@ def test_run_with_local_artifact(tmpdir, MockNasdaqAPIServer):  # noqa: F811
 def test_run_each_symbols_with_postgresql(
     exchange,
     tmpdir,
-    SessionLocal,  # noqa: F811,
+    SessionLocal,
     MockNasdaqAPIServer,  # noqa: F811
 ):
     pipeline = NASDAQSymbolsPipeline(

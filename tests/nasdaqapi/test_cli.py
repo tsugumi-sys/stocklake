@@ -3,7 +3,6 @@ from itertools import product
 import pytest
 from click.testing import CliRunner
 
-from conftest import SessionLocal  # noqa: F401
 from stocklake.exceptions import StockLakeException
 from stocklake.nasdaqapi import cli
 from stocklake.nasdaqapi.constants import Exchange
@@ -43,7 +42,7 @@ def test_nasdaqapi(
     store_type,
     MockNasdaqAPIServer,  # noqa: F811
     monkeypatch,
-    SessionLocal,  # noqa: F811
+    SessionLocal,
 ):
     monkeypatch.setenv("_STOCKLAKE_ENVIRONMENT", "test")
     monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
