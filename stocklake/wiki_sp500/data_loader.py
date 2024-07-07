@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from stocklake.core.base_data_loader import BaseDataLoader
 from stocklake.core.constants import CACHE_DIR
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
-from stocklake.stores.db.schemas import RawWikiSP500Data
+from stocklake.wiki_sp500.entities import RawWikiSP500Data
 
 logger = logging.getLogger(__name__)
 
