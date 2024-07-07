@@ -10,6 +10,8 @@ from stocklake.environment_variables import (
 
 Base = orm.declarative_base()
 
+DATABASE_SESSION_TYPE = orm.sessionmaker[orm.session.Session]
+
 
 def database_url():
     """Dynamically change database url based on environment variable `__STOCKLAKE_ENVIRONMENT`"""

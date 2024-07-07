@@ -2,8 +2,6 @@ import os
 import tempfile
 from typing import List, Optional
 
-from sqlalchemy import orm
-
 from stocklake.core.base_sqlalchemy_store import SQLAlchemyStore
 from stocklake.core.base_store import BaseStore
 from stocklake.core.constants import DATA_DIR
@@ -14,6 +12,7 @@ from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepositor
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db import models, schemas
 from stocklake.stores.db.database import (
+    DATABASE_SESSION_TYPE,
     local_session,
     safe_database_url_from_sessionmaker,
 )
@@ -23,9 +22,7 @@ SAVE_ARTIFACTS_DIR = os.path.join(DATA_DIR, "nasdaqapi")
 
 
 class NASDAQDataStore(BaseStore):
-    def __init__(
-        self, sqlalchemy_session: Optional[orm.sessionmaker[orm.session.Session]] = None
-    ):
+    def __init__(self, sqlalchemy_session: Optional[DATABASE_SESSION_TYPE] = None):
         if sqlalchemy_session is None:
             sqlalchemy_session = local_session()
         self.sqlalchemy_session = sqlalchemy_session
@@ -54,13 +51,11 @@ class NASDAQDataStore(BaseStore):
                 models.NasdaqApiData.__tablename__,
             )
         else:
-            raise NotImplementedError
+            raise NotImplementedError()
 
 
 class NasdaqApiSQLAlchemyStore(SQLAlchemyStore):
-    def __init__(
-        self, exchange: Exchange, session: orm.sessionmaker[orm.session.Session]
-    ):
+    def __init__(self, exchange: Exchange, session: DATABASE_SESSION_TYPE):
         self.exchange = exchange
         self.session = session
 
