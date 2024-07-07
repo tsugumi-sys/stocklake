@@ -3,9 +3,11 @@ import os
 import pytest
 
 from stocklake.stores.constants import StoreType
+from stocklake.stores.db import models
+from stocklake.wiki_sp500 import entities
 from stocklake.wiki_sp500.data_loader import WikiSP500DataLoader
 from stocklake.wiki_sp500.preprocessor import WikiSP500Preprocessor
-from stocklake.wiki_sp500.stores import WikiSP500Stores
+from stocklake.wiki_sp500.stores import WikiSP500DataSQLAlchemyStore, WikiSP500Store
 
 
 @pytest.fixture
@@ -16,6 +18,28 @@ def wiki_sp500_data():
 
 
 def test_save_local_artifact_repo(wiki_sp500_data):
-    store = WikiSP500Stores()
+    store = WikiSP500Store()
     saved_path = store.save(StoreType.LOCAL_ARTIFACT, wiki_sp500_data)
     assert os.path.exists(saved_path)
+
+
+def test_WikiSP500DataSQLAlchemyStore_delete(wiki_sp500_data, SessionLocal):
+    store = WikiSP500DataSQLAlchemyStore(SessionLocal)
+    store.create(
+        [entities.WikiSP500DataCreate(**d.model_dump()) for d in wiki_sp500_data]
+    )
+    with SessionLocal() as session, session.begin():
+        assert len(session.query(models.WikiSP500Data).all()) == len(wiki_sp500_data)
+
+
+def test_WikiSP500DataSQLAlchemyStore_create(wiki_sp500_data, SessionLocal):
+    store = WikiSP500DataSQLAlchemyStore(SessionLocal)
+    store.create(
+        [entities.WikiSP500DataCreate(**d.model_dump()) for d in wiki_sp500_data]
+    )
+    with SessionLocal() as session, session.begin():
+        assert len(session.query(models.WikiSP500Data).all()) == len(wiki_sp500_data)
+
+    store.delete()
+    with SessionLocal() as session, session.begin():
+        assert len(session.query(models.WikiSP500Data).all()) == 0
