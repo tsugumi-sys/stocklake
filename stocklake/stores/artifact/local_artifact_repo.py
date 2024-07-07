@@ -26,7 +26,7 @@ class LocalArtifactRepository(ArtifactRepository):
             artifact_path = os.path.normpath(artifact_path)
 
         artifact_dir = (
-            os.path.join(self.artifact_dir, artifact_path)
+            os.path.dirname(os.path.join(self.artifact_dir, artifact_path))
             if artifact_path
             else self.artifact_dir
         )

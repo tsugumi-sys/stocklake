@@ -16,6 +16,7 @@ def MockNasdaqAPIServer():
     for mock in mock_resp:
         pook.get(BASE_URL + mock[0], reply=200, response_body=mock[1], times=10)
     yield MockNasdaqAPIServer
+    pook.off()
 
 
 expected_cols = [
