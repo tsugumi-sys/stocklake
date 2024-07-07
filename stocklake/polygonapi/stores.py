@@ -5,9 +5,10 @@ from typing import List, Optional
 from stocklake.core.base_sqlalchemy_store import SQLAlchemyStore
 from stocklake.core.base_store import BaseStore
 from stocklake.core.constants import DATA_DIR
+from stocklake.polygonapi import entities
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 from stocklake.stores.constants import StoreType
-from stocklake.stores.db import models, schemas
+from stocklake.stores.db import models
 from stocklake.stores.db.database import (
     DATABASE_SESSION_TYPE,
     local_session,
@@ -27,7 +28,7 @@ class PolygonFinancialsDataStore(BaseStore):
     def save(
         self,
         store_type: StoreType,
-        data: List[schemas.PreprocessedPolygonFinancialsData],
+        data: List[entities.PreprocessedPolygonFinancialsData],
     ) -> str:
         if store_type == StoreType.LOCAL_ARTIFACT:
             repository = LocalArtifactRepository(SAVE_ARTIFACTS_DIR)
@@ -40,7 +41,7 @@ class PolygonFinancialsDataStore(BaseStore):
             sqlstore = PolygonFinancialsDataSQLAlchemyStore(self.sqlalchemy_session)
             sqlstore.delete()
             sqlstore.create(
-                [schemas.PolygonFinancialsDataCreate(**d.model_dump()) for d in data]
+                [entities.PolygonFinancialsDataCreate(**d.model_dump()) for d in data]
             )
             return os.path.join(
                 safe_database_url_from_sessionmaker(self.sqlalchemy_session),
@@ -54,7 +55,7 @@ class PolygonFinancialsDataSQLAlchemyStore(SQLAlchemyStore):
     def __init__(self, session: DATABASE_SESSION_TYPE):
         self.session = session
 
-    def create(self, data: List[schemas.PolygonFinancialsDataCreate]):
+    def create(self, data: List[entities.PolygonFinancialsDataCreate]):
         with self.session() as session, session.begin():
             session.add_all(
                 [models.PolygonFinancialsData(**d.model_dump()) for d in data]
