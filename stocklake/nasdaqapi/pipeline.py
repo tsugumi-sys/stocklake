@@ -17,6 +17,7 @@ from stocklake.nasdaqapi.preprocessor import (
 from stocklake.nasdaqapi.stores import NASDAQDataStore
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db.database import DATABASE_SESSION_TYPE, local_session
+from stocklake.utils.validation import validate_store_type
 
 logger = logging.getLogger(__name__)
 
@@ -36,10 +37,7 @@ class NASDAQSymbolsPipeline(BasePipeline):
         self.exchange = exchange
         self.skip_download = skip_download
 
-        if store_type not in StoreType.types():
-            raise StockLakeException(
-                f"Specified store type is invalid, {store_type}, valid types are {StoreType.types()}"
-            )
+        validate_store_type(store_type)
         self.store_type = store_type
         self.preprocessor = NASDAQSymbolsPreprocessor()
         if sqlalchemy_session is None:
