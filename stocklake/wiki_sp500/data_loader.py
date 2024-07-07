@@ -63,15 +63,15 @@ class WikiSP500DataLoader(BaseDataLoader):
                     symbol_data_content["company"] = self._replace_new_line_code(
                         symbol_data.text.replace("\n", "")
                     )
-                if td_count == 3:
+                if td_count == 2:
                     symbol_data_content["sector"] = self._replace_new_line_code(
                         symbol_data.text.replace("\n", "")
                     )
-                if td_count == 4:
+                if td_count == 3:
                     symbol_data_content["industry"] = self._replace_new_line_code(
                         symbol_data.text.replace("\n", "")
                     )
-                if td_count == 5:
+                if td_count == 4:
                     symbol_data_content["headquarters"] = self._replace_new_line_code(
                         symbol_data.text.replace("\n", "")
                     )
