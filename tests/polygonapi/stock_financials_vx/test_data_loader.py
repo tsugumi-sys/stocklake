@@ -5,7 +5,9 @@ import pytest
 from polygon import RESTClient
 
 from stocklake.exceptions import StockLakeException
-from stocklake.polygonapi.data_loader import PolygonFinancialsDataLoader
+from stocklake.polygonapi.stock_financials_vx.data_loader import (
+    PolygonFinancialsDataLoader,
+)
 from tests.mocks.mock_api_server import mock_responses
 
 

@@ -5,7 +5,7 @@ from typing import List, Optional
 from stocklake.core.base_sqlalchemy_store import SQLAlchemyStore
 from stocklake.core.base_store import BaseStore
 from stocklake.core.constants import DATA_DIR
-from stocklake.polygonapi import entities
+from stocklake.polygonapi.stock_financials_vx import entities
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db import models

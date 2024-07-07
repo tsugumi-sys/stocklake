@@ -3,11 +3,15 @@ import os
 import pytest
 
 from stocklake.exceptions import StockLakeException
-from stocklake.polygonapi.pipeline import PolygonFinancialsDataPipeline
-from stocklake.polygonapi.stores import SAVE_ARTIFACTS_DIR
+from stocklake.polygonapi.stock_financials_vx.pipeline import (
+    PolygonFinancialsDataPipeline,
+)
+from stocklake.polygonapi.stock_financials_vx.stores import SAVE_ARTIFACTS_DIR
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db.models import PolygonFinancialsData
-from tests.polygonapi.test_data_loader import MockPolygonAPIServer  # noqa: F401
+from tests.polygonapi.stock_financials_vx.test_data_loader import (
+    MockPolygonAPIServer,  # noqa: F401
+)
 
 
 def test_invalid_store_type_specified():
