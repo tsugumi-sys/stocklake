@@ -29,9 +29,13 @@ class NasdaqApiData(Base):
 
 class PolygonFinancialsData(Base):
     __tablename__ = "polygonapi_financials_data"
-    # financials data
-    # - balance sheet
+
     id = Column(Integer, primary_key=True)
+    created_at = Column(DateTime(timezone=True), default=func.now())
+    updated_at = Column(
+        DateTime(timezone=True), default=func.now(), onupdate=func.now()
+    )
+
     equity_attributable_to_noncontrolling_interest = Column(Float, nullable=True)
     liabilities = Column(Float, nullable=True)
     equity_attributable_to_parent = Column(Float, nullable=True)
@@ -97,3 +101,19 @@ class PolygonFinancialsData(Base):
     fiscal_year = Column(Integer, nullable=True)
     source_filing_url = Column(String, nullable=True)
     source_filing_file_url = Column(String, nullable=True)
+
+
+class WikiSP500Data(Base):
+    __tablename__ = "wiki_sp500"
+
+    id = Column(Integer, primary_key=True)
+    created_at = Column(DateTime(timezone=True), default=func.now())
+    updated_at = Column(
+        DateTime(timezone=True), default=func.now(), onupdate=func.now()
+    )
+
+    symbol = Column(String)
+    company = Column(String)
+    sector = Column(String, nullable=True)
+    industry = Column(String, nullable=True)
+    headquarters = Column(String, nullable=True)
