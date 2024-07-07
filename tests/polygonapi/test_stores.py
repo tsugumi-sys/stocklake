@@ -4,6 +4,7 @@ import pytest
 
 from conftest import SessionLocal  # noqa: F401
 from stocklake.environment_variables import STOCKLAKE_POLYGON_API_KEY
+from stocklake.polygonapi import entities
 from stocklake.polygonapi.data_loader import PolygonFinancialsDataLoader
 from stocklake.polygonapi.preprocessor import PolygonFinancialsDataPreprocessor
 from stocklake.polygonapi.stores import (
@@ -12,7 +13,7 @@ from stocklake.polygonapi.stores import (
     PolygonFinancialsDataStore,
 )
 from stocklake.stores.constants import StoreType
-from stocklake.stores.db import models, schemas
+from stocklake.stores.db import models
 from tests.polygonapi.test_data_loader import MockPolygonAPIServer  # noqa: F401
 
 
@@ -59,7 +60,7 @@ def test_PolygonFinancialsDataSQLAlchemyStore_create(
     store = PolygonFinancialsDataSQLAlchemyStore(SessionLocal)
     store.create(
         [
-            schemas.PolygonFinancialsDataCreate(**d.model_dump())
+            entities.PolygonFinancialsDataCreate(**d.model_dump())
             for d in polygon_financials_data
         ]
     )
@@ -81,7 +82,7 @@ def test_PolygonFinancialsDataSQLAlchemyStore_delete(
     store = PolygonFinancialsDataSQLAlchemyStore(SessionLocal)
     store.create(
         [
-            schemas.PolygonFinancialsDataCreate(**d.model_dump())
+            entities.PolygonFinancialsDataCreate(**d.model_dump())
             for d in polygon_financials_data
         ]
     )

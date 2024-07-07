@@ -4,7 +4,7 @@ from typing import Dict, List
 from polygon.rest.models.financials import StockFinancial
 
 from stocklake.core.base_preprocessor import BasePreprocessor
-from stocklake.stores.db.schemas import PreprocessedPolygonFinancialsData
+from stocklake.polygonapi.entities import PreprocessedPolygonFinancialsData
 
 logger = logging.getLogger(__name__)
 
