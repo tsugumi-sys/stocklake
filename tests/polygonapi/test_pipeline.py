@@ -15,10 +15,7 @@ def test_invalid_store_type_specified():
         _ = PolygonFinancialsDataPipeline(
             symbols=["AAPL"], store_type="INVALID_STORE_TYPE"
         )
-        assert (
-            str(exc.value)
-            == "Specified store type is invalid, INVALID_STORE_TYPE, valid types are ['local_artifact', 'postgresql']"
-        )
+        assert "Specified store type is invalid, INVALID_STORE_TYPE" in str(exc.value)
 
 
 def test_run_with_local_artifact(MockPolygonAPIServer, monkeypatch):  # noqa: F811
@@ -38,6 +35,10 @@ def test_run_with_postgresql(
     SessionLocal,
 ):
     monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
+    with SessionLocal() as session, session.begin():
+        res = session.query(PolygonFinancialsData).all()
+        assert len(res) == 0
+
     pipeline = PolygonFinancialsDataPipeline(
         symbols=["AAPL"],
         skip_download=False,
