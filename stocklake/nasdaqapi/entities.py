@@ -3,7 +3,23 @@ from typing import List, Optional, TypedDict
 from pydantic import BaseModel, ConfigDict
 
 
+class TD_RawNasdaqApiData(TypedDict):
+    symbol: str
+    name: str
+    lastsale: str
+    netchange: str
+    pctchange: str
+    volume: str
+    marketCap: str
+    country: str
+    ipoyear: str
+    industry: str
+    sector: str
+    url: str
+
+
 class RawNasdaqApiData(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     symbol: str
     name: str
     lastsale: str
@@ -52,8 +68,8 @@ class NasdaqApiData(NasdaqApiDataBase):
 
 class _ResponseData(TypedDict):
     asOf: str
-    headers: RawNasdaqApiData
-    rows: List[RawNasdaqApiData]
+    headers: TD_RawNasdaqApiData
+    rows: List[TD_RawNasdaqApiData]
 
 
 class NasdaqAPIResponse(TypedDict):

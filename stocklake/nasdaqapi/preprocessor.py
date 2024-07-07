@@ -9,7 +9,7 @@ class NASDAQSymbolsPreprocessor(BasePreprocessor):
     def process(
         self, exchange: Exchange, data: List[RawNasdaqApiData]
     ) -> List[PreprocessedNasdaqApiData]:
-        processed_data: List[PreprocessedNasdaqApiData] = []
+        processed_data = []
         for d in data:
             _data = {
                 "symbol": d.symbol,
@@ -28,7 +28,8 @@ class NASDAQSymbolsPreprocessor(BasePreprocessor):
                 "sector": d.sector,
                 "url": d.url,
             }
-            processed_data.append(PreprocessedNasdaqApiData(**_data))
+            # NOTE: We ignore arg-type mypy error here, because of this bug https://github.com/python/mypy/issues/5382.
+            processed_data.append(PreprocessedNasdaqApiData(**_data))  # type: ignore
         return processed_data
 
     def _ipo_year(self, data: RawNasdaqApiData) -> int:
