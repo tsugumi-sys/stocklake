@@ -126,6 +126,10 @@ class RawWikiSP500Data(WikiSP500DataBase):
     pass
 
 
+class PreprocessedWikiSp500Data(WikiSP500DataBase):
+    pass
+
+
 class WikiSP500DataCreate(WikiSP500DataBase):
     pass
 
