@@ -3,17 +3,23 @@ import os
 import pytest
 
 from stocklake.environment_variables import STOCKLAKE_POLYGON_API_KEY
-from stocklake.polygonapi import entities
-from stocklake.polygonapi.data_loader import PolygonFinancialsDataLoader
-from stocklake.polygonapi.preprocessor import PolygonFinancialsDataPreprocessor
-from stocklake.polygonapi.stores import (
+from stocklake.polygonapi.stock_financials_vx import entities
+from stocklake.polygonapi.stock_financials_vx.data_loader import (
+    PolygonFinancialsDataLoader,
+)
+from stocklake.polygonapi.stock_financials_vx.preprocessor import (
+    PolygonFinancialsDataPreprocessor,
+)
+from stocklake.polygonapi.stock_financials_vx.stores import (
     SAVE_ARTIFACTS_DIR,
     PolygonFinancialsDataSQLAlchemyStore,
     PolygonFinancialsDataStore,
 )
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db import models
-from tests.polygonapi.test_data_loader import MockPolygonAPIServer  # noqa: F401
+from tests.polygonapi.stock_financials_vx.test_data_loader import (
+    MockPolygonAPIServer,  # noqa: F401
+)
 
 
 @pytest.fixture

@@ -1,6 +1,12 @@
-from stocklake.polygonapi.data_loader import PolygonFinancialsDataLoader
-from stocklake.polygonapi.preprocessor import PolygonFinancialsDataPreprocessor
-from tests.polygonapi.test_data_loader import MockPolygonAPIServer  # noqa: F401
+from stocklake.polygonapi.stock_financials_vx.data_loader import (
+    PolygonFinancialsDataLoader,
+)
+from stocklake.polygonapi.stock_financials_vx.preprocessor import (
+    PolygonFinancialsDataPreprocessor,
+)
+from tests.polygonapi.stock_financials_vx.test_data_loader import (
+    MockPolygonAPIServer,  # noqa: F401
+)
 
 
 def test_preprocessor(MockPolygonAPIServer, monkeypatch):  # noqa: F811

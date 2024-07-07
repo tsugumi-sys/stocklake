@@ -6,16 +6,16 @@ from stocklake.core.base_pipeline import BasePipeline
 from stocklake.core.base_preprocessor import BasePreprocessor
 from stocklake.core.base_store import BaseStore
 from stocklake.core.stdout import PipelineStdOut
-from stocklake.exceptions import StockLakeException
-from stocklake.polygonapi.data_loader import (
+from stocklake.polygonapi.stock_financials_vx.data_loader import (
     PolygonFinancialsDataLoader,
 )
-from stocklake.polygonapi.preprocessor import (
+from stocklake.polygonapi.stock_financials_vx.preprocessor import (
     PolygonFinancialsDataPreprocessor,
 )
-from stocklake.polygonapi.stores import PolygonFinancialsDataStore
+from stocklake.polygonapi.stock_financials_vx.stores import PolygonFinancialsDataStore
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db.database import DATABASE_SESSION_TYPE, local_session
+from stocklake.utils.validation import validate_store_type
 
 logger = logging.getLogger(__name__)
 
@@ -31,10 +31,7 @@ class PolygonFinancialsDataPipeline(BasePipeline):
         self.symbols = symbols
         self.skip_download = skip_download
 
-        if store_type not in StoreType.types():
-            raise StockLakeException(
-                f"Specified store type is invalid, {store_type}, valid types are {StoreType.types()}"
-            )
+        validate_store_type(store_type)
         self.store_type = store_type
         self.data_loader = PolygonFinancialsDataLoader()
         self.preprocessor = PolygonFinancialsDataPreprocessor()
@@ -54,7 +51,7 @@ class PolygonFinancialsDataPipeline(BasePipeline):
         preprocessor: BasePreprocessor,
         store: BaseStore,
     ):
-        self.stdout.starting(f"Polygon Finaqncials API of {symbol}")
+        self.stdout.starting(f"Stock Financials VX API Polygon of {symbol}")
         if not self.skip_download:
             self.stdout.downloading()
             raw_data = data_loader.download(self.symbols)
