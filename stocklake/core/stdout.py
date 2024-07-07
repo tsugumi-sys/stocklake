@@ -12,7 +12,7 @@ class PrettyStdoutPrint:
         print(
             "{}{}{}{}".format(
                 "=" * 30,
-                f"{step_name} started",
+                f"{step_name}",
                 "=" * 30,
                 self.msg_colors.get("DEFAULT"),
             )
