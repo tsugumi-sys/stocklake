@@ -88,7 +88,13 @@ stocklake download nasdaqapi --exchange nasdaq --store_type postgresql
 ### Polygon API (Stock Financials Vx)
 
 ```bash
-stocklake download polygonapi --symbols AAPL --api_type stock_financials_vx --store_type postgresql
+stocklake download polygonapi stock-financials-vx --symbols AAPL --store_type postgresql
+```
+
+### Wikipedia: List of S&P 500 companies
+
+```bash
+stocklake download wikisp500 --store_type postgresql
 ```
 
 
