@@ -31,10 +31,10 @@ expected_cols = [
 
 
 @pytest.mark.parametrize("exchange_name", Exchange.exchanges())
-def test_data_loader(exchange_name, tmpdir, MockNasdaqAPIServer):
+def test_download(exchange_name, tmpdir, MockNasdaqAPIServer):
     data_loader = NASDAQSymbolsDataLoader(exchange_name=exchange_name, cache_dir=tmpdir)
     data = data_loader.download()
     assert os.path.exists(data_loader.cache_artifact_path)
-    for row in data:
+    for d in data:
         for col in expected_cols:
-            assert col in row
+            assert col in d.model_dump()

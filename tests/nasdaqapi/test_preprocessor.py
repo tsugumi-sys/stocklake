@@ -8,8 +8,8 @@ def test_process(tmpdir, MockNasdaqAPIServer):  # noqa: F811
     data_loader = NASDAQSymbolsDataLoader(exchange_name=Exchange.AMEX, cache_dir=tmpdir)
     preprocessor = NASDAQSymbolsPreprocessor()
     data = preprocessor.process(exchange=Exchange.NASDAQ, data=data_loader.download())
-    for data_dic in data:
-        for key, val in data_dic.items():
+    for d in data:
+        for key, val in d.model_dump().items():
             if key in ["last_sale", "net_change", "pct_change", "marketcap", "volume"]:
                 assert isinstance(val, float)
             elif key in ["ipo_year"]:
