@@ -1,8 +1,6 @@
 import logging
 from typing import List, Optional
 
-from sqlalchemy import orm
-
 from stocklake.core.base_data_loader import BaseDataLoader
 from stocklake.core.base_pipeline import BasePipeline
 from stocklake.core.base_preprocessor import BasePreprocessor
@@ -17,7 +15,7 @@ from stocklake.polygonapi.preprocessor import (
 )
 from stocklake.polygonapi.stores import PolygonFinancialsDataStore
 from stocklake.stores.constants import StoreType
-from stocklake.stores.db.database import local_session
+from stocklake.stores.db.database import DATABASE_SESSION_TYPE, local_session
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +26,7 @@ class PolygonFinancialsDataPipeline(BasePipeline):
         symbols: List[str],
         skip_download: bool = False,
         store_type: StoreType = StoreType.LOCAL_ARTIFACT,
-        sqlalchemy_session: Optional[orm.sessionmaker[orm.session.Session]] = None,
+        sqlalchemy_session: Optional[DATABASE_SESSION_TYPE] = None,
     ):
         self.symbols = symbols
         self.skip_download = skip_download

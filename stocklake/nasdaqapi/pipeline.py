@@ -1,8 +1,6 @@
 import logging
 from typing import Optional
 
-from sqlalchemy import orm
-
 from stocklake.core.base_data_loader import BaseDataLoader
 from stocklake.core.base_pipeline import BasePipeline
 from stocklake.core.base_preprocessor import BasePreprocessor
@@ -18,7 +16,7 @@ from stocklake.nasdaqapi.preprocessor import (
 )
 from stocklake.nasdaqapi.stores import NASDAQDataStore
 from stocklake.stores.constants import StoreType
-from stocklake.stores.db.database import local_session
+from stocklake.stores.db.database import DATABASE_SESSION_TYPE, local_session
 
 logger = logging.getLogger(__name__)
 
@@ -29,9 +27,8 @@ class NASDAQSymbolsPipeline(BasePipeline):
         skip_download: bool = False,
         exchange: Optional[Exchange] = None,
         store_type: StoreType = StoreType.LOCAL_ARTIFACT,
-        sqlalchemy_session: Optional[orm.sessionmaker[orm.session.Session]] = None,
+        sqlalchemy_session: Optional[DATABASE_SESSION_TYPE] = None,
     ):
-        print(exchange)
         if exchange is not None and exchange not in Exchange.exchanges():
             raise StockLakeException(
                 f"Specified exchange is invalid, but got {exchange}. The valid exchanges are {Exchange.exchanges()}"

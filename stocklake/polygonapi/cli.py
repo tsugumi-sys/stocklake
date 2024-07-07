@@ -46,5 +46,5 @@ def polygonapi(
             symbols.split(","), skip_download, store_type
         )
     else:
-        raise NotImplementedError
+        raise NotImplementedError()
     pipeline.run()
