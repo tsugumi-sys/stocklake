@@ -5,7 +5,7 @@ from stocklake.exceptions import StockLakeException
 from stocklake.polygonapi.stock_financials_vx import cli
 from stocklake.stores.constants import StoreType
 from tests.polygonapi.stock_financials_vx.test_data_loader import (
-    MockPolygonAPIServer,  # noqa: F401
+    MockPolygonStockFinancialsVxAPIServer,  # noqa: F401
 )
 
 
@@ -37,7 +37,7 @@ def test_polygonapi_stock_financials_vx_invalid_store_type():
 @pytest.mark.parametrize("store_type", StoreType.types())
 def test_polygonapi_stock_financials_vx(
     store_type,
-    MockPolygonAPIServer,  # noqa: F811
+    MockPolygonStockFinancialsVxAPIServer,  # noqa: F811
     monkeypatch,
     SessionLocal,
 ):
