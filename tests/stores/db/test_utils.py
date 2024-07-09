@@ -1,4 +1,3 @@
-import pytest
 from click.testing import CliRunner
 
 from stocklake.core.stdout import PrettyStdoutPrint
@@ -6,9 +5,7 @@ from stocklake.stores.db import cli
 from stocklake.stores.db.database import database_url
 
 
-@pytest.mark.usefixtures("test_database")
-def test_upgrade(monkeypatch):
-    monkeypatch.setenv("_STOCKLAKE_ENVIRONMENT", "test")
+def test_upgrade(test_database, monkeypatch):
     runner = CliRunner()
     res = runner.invoke(cli.upgrade, ["--url", database_url()], catch_exceptions=False)
     assert res.exit_code == 0
@@ -30,10 +27,8 @@ def test_upgrade_database_not_found():
     )
 
 
-@pytest.mark.usefixtures("test_database")
-def test_revision(monkeypatch):  # noqa: F811
+def test_revision(test_database, monkeypatch):  # noqa: F811
     # set environment as test (to mock alembic script location)
-    monkeypatch.setenv("_STOCKLAKE_ENVIRONMENT", "test")
     runner = CliRunner()
     # you need to sync the current latest migration first.
     _ = runner.invoke(cli.upgrade, ["--url", database_url()], catch_exceptions=False)

@@ -41,11 +41,8 @@ def test_nasdaqapi(
     exchange,
     store_type,
     MockNasdaqAPIServer,  # noqa: F811
-    monkeypatch,
     SessionLocal,
 ):
-    monkeypatch.setenv("_STOCKLAKE_ENVIRONMENT", "test")
-    monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
     runner = CliRunner()
     res = runner.invoke(
         cli.nasdaqapi,
