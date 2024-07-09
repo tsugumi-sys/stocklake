@@ -12,7 +12,7 @@ from tests.mocks.mock_api_server import mock_responses
 
 
 @pytest.fixture(scope="function")
-def MockPolygonAPIServer():
+def MockPolygonStockFinancialsVxAPIServer():
     pook.on()
     for mock in mock_responses(os.path.join(os.path.dirname(__file__), "mocks")):
         pook.get(
@@ -20,7 +20,7 @@ def MockPolygonAPIServer():
             reply=200,
             response_body=mock[1],
         )
-    yield MockPolygonAPIServer
+    yield MockPolygonStockFinancialsVxAPIServer
     pook.off()
 
 
@@ -29,7 +29,7 @@ def test_raise_error_when_polygon_api_key_missing():
         _ = PolygonFinancialsDataLoader()
 
 
-def test_download(MockPolygonAPIServer, monkeypatch):
+def test_download(MockPolygonStockFinancialsVxAPIServer, monkeypatch):
     monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
     dataloader = PolygonFinancialsDataLoader()
     res = dataloader.download(["AAPL"])

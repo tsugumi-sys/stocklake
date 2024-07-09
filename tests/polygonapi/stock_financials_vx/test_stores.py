@@ -18,13 +18,13 @@ from stocklake.polygonapi.stock_financials_vx.stores import (
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db import models
 from tests.polygonapi.stock_financials_vx.test_data_loader import (
-    MockPolygonAPIServer,  # noqa: F401
+    MockPolygonStockFinancialsVxAPIServer,  # noqa: F401
 )
 
 
 @pytest.fixture
 def polygon_financials_data(
-    MockPolygonAPIServer,  # noqa: F811
+    MockPolygonStockFinancialsVxAPIServer,  # noqa: F811
     monkeypatch,
 ):
     monkeypatch.setenv(STOCKLAKE_POLYGON_API_KEY.env_name, "dummy_key")

@@ -10,7 +10,7 @@ from stocklake.polygonapi.stock_financials_vx.stores import SAVE_ARTIFACTS_DIR
 from stocklake.stores.constants import StoreType
 from stocklake.stores.db.models import PolygonFinancialsData
 from tests.polygonapi.stock_financials_vx.test_data_loader import (
-    MockPolygonAPIServer,  # noqa: F401
+    MockPolygonStockFinancialsVxAPIServer,  # noqa: F401
 )
 
 
@@ -22,7 +22,7 @@ def test_invalid_store_type_specified():
         assert "Specified store type is invalid, INVALID_STORE_TYPE" in str(exc.value)
 
 
-def test_run_with_local_artifact(MockPolygonAPIServer, monkeypatch):  # noqa: F811
+def test_run_with_local_artifact(MockPolygonStockFinancialsVxAPIServer, monkeypatch):  # noqa: F811
     monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
     pipeline = PolygonFinancialsDataPipeline(
         symbols=["AAPL"],
@@ -34,7 +34,7 @@ def test_run_with_local_artifact(MockPolygonAPIServer, monkeypatch):  # noqa: F8
 
 
 def test_run_with_postgresql(
-    MockPolygonAPIServer,  # noqa: F811
+    MockPolygonStockFinancialsVxAPIServer,  # noqa: F811
     monkeypatch,
     SessionLocal,
 ):
