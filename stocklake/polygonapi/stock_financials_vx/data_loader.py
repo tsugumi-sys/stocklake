@@ -30,6 +30,10 @@ class PolygonFinancialsDataLoader(BaseDataLoader):
     def cache_artifact_path(self) -> str:
         return "dummy"
 
+    @property
+    def cache_artifact_paths(self):
+        raise NotImplementedError()
+
     def download(self, tickers: List[str]) -> Dict[str, List[StockFinancial]]:
         data = {}
         for request_count, ticker in enumerate(tickers):

@@ -31,8 +31,9 @@ def test_raise_error_when_polygon_api_key_missing():
         _ = PolygonAggregatesBarsDataLoader()
 
 
-def test_download(MockPolygonAggregatesBarsAPIServer):
-    data_loader = PolygonAggregatesBarsDataLoader()
+@pytest.mark.parametrize("use_cache", [False, True])
+def test_download(use_cache, MockPolygonAggregatesBarsAPIServer):
+    data_loader = PolygonAggregatesBarsDataLoader(use_cache=use_cache)
     res = data_loader.download(["AAPL"])
     assert "AAPL" in res
     assert len(res["AAPL"]) == 24

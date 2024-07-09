@@ -29,6 +29,10 @@ class NASDAQSymbolsDataLoader(BaseDataLoader):
             self._cache_artifact_repo.artifact_dir, self._cache_artifact_filename
         )
 
+    @property
+    def cache_artifact_paths(self):
+        raise NotImplementedError()
+
     def download(self) -> List[RawNasdaqApiData]:
         logger.info(
             f"Loading {self.exchange_name.upper()} symbols data from `https://www.nasdaq.com/`"
