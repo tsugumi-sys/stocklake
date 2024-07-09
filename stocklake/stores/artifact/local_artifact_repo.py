@@ -13,6 +13,7 @@ from stocklake.utils.file_utils import (
 
 class LocalArtifactRepository(ArtifactRepository):
     def __init__(self, artifact_uri: str):
+        os.makedirs(artifact_uri, exist_ok=True)
         super().__init__(artifact_uri)
         self._artifact_dir = artifact_uri
 

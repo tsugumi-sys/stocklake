@@ -1,6 +1,5 @@
 import logging
 import os
-import time
 from typing import Dict, List
 
 from polygon import RESTClient
@@ -10,7 +9,8 @@ from stocklake.core.base_data_loader import BaseDataLoader
 from stocklake.core.constants import CACHE_DIR
 from stocklake.core.stdout import PrettyStdoutPrint
 from stocklake.environment_variables import STOCKLAKE_POLYGON_API_KEY
-from stocklake.exceptions import StockLakeException
+from stocklake.polygonapi.utils import avoid_request_limit
+from stocklake.polygonapi.validation import validate_polygonapi_api_key
 
 CACHE_DIR_PATH = os.path.join(CACHE_DIR, "polygonapi_finalcials")
 
@@ -20,24 +20,26 @@ logger = logging.getLogger(__name__)
 class PolygonFinancialsDataLoader(BaseDataLoader):
     def __init__(self):
         super().__init__()
-        if STOCKLAKE_POLYGON_API_KEY.get() is None:
-            raise StockLakeException(
-                "You need to set an environment variable `STOCKLAKE_POLYGON_API_KEY`."
-            )
+        validate_polygonapi_api_key()
         self.polygon_client = RESTClient(STOCKLAKE_POLYGON_API_KEY.get())
         self.filing_date_gte = "2022-01-01"
-        self.request_limit_min = 5
+        self.request_count_threshold = 5
         self.stdout = PrettyStdoutPrint()
 
     @property
     def cache_artifact_path(self) -> str:
         return "dummy"
 
+    @property
+    def cache_artifact_paths(self):
+        raise NotImplementedError()
+
     def download(self, tickers: List[str]) -> Dict[str, List[StockFinancial]]:
         data = {}
         for request_count, ticker in enumerate(tickers):
-            logger.info(f"Loading {ticker} data from Polygon ...")
-            self._avoid_request_limit(request_count)
+            avoid_request_limit(
+                self.request_count_threshold, request_count, self.stdout
+            )
             data[ticker] = self._request_financials_data(ticker)
         return data
 
@@ -46,11 +48,3 @@ class PolygonFinancialsDataLoader(BaseDataLoader):
         for d in self.polygon_client.vx.list_stock_financials(ticker=ticker, limit=100):
             rawdata.append(d)
         return rawdata
-
-    def _avoid_request_limit(self, request_count: int):
-        if request_count < self.request_limit_min:
-            return
-        if request_count % 5 != 0:
-            return
-        self.stdout.normal_message("Waiting for 70 seconds to avoid request limit")
-        time.sleep(70)

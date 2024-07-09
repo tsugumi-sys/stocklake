@@ -1,4 +1,5 @@
 import os
+from unittest import mock
 
 import pook
 import pytest
@@ -14,23 +15,22 @@ from tests.mocks.mock_api_server import mock_responses
 @pytest.fixture(scope="function")
 def MockPolygonStockFinancialsVxAPIServer():
     pook.on()
-    for mock in mock_responses(os.path.join(os.path.dirname(__file__), "mocks")):
+    for resp in mock_responses(os.path.join(os.path.dirname(__file__), "mocks")):
         pook.get(
-            RESTClient("").BASE + mock[0],
+            RESTClient("").BASE + resp[0],
             reply=200,
-            response_body=mock[1],
+            response_body=resp[1],
         )
     yield MockPolygonStockFinancialsVxAPIServer
     pook.off()
 
 
 def test_raise_error_when_polygon_api_key_missing():
-    with pytest.raises(StockLakeException):
+    with mock.patch.dict(os.environ, clear=True), pytest.raises(StockLakeException):
         _ = PolygonFinancialsDataLoader()
 
 
-def test_download(MockPolygonStockFinancialsVxAPIServer, monkeypatch):
-    monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
+def test_download(MockPolygonStockFinancialsVxAPIServer):
     dataloader = PolygonFinancialsDataLoader()
     res = dataloader.download(["AAPL"])
     assert "AAPL" in res

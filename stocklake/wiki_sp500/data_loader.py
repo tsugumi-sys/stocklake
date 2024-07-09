@@ -29,6 +29,10 @@ class WikiSP500DataLoader(BaseDataLoader):
             self._cache_artifact_repo.artifact_dir, self._cache_artifact_filename
         )
 
+    @property
+    def cache_artifact_paths(self):
+        raise NotImplementedError()
+
     def download(self) -> List[RawWikiSP500Data]:
         logger.info(
             "Loading S&P500 symbols data from `https://en.wikipedia.org/wiki/List_of_S%26P_500_companies`"

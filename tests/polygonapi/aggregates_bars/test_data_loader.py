@@ -1,37 +1,39 @@
 import os
+from unittest import mock
 
 import pook
 import pytest
 from polygon import RESTClient
 
-from stocklake.environment_variables import STOCKLAKE_POLYGON_API_KEY
+from stocklake.exceptions import StockLakeException
+from stocklake.polygonapi.aggregates_bars.data_loader import (
+    PolygonAggregatesBarsDataLoader,
+)
 from tests.mocks.mock_api_server import mock_responses
 
 
 @pytest.fixture(scope="function")
 def MockPolygonAggregatesBarsAPIServer():
     pook.on()
-    for mock in mock_responses(os.path.join(os.path.dirname(__file__), "mocks")):
-        url = "/" + os.path.join(*mock[0].split("/")[:-1])
+    for resp in mock_responses(os.path.join(os.path.dirname(__file__), "mocks")):
+        url = "/" + os.path.join(*resp[0].split("/")[:-1])
         pook.get(
             RESTClient("").BASE + url,
             reply=200,
-            response_body=mock[1],
+            response_body=resp[1],
         )
     yield MockPolygonAggregatesBarsAPIServer
     pook.off()
 
 
-def test_download(MockPolygonAggregatesBarsAPIServer, monkeypatch):
-    monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
-    res = RESTClient(STOCKLAKE_POLYGON_API_KEY.get()).list_aggs(
-        ticker="AAPL",
-        multiplier=1,
-        timespan="day",
-        from_="2023-01-09",
-        to="2023-02-10",
-        adjusted=True,
-        sort="asc",
-    )
-    for a in res:
-        print(a)
+def test_raise_error_when_polygon_api_key_missing():
+    with mock.patch.dict(os.environ, clear=True), pytest.raises(StockLakeException):
+        _ = PolygonAggregatesBarsDataLoader()
+
+
+@pytest.mark.parametrize("use_cache", [False, True])
+def test_download(use_cache, MockPolygonAggregatesBarsAPIServer):
+    data_loader = PolygonAggregatesBarsDataLoader(use_cache=use_cache)
+    res = data_loader.download(["AAPL"])
+    assert "AAPL" in res
+    assert len(res["AAPL"]) == 24

@@ -7,9 +7,14 @@ from stocklake.stores.db.database import database_url
 from stocklake.stores.db.models import Base
 
 
+@pytest.fixture(scope="function", autouse=True)
+def set_environment_variables(monkeypatch):
+    monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
+    monkeypatch.setenv("_STOCKLAKE_ENVIRONMENT", "test")
+
+
 @pytest.fixture(scope="function")
 def SessionLocal(monkeypatch):
-    monkeypatch.setenv("_STOCKLAKE_ENVIRONMENT", "test")
     engine = create_engine(database_url())
 
     # Create database
@@ -29,7 +34,6 @@ def SessionLocal(monkeypatch):
 
 @pytest.fixture(scope="function")
 def test_database(monkeypatch):
-    monkeypatch.setenv("_STOCKLAKE_ENVIRONMENT", "test")
     engine = create_engine(database_url())
 
     # Create database

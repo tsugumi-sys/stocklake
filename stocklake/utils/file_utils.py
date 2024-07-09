@@ -33,7 +33,7 @@ def relative_path_to_artifact_path(path: str) -> str:
     return unquote(pathname2url(path))
 
 
-def save_data_to_csv(data: Any, csv_path: str):
+def save_data_to_csv(data: List[Any], csv_path: str):
     # Extract column headers from the keys of the first dictionary
     fieldnames = data[0].keys() if data else []
 

@@ -41,8 +41,6 @@ def test_polygonapi_stock_financials_vx(
     monkeypatch,
     SessionLocal,
 ):
-    monkeypatch.setenv("_STOCKLAKE_ENVIRONMENT", "test")
-    monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
     runner = CliRunner()
     res = runner.invoke(
         cli.stock_financials_vx,

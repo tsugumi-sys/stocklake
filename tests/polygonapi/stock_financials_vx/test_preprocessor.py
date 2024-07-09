@@ -9,8 +9,7 @@ from tests.polygonapi.stock_financials_vx.test_data_loader import (
 )
 
 
-def test_preprocessor(MockPolygonStockFinancialsVxAPIServer, monkeypatch):  # noqa: F811
-    monkeypatch.setenv("STOCKLAKE_POLYGON_API_KEY", "dummy_key")
+def test_preprocessor(MockPolygonStockFinancialsVxAPIServer):  # noqa: F811
     dataloader = PolygonFinancialsDataLoader()
     preprocessor = PolygonFinancialsDataPreprocessor()
     data = dataloader.download(["AAPL"])
