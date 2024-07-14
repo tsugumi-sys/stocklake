@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from stocklake.core.base_sqlalchemy_store import SQLAlchemyStore
 from stocklake.core.base_store import BaseStore
-from stocklake.core.constants import DATA_DIR
+from stocklake.polygonapi import BASE_SAVE_ARTIFACTS_DIR
 from stocklake.polygonapi.stock_financials_vx import entities
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 from stocklake.stores.constants import StoreType
@@ -16,7 +16,7 @@ from stocklake.stores.db.database import (
 )
 from stocklake.utils.file_utils import save_data_to_csv
 
-SAVE_ARTIFACTS_DIR = os.path.join(DATA_DIR, "polygonapi")
+SAVE_ARTIFACTS_DIR = os.path.join(BASE_SAVE_ARTIFACTS_DIR, "stock_financials_vx")
 
 
 class PolygonFinancialsDataStore(BaseStore):
