@@ -1,0 +1,4 @@
+[files]
+extend-exclude = [
+  "stocklake/stores/db_migrations/versions/*.py",
+]

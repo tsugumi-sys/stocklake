@@ -117,3 +117,23 @@ class WikiSP500Data(Base):
     sector = Column(String, nullable=True)
     industry = Column(String, nullable=True)
     headquarters = Column(String, nullable=True)
+
+
+class PolygonAggregatesBarsData(Base):
+    __tablename__ = "polygonapi_aggregates_bars_data"
+
+    id = Column(Integer, primary_key=True)
+    created_at = Column(DateTime(timezone=True), default=func.now())
+    updated_at = Column(
+        DateTime(timezone=True), default=func.now(), onupdate=func.now()
+    )
+
+    ticker = Column(String)
+    timestamp_ms = Column(Integer)
+    open = Column(Float)
+    high = Column(Float)
+    low = Column(Float)
+    close = Column(Float)
+    transactions = Column(Integer)
+    volume = Column(Integer)
+    volume_weighted_average_price = Column(Float)
