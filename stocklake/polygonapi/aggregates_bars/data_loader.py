@@ -96,8 +96,20 @@ class PolygonAggregatesBarsDataLoader(BaseDataLoader):
             if not os.path.exists(cache_file_path):
                 raise StockLakeException(f"cached file not found, {cache_file_path}")
             with open(cache_file_path) as f:
-                data = [Agg.from_dict(row) for row in csv.DictReader(f)]
-            return _ResponseMeta(ticker=ticker, hash=hash_key, data=data)
+                data = []
+                for row in csv.DictReader(f):
+                    _data = {}
+                    for key, val in row.items():
+                        if key in ["open", "high", "low", "close", "volume", "vwap"]:
+                            _data[key] = float(val)
+                        elif key in ["timestamp", "transactions"]:
+                            _data[key] = int(val)
+                        else:
+                            _data[key] = bool(val) if val != "" else None  # type: ignore
+                    data.append(_data)
+            return _ResponseMeta(
+                ticker=ticker, hash=hash_key, data=[Agg(**row) for row in data]
+            )
 
         rawdata = []
         for d in self.polygon_client.list_aggs(

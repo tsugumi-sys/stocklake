@@ -135,5 +135,5 @@ class PolygonAggregatesBarsData(Base):
     low = Column(Float)
     close = Column(Float)
     transactions = Column(Integer)
-    volume = Column(Integer)
+    volume = Column(Float)
     volume_weighted_average_price = Column(Float)

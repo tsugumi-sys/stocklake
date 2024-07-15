@@ -9,7 +9,7 @@ class PolygonAggregatesBarsDataBase(BaseModel):
     low: float
     close: float
     transactions: int
-    volume: int
+    volume: float
     volume_weighted_average_price: float
 
 
