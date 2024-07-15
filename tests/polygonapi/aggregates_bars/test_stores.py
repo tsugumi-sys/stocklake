@@ -40,6 +40,17 @@ def test_polygon_aggregates_bars_store_local_artifact(polygon_aggregates_bars_da
     assert os.path.exists(os.path.join(SAVE_ARTIFACTS_DIR, "aggregates_bars.csv"))
 
 
+def test_polygon_financials_store_postgresql(
+    SessionLocal,
+    polygon_aggregates_bars_data,
+):
+    store = PolygonAggregatesBarsDataStore(SessionLocal)
+    store.save(StoreType.POSTGRESQL, polygon_aggregates_bars_data)
+    with SessionLocal() as session, session.begin():
+        res = session.query(models.PolygonAggregatesBarsData).all()
+    assert len(res) == len(polygon_aggregates_bars_data)
+
+
 def test_PolygonFinancialsDataSQLAlchemyStore_create(
     polygon_aggregates_bars_data,
     SessionLocal,

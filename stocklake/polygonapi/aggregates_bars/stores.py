@@ -12,6 +12,7 @@ from stocklake.stores.db import models
 from stocklake.stores.db.database import (
     DATABASE_SESSION_TYPE,
     local_session,
+    safe_database_url_from_sessionmaker,
 )
 from stocklake.utils.file_utils import save_data_to_csv
 
@@ -36,7 +37,19 @@ class PolygonAggregatesBarsDataStore(BaseStore):
                 save_data_to_csv([d.model_dump() for d in data], csv_file_path)
                 repository.save_artifact(csv_file_path)
             return repository.list_artifacts()[0].path
-        # elif store_type == StoreType.POSTGRESQL:
+        elif store_type == StoreType.POSTGRESQL:
+            sqlstore = PolygonAggregatesBarsDataSQLAlchemyStore(self.sqlalchemy_session)
+            sqlstore.delete()
+            sqlstore.create(
+                [
+                    entities.PolygonAggregatesBarsDataCreate(**d.model_dump())
+                    for d in data
+                ]
+            )
+            return os.path.join(
+                safe_database_url_from_sessionmaker(self.sqlalchemy_session),
+                models.PolygonAggregatesBarsData.__tablename__,
+            )
         else:
             raise NotImplementedError()
 
