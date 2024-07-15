@@ -15,7 +15,14 @@ def test_preprocess(MockPolygonAggregatesBarsAPIServer):  # noqa: F811
     preprocessed_data = preprocessor.process(data_loader.download(["AAPL"]))
     for d in preprocessed_data:
         assert d.ticker == "AAPL"
-        for item in [d.open, d.high, d.low, d.close, d.volume_weighted_average_price]:
+        for item in [
+            d.open,
+            d.high,
+            d.low,
+            d.close,
+            d.volume_weighted_average_price,
+            d.volume,
+        ]:
             assert isinstance(item, float)
-        for item in [d.timestamp_ms, d.transactions, d.volume]:
+        for item in [d.timestamp_ms, d.transactions]:
             assert isinstance(item, int)
