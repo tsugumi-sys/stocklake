@@ -2,11 +2,13 @@ import os
 import tempfile
 from typing import List, Optional
 
+from stocklake.core.base_sqlalchemy_store import SQLAlchemyStore
 from stocklake.core.base_store import BaseStore
 from stocklake.polygonapi import BASE_SAVE_ARTIFACTS_DIR
 from stocklake.polygonapi.aggregates_bars import entities
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 from stocklake.stores.constants import StoreType
+from stocklake.stores.db import models
 from stocklake.stores.db.database import (
     DATABASE_SESSION_TYPE,
     local_session,
@@ -37,3 +39,24 @@ class PolygonAggregatesBarsDataStore(BaseStore):
         # elif store_type == StoreType.POSTGRESQL:
         else:
             raise NotImplementedError()
+
+
+class PolygonAggregatesBarsDataSQLAlchemyStore(SQLAlchemyStore):
+    def __init__(self, session: DATABASE_SESSION_TYPE):
+        self.session = session
+
+    def create(self, data: List[entities.PolygonAggregatesBarsDataCreate]):
+        with self.session() as session, session.begin():
+            session.add_all(
+                [models.PolygonAggregatesBarsData(**d.model_dump()) for d in data]
+            )
+
+    def read(self):
+        raise NotImplementedError()
+
+    def update(self):
+        raise NotImplementedError()
+
+    def delete(self):
+        with self.session() as session, session.begin():
+            session.query(models.PolygonAggregatesBarsData).delete()

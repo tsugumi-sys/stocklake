@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, Float, Integer, String
+from sqlalchemy import BigInteger, Column, DateTime, Float, Integer, String
 from sqlalchemy.sql import func
 
 from stocklake.stores.db.database import Base
@@ -129,7 +129,7 @@ class PolygonAggregatesBarsData(Base):
     )
 
     ticker = Column(String)
-    timestamp_ms = Column(Integer)
+    timestamp_ms = Column(BigInteger)
     open = Column(Float)
     high = Column(Float)
     low = Column(Float)

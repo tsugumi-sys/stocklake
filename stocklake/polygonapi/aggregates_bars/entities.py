@@ -15,3 +15,7 @@ class PolygonAggregatesBarsDataBase(BaseModel):
 
 class PreprocessedPolygonAggregatesBarsData(PolygonAggregatesBarsDataBase):
     pass
+
+
+class PolygonAggregatesBarsDataCreate(PolygonAggregatesBarsDataBase):
+    pass
