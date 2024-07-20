@@ -24,6 +24,7 @@ class PolygonFinancialsDataLoader(BaseDataLoader):
         validate_polygonapi_api_key()
         validate_int_variable(interval_sec, "timeout_sec")
         validate_numeric_range(interval_sec, "timeout_sec", min_=0)
+
         self.interval_sec = interval_sec
         self.polygon_client = RESTClient(STOCKLAKE_POLYGON_API_KEY.get())
         self.filing_date_gte = "2022-01-01"

@@ -31,6 +31,12 @@ def test_raise_error_when_polygon_api_key_missing():
         _ = PolygonAggregatesBarsDataLoader()
 
 
+@pytest.mark.parametrize("interval_sec", [-1, "a"])
+def test_invalid_interval_sec(interval_sec):
+    with pytest.raises(ValueError):
+        _ = PolygonAggregatesBarsDataLoader(interval_sec=interval_sec)
+
+
 @pytest.mark.parametrize("use_cache", [False, True])
 def test_download(use_cache, MockPolygonAggregatesBarsAPIServer):
     data_loader = PolygonAggregatesBarsDataLoader(use_cache=use_cache)
