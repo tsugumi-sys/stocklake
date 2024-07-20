@@ -16,13 +16,13 @@ from stocklake.stores.constants import StoreType
 @click.option("--symbols", default=None, help="symbols split by comma. ex `MSFT,AAPL`.")
 @click.option(
     "--store_type",
-    default=StoreType.LOCAL_ARTIFACT,
+    default=None,
     help=f"The storege type, should be in `{StoreType.types()}`.",
 )
 def aggregates_bars(
     skip_download: bool,
     symbols: Optional[str],
-    store_type: StoreType,
+    store_type: StoreType | None,
 ):
     if symbols is None:
         raise StockLakeException("`symbols` must be given.")

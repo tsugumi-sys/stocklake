@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import List, Optional
 
@@ -25,20 +26,21 @@ class PolygonAggregatesBarsDataPipeline(BasePipeline):
         self,
         symbols: List[str],
         skip_download: bool = False,
-        store_type: StoreType = StoreType.LOCAL_ARTIFACT,
+        store_type: StoreType | None = None,
         sqlalchemy_session: Optional[DATABASE_SESSION_TYPE] = None,
     ):
         self.symbols = symbols
         self.skip_download = skip_download
 
-        validate_store_type(store_type)
+        if store_type is not None:
+            validate_store_type(store_type)
         self.store_type = store_type
         self.data_loader = PolygonAggregatesBarsDataLoader(use_cache=self.skip_download)
         self.preprocessor = PolygonAggregatesBarsPreprocessor()
         if sqlalchemy_session is None:
             sqlalchemy_session = local_session()
         self.store = PolygonAggregatesBarsDataStore(sqlalchemy_session)
-        self.stdout = PipelineStdOut()
+        self.stdout = PipelineStdOut(enable_stdout=store_type is not None)
 
     def run(self):
         for symbol in self.symbols:
@@ -58,5 +60,9 @@ class PolygonAggregatesBarsDataPipeline(BasePipeline):
             self.stdout.skip_downloading()
         raw_data = data_loader.download(self.symbols)
         data = preprocessor.process(raw_data)
-        saved_location = store.save(self.store_type, data)
-        self.stdout.completed(saved_location)
+        if self.store_type is not None:
+            saved_location = store.save(self.store_type, data)
+            self.stdout.completed(saved_location)
+        else:
+            # MEMO: output a serialized json to the stdout for pipe.
+            print(json.dumps([d.model_dump() for d in data]), flush=True)
