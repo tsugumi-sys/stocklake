@@ -29,13 +29,17 @@ pip install stocklake
 
 ## Basic Usage
 
-### Install Wikipedia: List of S&P 500 companies data to a local CSV file.
+### Install Wikipedia: List of S&P 500 companies data
+
+Installing to a local CSV file:
 
 ```bash
 stocklake download wikisp500 --store_type local_artifact --artifact_format csv
 ```
 
-### Install Wikipedia: List of S&P 500 companies data to PostgreSQL.
+----
+
+Installing to PostgreSQL:
 
 You need to setup PostgreSQL first. The [PostgreSQL and Metabase example](https://tsugumi-sys.github.io/stocklake/examples/postgresql_and_metabase/) might help you.
 
@@ -43,7 +47,9 @@ You need to setup PostgreSQL first. The [PostgreSQL and Metabase example](https:
 stocklake download wikisp500 --store_type postgresql
 ```
 
-### Install Wikipedia: List of S&P 500 companies data and output as a serialized json to the standard output.
+----
+
+Installing and output as a serialized json to the standard output
 
 ```bash
 stocklake download wikisp500
