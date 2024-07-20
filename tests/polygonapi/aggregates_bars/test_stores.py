@@ -96,12 +96,11 @@ def test_PolygonFinancialsDataSQLAlchemyStore_delete(
         assert len(res) == 0
 
     store = PolygonAggregatesBarsDataSQLAlchemyStore(SessionLocal)
-    store.create(
-        [
-            entities.PolygonAggregatesBarsDataCreate(**d.model_dump())
-            for d in polygon_aggregates_bars_data
-        ]
-    )
+    data = [
+        entities.PolygonAggregatesBarsDataCreate(**d.model_dump())
+        for d in polygon_aggregates_bars_data
+    ]
+    store.create(data)
 
     # check data is created
     with SessionLocal() as session, session.begin():
@@ -115,3 +114,21 @@ def test_PolygonFinancialsDataSQLAlchemyStore_delete(
     with SessionLocal() as session, session.begin():
         res = session.query(models.PolygonAggregatesBarsData).all()
         assert len(res) == 0
+
+    # create multi ticker data
+    store.create(data)
+    for d in data:
+        d.ticker = "MSFT"
+    store.create(data)
+
+    # check successfully created
+    with SessionLocal() as session, session.begin():
+        res = session.query(models.PolygonAggregatesBarsData).all()
+        assert len(res) == data_length * 2
+
+    # delete MSFT data
+    store.delete(["MSFT"])
+    with SessionLocal() as session, session.begin():
+        res = session.query(models.PolygonAggregatesBarsData).all()
+        assert len(res) == data_length
+        assert res[0].ticker == "AAPL"

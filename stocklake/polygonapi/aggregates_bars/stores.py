@@ -43,7 +43,7 @@ class PolygonAggregatesBarsDataStore(BaseStore):
             return repository.list_artifacts()[0].path
         elif store_type == StoreType.POSTGRESQL:
             sqlstore = PolygonAggregatesBarsDataSQLAlchemyStore(self.sqlalchemy_session)
-            sqlstore.delete()
+            sqlstore.delete(list(set([d.ticker for d in data])))
             sqlstore.create(
                 [
                     entities.PolygonAggregatesBarsDataCreate(**d.model_dump())
@@ -74,6 +74,11 @@ class PolygonAggregatesBarsDataSQLAlchemyStore(SQLAlchemyStore):
     def update(self):
         raise NotImplementedError()
 
-    def delete(self):
+    def delete(self, tickers: List[str] | None = None):
         with self.session() as session, session.begin():
-            session.query(models.PolygonAggregatesBarsData).delete()
+            if tickers:
+                session.query(models.PolygonAggregatesBarsData).filter(
+                    models.PolygonAggregatesBarsData.ticker.in_(tickers)
+                ).delete()
+            else:
+                session.query(models.PolygonAggregatesBarsData).delete()
