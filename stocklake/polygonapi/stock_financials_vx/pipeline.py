@@ -28,6 +28,7 @@ class PolygonFinancialsDataPipeline(BasePipeline):
         skip_download: bool = False,
         store_type: StoreType | None = None,
         artifact_format: ArtifactFormat | None = None,
+        interval_sec: int = 0,
         sqlalchemy_session: Optional[DATABASE_SESSION_TYPE] = None,
     ):
         self.symbols = symbols
@@ -40,7 +41,7 @@ class PolygonFinancialsDataPipeline(BasePipeline):
             validate_artifact_format(artifact_format)
         self.artifact_format = artifact_format
 
-        self.data_loader = PolygonFinancialsDataLoader()
+        self.data_loader = PolygonFinancialsDataLoader(interval_sec)
         self.preprocessor = PolygonFinancialsDataPreprocessor()
         if sqlalchemy_session is None:
             sqlalchemy_session = local_session()

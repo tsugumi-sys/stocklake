@@ -34,6 +34,23 @@ def test_polygonapi_stock_financials_vx_invalid_store_type():
         )
 
 
+# MEMO: If a given `interval_sec` is not integer, click automatically check it and stdout error message (but not raise an exception).
+@pytest.mark.parametrize("interval_sec", [-1])
+def test_polygonapi_stock_financials_vx_invalid_interval_ms(interval_sec):
+    runner = CliRunner()
+    with pytest.raises((ValueError, Exception)):
+        _ = runner.invoke(
+            cli.stock_financials_vx,
+            [
+                "--symbols",
+                "AAPL",
+                "--interval_sec",
+                interval_sec,
+            ],
+            catch_exceptions=False,
+        )
+
+
 @pytest.mark.parametrize("store_type", StoreType.types())
 def test_polygonapi_stock_financials_vx(
     store_type,
