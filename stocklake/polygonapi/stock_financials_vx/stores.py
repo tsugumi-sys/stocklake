@@ -7,7 +7,7 @@ from stocklake.core.base_store import BaseStore
 from stocklake.polygonapi import BASE_SAVE_ARTIFACTS_DIR
 from stocklake.polygonapi.stock_financials_vx import entities
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
-from stocklake.stores.constants import StoreType
+from stocklake.stores.constants import ArtifactFormat, StoreType
 from stocklake.stores.db import models
 from stocklake.stores.db.database import (
     DATABASE_SESSION_TYPE,
@@ -29,13 +29,17 @@ class PolygonFinancialsDataStore(BaseStore):
         self,
         store_type: StoreType,
         data: List[entities.PreprocessedPolygonFinancialsData],
+        artifact_format: ArtifactFormat | None = None,
     ) -> str:
         if store_type == StoreType.LOCAL_ARTIFACT:
             repository = LocalArtifactRepository(SAVE_ARTIFACTS_DIR)
             with tempfile.TemporaryDirectory() as tempdir:
-                csv_file_path = os.path.join(tempdir, "financials_data.csv")
-                save_data_to_csv([d.model_dump() for d in data], csv_file_path)
-                repository.save_artifact(csv_file_path)
+                if artifact_format is None or artifact_format == ArtifactFormat.CSV:
+                    csv_file_path = os.path.join(tempdir, "financials_data.csv")
+                    save_data_to_csv([d.model_dump() for d in data], csv_file_path)
+                    repository.save_artifact(csv_file_path)
+                else:
+                    raise NotImplementedError()
             return repository.list_artifacts()[0].path
         elif store_type == StoreType.POSTGRESQL:
             sqlstore = PolygonFinancialsDataSQLAlchemyStore(self.sqlalchemy_session)

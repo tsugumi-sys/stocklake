@@ -14,9 +14,9 @@ from stocklake.polygonapi.stock_financials_vx.preprocessor import (
     PolygonFinancialsDataPreprocessor,
 )
 from stocklake.polygonapi.stock_financials_vx.stores import PolygonFinancialsDataStore
-from stocklake.stores.constants import StoreType
+from stocklake.stores.constants import ArtifactFormat, StoreType
 from stocklake.stores.db.database import DATABASE_SESSION_TYPE, local_session
-from stocklake.utils.validation import validate_store_type
+from stocklake.utils.validation import validate_artifact_format, validate_store_type
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +27,7 @@ class PolygonFinancialsDataPipeline(BasePipeline):
         symbols: List[str],
         skip_download: bool = False,
         store_type: StoreType | None = None,
+        artifact_format: ArtifactFormat | None = None,
         sqlalchemy_session: Optional[DATABASE_SESSION_TYPE] = None,
     ):
         self.symbols = symbols
@@ -35,6 +36,10 @@ class PolygonFinancialsDataPipeline(BasePipeline):
         if store_type is not None:
             validate_store_type(store_type)
         self.store_type = store_type
+        if artifact_format is not None:
+            validate_artifact_format(artifact_format)
+        self.artifact_format = artifact_format
+
         self.data_loader = PolygonFinancialsDataLoader()
         self.preprocessor = PolygonFinancialsDataPreprocessor()
         if sqlalchemy_session is None:
@@ -65,7 +70,7 @@ class PolygonFinancialsDataPipeline(BasePipeline):
             return
         data = preprocessor.process(raw_data)
         if self.store_type is not None:
-            saved_location = store.save(self.store_type, data)
+            saved_location = store.save(self.store_type, data, self.artifact_format)
             self.stdout.completed(saved_location)
         else:
             # MEMO: output a serialized json to the stdout for pipe.

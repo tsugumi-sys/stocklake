@@ -15,7 +15,7 @@ from stocklake.polygonapi.stock_financials_vx.stores import (
     PolygonFinancialsDataSQLAlchemyStore,
     PolygonFinancialsDataStore,
 )
-from stocklake.stores.constants import StoreType
+from stocklake.stores.constants import ArtifactFormat, StoreType
 from stocklake.stores.db import models
 from tests.polygonapi.stock_financials_vx.test_data_loader import (
     MockPolygonStockFinancialsVxAPIServer,  # noqa: F401
@@ -34,12 +34,22 @@ def polygon_financials_data(
     yield data
 
 
+@pytest.mark.parametrize(
+    "artifact_format", [None, ArtifactFormat.CSV, "INVALID_FORMAT"]
+)
 def test_polygon_financials_store_local_artifact(
+    artifact_format,
     polygon_financials_data,
 ):
     store = PolygonFinancialsDataStore()
-    store.save(StoreType.LOCAL_ARTIFACT, polygon_financials_data)
-    assert os.path.exists(os.path.join(SAVE_ARTIFACTS_DIR, "financials_data.csv"))
+    if artifact_format in ArtifactFormat.formats() or artifact_format is None:
+        store.save(StoreType.LOCAL_ARTIFACT, polygon_financials_data, artifact_format)
+        assert os.path.exists(os.path.join(SAVE_ARTIFACTS_DIR, "financials_data.csv"))
+    else:
+        with pytest.raises(NotImplementedError):
+            _ = store.save(
+                StoreType.LOCAL_ARTIFACT, polygon_financials_data, artifact_format
+            )
 
 
 def test_polygon_financials_store_postgresql(
