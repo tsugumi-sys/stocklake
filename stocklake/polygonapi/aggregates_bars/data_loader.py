@@ -3,6 +3,7 @@ import datetime
 import hashlib
 import logging
 import os
+import time
 from dataclasses import asdict
 from typing import Dict, List, Optional
 
@@ -18,10 +19,10 @@ from stocklake.environment_variables import (
     STOCKLAKE_POLYGON_API_KEY,
 )
 from stocklake.exceptions import StockLakeException
-from stocklake.polygonapi.utils import avoid_request_limit
 from stocklake.polygonapi.validation import validate_polygonapi_api_key
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
 from stocklake.utils.file_utils import save_data_to_csv
+from stocklake.utils.validation import validate_int_variable, validate_numeric_range
 
 CACHE_DIR_PATH = os.path.join(CACHE_DIR, "polygonapi_aggregates_bars")
 
@@ -35,9 +36,18 @@ class _ResponseMeta(BaseModel):
 
 
 class PolygonAggregatesBarsDataLoader(BaseDataLoader):
-    def __init__(self, cache_dir: str = CACHE_DIR_PATH, use_cache: bool = False):
+    def __init__(
+        self,
+        interval_sec: int = 0,
+        cache_dir: str = CACHE_DIR_PATH,
+        use_cache: bool = False,
+    ):
         super().__init__()
         validate_polygonapi_api_key()
+        validate_int_variable(interval_sec, "timeout_sec")
+        validate_numeric_range(interval_sec, "timeout_sec", min_=0)
+
+        self.interval_sec = interval_sec
         self._use_cache = use_cache
         self._cache_artifact_repo = LocalArtifactRepository(cache_dir)
         self._cache_artifact_filenames: List[str] = []
@@ -72,10 +82,7 @@ class PolygonAggregatesBarsDataLoader(BaseDataLoader):
         else:
             to = datetime.datetime.today().strftime("%Y-%m-%d")
         data = {}
-        for request_count, ticker in enumerate(tickers):
-            avoid_request_limit(
-                self.request_count_threshold, request_count, self.stdout
-            )
+        for ticker in tickers:
             metadata = self._request_agg_data(ticker, from_, to)
             # store to cache
             csv_file_name = f"{metadata.hash}.csv"
@@ -85,6 +92,9 @@ class PolygonAggregatesBarsDataLoader(BaseDataLoader):
             )
             self._cache_artifact_filenames.append(csv_file_name)
             data[ticker] = metadata.data
+
+            if self.interval_sec > 0:
+                time.sleep(self.interval_sec)
         return data
 
     def _request_agg_data(self, ticker: str, from_: str, to: str) -> _ResponseMeta:
