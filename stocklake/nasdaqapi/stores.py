@@ -9,7 +9,7 @@ from stocklake.exceptions import StockLakeException
 from stocklake.nasdaqapi import entities
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
-from stocklake.stores.constants import StoreType
+from stocklake.stores.constants import ArtifactFormat, StoreType
 from stocklake.stores.db import models
 from stocklake.stores.db.database import (
     DATABASE_SESSION_TYPE,
@@ -32,12 +32,16 @@ class NASDAQDataStore(BaseStore):
         store_type: StoreType,
         exchange: Exchange,
         data: List[entities.PreprocessedNasdaqApiData],
+        artifact_format: ArtifactFormat | None = None,
     ) -> str:
         if store_type == StoreType.LOCAL_ARTIFACT:
             repository = LocalArtifactRepository(SAVE_ARTIFACTS_DIR)
             with tempfile.TemporaryDirectory() as tmpdir:
-                csv_file_path = os.path.join(tmpdir, f"{exchange}_data.csv")
-                save_data_to_csv([d.model_dump() for d in data], csv_file_path)
+                if artifact_format is None or artifact_format == ArtifactFormat.CSV:
+                    csv_file_path = os.path.join(tmpdir, f"{exchange}_data.csv")
+                    save_data_to_csv([d.model_dump() for d in data], csv_file_path)
+                else:
+                    raise NotImplementedError()
                 repository.save_artifact(csv_file_path)
             return repository.list_artifacts()[0].path
         elif store_type == StoreType.POSTGRESQL:

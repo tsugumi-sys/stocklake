@@ -4,7 +4,7 @@ import click
 
 from stocklake.nasdaqapi.constants import Exchange
 from stocklake.nasdaqapi.pipeline import NASDAQSymbolsPipeline
-from stocklake.stores.constants import StoreType
+from stocklake.stores.constants import ArtifactFormat, StoreType
 
 
 @click.command()
@@ -21,8 +21,18 @@ from stocklake.stores.constants import StoreType
     default=None,
     help=f"The storege type, should be in `{StoreType.types()}`.",
 )
+@click.option(
+    "--artifact_format",
+    default=None,
+    help=f"The artifact file format, should be in `{ArtifactFormat.formats()}`",
+)
 def nasdaqapi(
-    skip_download: bool, exchange: Optional[Exchange], store_type: StoreType | None
+    skip_download: bool,
+    exchange: Optional[Exchange],
+    store_type: StoreType | None,
+    artifact_format: ArtifactFormat | None,
 ):
-    pipeline = NASDAQSymbolsPipeline(skip_download, exchange, store_type)
+    pipeline = NASDAQSymbolsPipeline(
+        skip_download, exchange, store_type, artifact_format
+    )
     pipeline.run()
