@@ -43,7 +43,7 @@ class PolygonFinancialsDataStore(BaseStore):
             return repository.list_artifacts()[0].path
         elif store_type == StoreType.POSTGRESQL:
             sqlstore = PolygonFinancialsDataSQLAlchemyStore(self.sqlalchemy_session)
-            sqlstore.delete()
+            sqlstore.delete(list(set([d.ticker for d in data])))
             sqlstore.create(
                 [entities.PolygonFinancialsDataCreate(**d.model_dump()) for d in data]
             )
@@ -71,6 +71,11 @@ class PolygonFinancialsDataSQLAlchemyStore(SQLAlchemyStore):
     def update(self):
         raise NotImplementedError()
 
-    def delete(self):
+    def delete(self, tickers: List[str] | None = None):
         with self.session() as session, session.begin():
-            session.query(models.PolygonFinancialsData).delete()
+            if tickers:
+                session.query(models.PolygonFinancialsData).filter(
+                    models.PolygonFinancialsData.ticker.in_(tickers)
+                ).delete()
+            else:
+                session.query(models.PolygonFinancialsData).delete()
