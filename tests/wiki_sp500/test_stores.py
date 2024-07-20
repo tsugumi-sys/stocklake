@@ -5,7 +5,7 @@ import pytest
 from stocklake.stores.db.database import (
     database_url,
 )
-from stocklake.stores.constants import StoreType
+from stocklake.stores.constants import ArtifactFormat, StoreType
 from stocklake.stores.db import models
 from stocklake.wiki_sp500 import entities
 from stocklake.wiki_sp500.data_loader import WikiSP500DataLoader
@@ -20,10 +20,19 @@ def wiki_sp500_data():
     yield preprocessor.process(data_loader.download())
 
 
-def test_save_local_artifact_repo(wiki_sp500_data):
+@pytest.mark.parametrize(
+    "artifact_format", [None, ArtifactFormat.CSV, "INVALID_FORMAT"]
+)
+def test_save_local_artifact_repo(artifact_format, wiki_sp500_data):
     store = WikiSP500Store()
-    saved_path = store.save(StoreType.LOCAL_ARTIFACT, wiki_sp500_data)
-    assert os.path.exists(saved_path)
+    if artifact_format in ArtifactFormat.formats() or artifact_format is None:
+        saved_path = store.save(
+            StoreType.LOCAL_ARTIFACT, wiki_sp500_data, artifact_format
+        )
+        assert os.path.exists(saved_path)
+    else:
+        with pytest.raises(NotImplementedError):
+            _ = store.save(StoreType.LOCAL_ARTIFACT, wiki_sp500_data, artifact_format)
 
 
 def test_save_postgresql(wiki_sp500_data, SessionLocal):

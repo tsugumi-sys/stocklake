@@ -6,7 +6,7 @@ from stocklake.core.base_sqlalchemy_store import SQLAlchemyStore
 from stocklake.core.base_store import BaseStore
 from stocklake.core.constants import DATA_DIR
 from stocklake.stores.artifact.local_artifact_repo import LocalArtifactRepository
-from stocklake.stores.constants import StoreType
+from stocklake.stores.constants import ArtifactFormat, StoreType
 from stocklake.stores.db import models
 from stocklake.stores.db.database import (
     DATABASE_SESSION_TYPE,
@@ -26,14 +26,20 @@ class WikiSP500Store(BaseStore):
         self.sqlalchemy_session = sqlalchemy_session
 
     def save(
-        self, store_type: StoreType, data: List[entities.PreprocessedWikiSp500Data]
+        self,
+        store_type: StoreType,
+        data: List[entities.PreprocessedWikiSp500Data],
+        artifact_format: ArtifactFormat | None = None,
     ) -> str:
         if store_type == StoreType.LOCAL_ARTIFACT:
             repository = LocalArtifactRepository(SAVE_ARTIFACTS_DIR)
             with tempfile.TemporaryDirectory() as tmpdir:
-                csv_file_path = os.path.join(tmpdir, "wiki_sp500.csv")
-                save_data_to_csv([d.model_dump() for d in data], csv_file_path)
-                repository.save_artifact(csv_file_path)
+                if artifact_format is None or artifact_format == ArtifactFormat.CSV:
+                    csv_file_path = os.path.join(tmpdir, "wiki_sp500.csv")
+                    save_data_to_csv([d.model_dump() for d in data], csv_file_path)
+                    repository.save_artifact(csv_file_path)
+                else:
+                    raise NotImplementedError()
             return repository.list_artifacts()[0].path
         elif store_type == StoreType.POSTGRESQL:
             store = WikiSP500DataSQLAlchemyStore(self.sqlalchemy_session)
