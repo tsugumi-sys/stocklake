@@ -1,5 +1,8 @@
 site_name: Stocklake
-theme: material
+theme:
+  - material
+  - features:
+    - content.code.copy
 
 markdown_extensions:
     - mkdocs-click
