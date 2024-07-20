@@ -3,7 +3,7 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/stocklake.svg)](https://pypi.org/project/stocklake)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/stocklake.svg)](https://pypi.org/project/stocklake)
 
-A CLI tool to install stock information from various APIs to your data sources (local artifacts, databases, ...etc).
+A CLI tool to install various stock information APIs data to your data sources (local artifacts, databases, ...etc).
 
 -----
 
