@@ -10,6 +10,8 @@ A CLI tool to install stock information from various APIs to your data sources (
 **Table of Contents**
 
 - [Installation](#installation)
+- [Supported APIs](#supported-apis)
+- [Basic Usage](#basic-usage)
 - [License](#license)
 
 ## Installation
