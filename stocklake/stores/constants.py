@@ -11,3 +11,15 @@ class StoreType(str, Enum):
 
     def __str__(self):
         return self.value
+
+
+class ArtifactFormat(str, Enum):
+    CSV = "csv"
+    # JSON = "json"
+
+    @staticmethod
+    def formats():
+        return sorted(t.value for t in ArtifactFormat)
+
+    def __str__(self):
+        return self.value
