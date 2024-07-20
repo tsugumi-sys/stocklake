@@ -10,9 +10,9 @@ from stocklake.wiki_sp500.pipeline import WikiSP500Pipeline
 )
 @click.option(
     "--store_type",
-    default=StoreType.LOCAL_ARTIFACT,
+    default=None,
     help=f"The storege type, should be in `{StoreType.types()}`.",
 )
-def wikisp500(skip_download: bool, store_type: StoreType):
+def wikisp500(skip_download: bool, store_type: StoreType | None):
     pipeline = WikiSP500Pipeline(skip_download, store_type)
     pipeline.run()

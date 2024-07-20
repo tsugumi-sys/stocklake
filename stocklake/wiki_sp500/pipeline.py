@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import Optional
 
@@ -17,12 +18,13 @@ class WikiSP500Pipeline(BasePipeline):
     def __init__(
         self,
         skip_download: bool = False,
-        store_type: StoreType = StoreType.LOCAL_ARTIFACT,
+        store_type: StoreType | None = None,
         sqlalchemy_session: Optional[DATABASE_SESSION_TYPE] = None,
     ):
         self.skip_download = skip_download
 
-        validate_store_type(store_type)
+        if store_type is not None:
+            validate_store_type(store_type)
         self.store_type = store_type
         if sqlalchemy_session is None:
             sqlalchemy_session = local_session()
@@ -34,7 +36,9 @@ class WikiSP500Pipeline(BasePipeline):
         )
         self.preprocessor = WikiSP500Preprocessor()
         self.store = WikiSP500Store(sqlalchemy_session)
-        self.stdout = PipelineStdOut()
+        self.stdout = PipelineStdOut(
+            enable_stdout=store_type is not None
+        )  # MEMO: pipe doesn't work if other output comes into the stdout.
 
     def run(self):
         self.stdout.starting("Wikipedia S&P500")
@@ -44,5 +48,8 @@ class WikiSP500Pipeline(BasePipeline):
             self.stdout.downloading()
         raw_data = self.data_loader.download()
         data = self.preprocessor.process(raw_data)
-        saved_location = self.store.save(self.store_type, data)
-        self.stdout.completed(saved_location)
+        if self.store_type is not None:
+            saved_location = self.store.save(self.store_type, data)
+            self.stdout.completed(saved_location)
+        else:
+            print(json.dumps([d.model_dump() for d in data]), flush=True)
