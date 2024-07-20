@@ -24,16 +24,22 @@ from stocklake.stores.constants import ArtifactFormat, StoreType
     default=None,
     help=f"The artifact file format, should be in `{ArtifactFormat.formats()}`",
 )
+@click.option(
+    "--interval_sec",
+    default=0,
+    help="The interval time in seconds to process each symbols",
+)
 def stock_financials_vx(
     skip_download: bool,
     symbols: Optional[str],
     store_type: StoreType | None,
     artifact_format: ArtifactFormat | None,
+    interval_sec: int,
 ):
     if symbols is None:
         raise StockLakeException("`symbols` must be given.")
 
     pipeline = PolygonFinancialsDataPipeline(
-        symbols.split(","), skip_download, store_type, artifact_format
+        symbols.split(","), skip_download, store_type, artifact_format, interval_sec
     )
     pipeline.run()

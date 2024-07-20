@@ -22,6 +22,12 @@ def test_invalid_store_type_specified():
         assert "Specified store type is invalid, INVALID_STORE_TYPE" in str(exc.value)
 
 
+@pytest.mark.parametrize("interval_sec", [-1, "a"])
+def test_invalid_interval_sec(interval_sec):
+    with pytest.raises(ValueError):
+        _ = PolygonFinancialsDataPipeline(symbols=["AAPL"], interval_sec=interval_sec)
+
+
 def test_run_with_local_artifact(MockPolygonStockFinancialsVxAPIServer):  # noqa: F811
     pipeline = PolygonFinancialsDataPipeline(
         symbols=["AAPL"],
