@@ -15,7 +15,7 @@ from stocklake.polygonapi.aggregates_bars.stores import (
     PolygonAggregatesBarsDataSQLAlchemyStore,
     PolygonAggregatesBarsDataStore,
 )
-from stocklake.stores.constants import StoreType
+from stocklake.stores.constants import ArtifactFormat, StoreType
 from stocklake.stores.db import models
 from tests.polygonapi.aggregates_bars.test_data_loader import (
     MockPolygonAggregatesBarsAPIServer,  # noqa: F401
@@ -34,10 +34,23 @@ def polygon_aggregates_bars_data(
     yield data
 
 
-def test_polygon_aggregates_bars_store_local_artifact(polygon_aggregates_bars_data):
+@pytest.mark.parametrize(
+    "artifact_format", [None, ArtifactFormat.CSV, "INVALID_FORMAT"]
+)
+def test_polygon_aggregates_bars_store_local_artifact(
+    artifact_format, polygon_aggregates_bars_data
+):
     store = PolygonAggregatesBarsDataStore()
-    store.save(StoreType.LOCAL_ARTIFACT, polygon_aggregates_bars_data)
-    assert os.path.exists(os.path.join(SAVE_ARTIFACTS_DIR, "aggregates_bars.csv"))
+    if artifact_format is None or artifact_format in ArtifactFormat.formats():
+        store.save(
+            StoreType.LOCAL_ARTIFACT, polygon_aggregates_bars_data, artifact_format
+        )
+        assert os.path.exists(os.path.join(SAVE_ARTIFACTS_DIR, "aggregates_bars.csv"))
+    else:
+        with pytest.raises(NotImplementedError):
+            store.save(
+                StoreType.LOCAL_ARTIFACT, polygon_aggregates_bars_data, artifact_format
+            )
 
 
 def test_polygon_financials_store_postgresql(

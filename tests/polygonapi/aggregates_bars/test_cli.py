@@ -3,7 +3,7 @@ from click.testing import CliRunner
 
 from stocklake.exceptions import StockLakeException
 from stocklake.polygonapi.aggregates_bars import cli
-from stocklake.stores.constants import StoreType
+from stocklake.stores.constants import ArtifactFormat, StoreType
 from tests.polygonapi.aggregates_bars.test_data_loader import (
     MockPolygonAggregatesBarsAPIServer,  # noqa: F401
 )
@@ -38,7 +38,6 @@ def test_polygonapi_aggregates_bars_invalid_store_type():
 def test_polygonapi_aggregates_bars(
     store_type,
     MockPolygonAggregatesBarsAPIServer,  # noqa: F811
-    monkeypatch,
     SessionLocal,
 ):
     runner = CliRunner()
@@ -54,3 +53,42 @@ def test_polygonapi_aggregates_bars(
     )
     assert res.exit_code == 0
     assert "- Completed🐳" in res.output
+
+
+@pytest.mark.parametrize(
+    "artifact_format", [None, ArtifactFormat.CSV, "INVALID_FORMAT"]
+)
+def test_polygonapi_aggregates_bars_local_artifact(
+    artifact_format,
+    MockPolygonAggregatesBarsAPIServer,  # noqa: F811
+):
+    runner = CliRunner()
+    if artifact_format is None or artifact_format in ArtifactFormat.formats():
+        res = runner.invoke(
+            cli.aggregates_bars,
+            [
+                "--symbols",
+                "AAPL",
+                "--store_type",
+                "local_artifact",
+                "--artifact_format",
+                artifact_format,
+            ],
+            catch_exceptions=False,
+        )
+        assert res.exit_code == 0
+        assert "- Completed🐳" in res.output
+    else:
+        with pytest.raises(StockLakeException):
+            _ = runner.invoke(
+                cli.aggregates_bars,
+                [
+                    "--symbols",
+                    "AAPL",
+                    "--store_type",
+                    "local_artifact",
+                    "--artifact_format",
+                    artifact_format,
+                ],
+                catch_exceptions=False,
+            )
