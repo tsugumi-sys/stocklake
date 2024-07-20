@@ -2,10 +2,7 @@ import json
 import logging
 from typing import List, Optional
 
-from stocklake.core.base_data_loader import BaseDataLoader
 from stocklake.core.base_pipeline import BasePipeline
-from stocklake.core.base_preprocessor import BasePreprocessor
-from stocklake.core.base_store import BaseStore
 from stocklake.core.stdout import PipelineStdOut
 from stocklake.polygonapi.aggregates_bars.data_loader import (
     PolygonAggregatesBarsDataLoader,
@@ -50,25 +47,17 @@ class PolygonAggregatesBarsDataPipeline(BasePipeline):
         self.stdout = PipelineStdOut(enable_stdout=store_type is not None)
 
     def run(self):
-        for symbol in self.symbols:
-            self._run(symbol, self.data_loader, self.preprocessor, self.store)
-
-    def _run(
-        self,
-        symbol: str,
-        data_loader: BaseDataLoader,
-        preprocessor: BasePreprocessor,
-        store: BaseStore,
-    ):
-        self.stdout.starting(f"Aggregates Bars API Polygon of {symbol}")
+        self.stdout.starting(f"Aggregates Bars API Polygon of {self.symbols}")
         if not self.skip_download:
             self.stdout.downloading()
         else:
             self.stdout.skip_downloading()
-        raw_data = data_loader.download(self.symbols)
-        data = preprocessor.process(raw_data)
+        raw_data = self.data_loader.download(self.symbols)
+        data = self.preprocessor.process(raw_data)
         if self.store_type is not None:
-            saved_location = store.save(self.store_type, data, self.artifact_format)
+            saved_location = self.store.save(
+                self.store_type, data, self.artifact_format
+            )
             self.stdout.completed(saved_location)
         else:
             # MEMO: output a serialized json to the stdout for pipe.

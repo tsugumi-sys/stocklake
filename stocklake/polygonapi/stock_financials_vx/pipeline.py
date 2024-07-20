@@ -2,10 +2,7 @@ import json
 import logging
 from typing import List, Optional
 
-from stocklake.core.base_data_loader import BaseDataLoader
 from stocklake.core.base_pipeline import BasePipeline
-from stocklake.core.base_preprocessor import BasePreprocessor
-from stocklake.core.base_store import BaseStore
 from stocklake.core.stdout import PipelineStdOut
 from stocklake.polygonapi.stock_financials_vx.data_loader import (
     PolygonFinancialsDataLoader,
@@ -51,27 +48,19 @@ class PolygonFinancialsDataPipeline(BasePipeline):
         )  # MEMO: pipe doesn't work if other output comes into the stdout.
 
     def run(self):
-        for symbol in self.symbols:
-            self._run(symbol, self.data_loader, self.preprocessor, self.store)
-
-    def _run(
-        self,
-        symbol: str,
-        data_loader: BaseDataLoader,
-        preprocessor: BasePreprocessor,
-        store: BaseStore,
-    ):
-        self.stdout.starting(f"Stock Financials VX API Polygon of {symbol}")
+        self.stdout.starting(f"Stock Financials VX API Polygon of {self.symbols}")
         if not self.skip_download:
             self.stdout.downloading()
-            raw_data = data_loader.download(self.symbols)
+            raw_data = self.data_loader.download(self.symbols)
         else:
             self.stdout.skip_downloading()
             # TODO: fetch from cached file
             return
-        data = preprocessor.process(raw_data)
+        data = self.preprocessor.process(raw_data)
         if self.store_type is not None:
-            saved_location = store.save(self.store_type, data, self.artifact_format)
+            saved_location = self.store.save(
+                self.store_type, data, self.artifact_format
+            )
             self.stdout.completed(saved_location)
         else:
             # MEMO: output a serialized json to the stdout for pipe.

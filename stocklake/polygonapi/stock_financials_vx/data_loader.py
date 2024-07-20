@@ -44,6 +44,9 @@ class PolygonFinancialsDataLoader(BaseDataLoader):
         for ticker in tickers:
             data[ticker] = self._request_financials_data(ticker)
             if self.interval_sec > 0:
+                self.stdout.normal_message(
+                    f"waiting with an interval of {self.interval_sec} seconds"
+                )
                 time.sleep(self.interval_sec)
         return data
 

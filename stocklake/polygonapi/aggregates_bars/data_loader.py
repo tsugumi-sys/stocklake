@@ -94,6 +94,9 @@ class PolygonAggregatesBarsDataLoader(BaseDataLoader):
             data[ticker] = metadata.data
 
             if self.interval_sec > 0:
+                self.stdout.normal_message(
+                    f"waiting with an interval of {self.interval_sec} seconds"
+                )
                 time.sleep(self.interval_sec)
         return data
 
