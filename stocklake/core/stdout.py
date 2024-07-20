@@ -49,19 +49,24 @@ class PrettyStdoutPrint:
 
 
 class PipelineStdOut:
-    def __init__(self):
+    def __init__(self, enable_stdout: bool = True):
+        self.enable_stdout = enable_stdout
         self.stdout = PrettyStdoutPrint()
 
     def starting(self, pipeline_name: str):
-        self.stdout.step_start(f"Pipeline: {pipeline_name} is starting ...")
+        if self.enable_stdout:
+            self.stdout.step_start(f"Pipeline: {pipeline_name} is starting ...")
 
     def skip_downloading(self):
-        self.stdout.warning_message("- Skip Downloading")
+        if self.enable_stdout:
+            self.stdout.warning_message("- Skip Downloading")
 
     def downloading(self):
-        self.stdout.normal_message("- Downloading ...")
+        if self.enable_stdout:
+            self.stdout.normal_message("- Downloading ...")
 
     def completed(self, stored_location: str):
-        self.stdout.success_message(
-            f"- Completed🐳. The data is stored into {stored_location}"
-        )
+        if self.enable_stdout:
+            self.stdout.success_message(
+                f"- Completed🐳. The data is stored into {stored_location}"
+            )

@@ -1,3 +1,4 @@
+import json
 import logging
 from typing import Optional
 
@@ -27,7 +28,7 @@ class NASDAQSymbolsPipeline(BasePipeline):
         self,
         skip_download: bool = False,
         exchange: Optional[Exchange] = None,
-        store_type: StoreType = StoreType.LOCAL_ARTIFACT,
+        store_type: StoreType | None = None,
         sqlalchemy_session: Optional[DATABASE_SESSION_TYPE] = None,
     ):
         if exchange is not None and exchange not in Exchange.exchanges():
@@ -37,13 +38,16 @@ class NASDAQSymbolsPipeline(BasePipeline):
         self.exchange = exchange
         self.skip_download = skip_download
 
-        validate_store_type(store_type)
+        if store_type is not None:
+            validate_store_type(store_type)
         self.store_type = store_type
         self.preprocessor = NASDAQSymbolsPreprocessor()
         if sqlalchemy_session is None:
             sqlalchemy_session = local_session()
         self.store = NASDAQDataStore(sqlalchemy_session)
-        self.stdout = PipelineStdOut()
+        self.stdout = PipelineStdOut(
+            enable_stdout=store_type is not None
+        )  # MEMO: pipe doesn't work if other output comes into the stdout.
 
     def run(self):
         if self.exchange is None:
@@ -82,5 +86,9 @@ class NASDAQSymbolsPipeline(BasePipeline):
             # TODO: fetch from cached file
             return
         data = preprocessor.process(exchange, raw_data)
-        stored_location = store.save(self.store_type, exchange, data)
-        self.stdout.completed(stored_location)
+        if self.store_type:
+            stored_location = store.save(self.store_type, exchange, data)
+            self.stdout.completed(stored_location)
+        else:
+            # MEMO: output a serialized json to the stdout for pipe.
+            print(json.dumps([d.model_dump() for d in data]), flush=True)

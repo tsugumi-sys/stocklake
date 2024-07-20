@@ -18,9 +18,11 @@ from stocklake.stores.constants import StoreType
 )
 @click.option(
     "--store_type",
-    default=StoreType.LOCAL_ARTIFACT,
+    default=None,
     help=f"The storege type, should be in `{StoreType.types()}`.",
 )
-def nasdaqapi(skip_download: bool, exchange: Optional[Exchange], store_type: StoreType):
+def nasdaqapi(
+    skip_download: bool, exchange: Optional[Exchange], store_type: StoreType | None
+):
     pipeline = NASDAQSymbolsPipeline(skip_download, exchange, store_type)
     pipeline.run()
