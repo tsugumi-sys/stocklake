@@ -30,6 +30,12 @@ def test_raise_error_when_polygon_api_key_missing():
         _ = PolygonFinancialsDataLoader()
 
 
+@pytest.mark.parametrize("interval_sec", [-1, "a"])
+def test_invalid_interval_sec(interval_sec):
+    with pytest.raises(ValueError):
+        _ = PolygonFinancialsDataLoader(interval_sec=interval_sec)
+
+
 def test_download(MockPolygonStockFinancialsVxAPIServer):
     dataloader = PolygonFinancialsDataLoader()
     res = dataloader.download(["AAPL"])
