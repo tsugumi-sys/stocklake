@@ -16,9 +16,9 @@ from stocklake.nasdaqapi.preprocessor import (
     NASDAQSymbolsPreprocessor,
 )
 from stocklake.nasdaqapi.stores import NASDAQDataStore
-from stocklake.stores.constants import StoreType
+from stocklake.stores.constants import ArtifactFormat, StoreType
 from stocklake.stores.db.database import DATABASE_SESSION_TYPE, local_session
-from stocklake.utils.validation import validate_store_type
+from stocklake.utils.validation import validate_artifact_format, validate_store_type
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +29,7 @@ class NASDAQSymbolsPipeline(BasePipeline):
         skip_download: bool = False,
         exchange: Optional[Exchange] = None,
         store_type: StoreType | None = None,
+        artifact_format: ArtifactFormat | None = None,
         sqlalchemy_session: Optional[DATABASE_SESSION_TYPE] = None,
     ):
         if exchange is not None and exchange not in Exchange.exchanges():
@@ -41,6 +42,9 @@ class NASDAQSymbolsPipeline(BasePipeline):
         if store_type is not None:
             validate_store_type(store_type)
         self.store_type = store_type
+        if artifact_format is not None:
+            validate_artifact_format(artifact_format)
+        self.artifact_format = artifact_format
         self.preprocessor = NASDAQSymbolsPreprocessor()
         if sqlalchemy_session is None:
             sqlalchemy_session = local_session()
@@ -87,7 +91,9 @@ class NASDAQSymbolsPipeline(BasePipeline):
             return
         data = preprocessor.process(exchange, raw_data)
         if self.store_type:
-            stored_location = store.save(self.store_type, exchange, data)
+            stored_location = store.save(
+                self.store_type, exchange, data, self.artifact_format
+            )
             self.stdout.completed(stored_location)
         else:
             # MEMO: output a serialized json to the stdout for pipe.

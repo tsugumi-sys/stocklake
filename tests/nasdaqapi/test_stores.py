@@ -10,37 +10,53 @@ from stocklake.nasdaqapi.stores import (
     NasdaqApiSQLAlchemyStore,
     NASDAQDataStore,
 )
-from stocklake.stores.constants import StoreType
+from stocklake.stores.constants import ArtifactFormat, StoreType
 from stocklake.stores.db.models import NasdaqApiData
 
 
-def test_nasdaqdatastore_local_artifact():
+@pytest.mark.parametrize(
+    "artifact_format", [None, ArtifactFormat.CSV, "INVALID_FORMAT"]
+)
+def test_nasdaqdatastore_local_artifact(artifact_format):
     exchange_name = Exchange.NASDAQ
     store = NASDAQDataStore()
-    store.save(
-        StoreType.LOCAL_ARTIFACT,
-        exchange_name,
-        [
-            NasdaqApiDataCreate(
-                **{
-                    "symbol": "TEST",
-                    "exchange": Exchange.NASDAQ,
-                    "name": "Test Company",
-                    "last_sale": 0.88,
-                    "pct_change": 0.5,
-                    "net_change": 0.35,
-                    "volume": 100.5,
-                    "marketcap": 0.75,
-                    "country": "US",
-                    "ipo_year": 1999,
-                    "industry": "Tech",
-                    "sector": "Health",
-                    "url": "https://example.com",
-                }
+    data = [
+        NasdaqApiDataCreate(
+            **{
+                "symbol": "TEST",
+                "exchange": Exchange.NASDAQ,
+                "name": "Test Company",
+                "last_sale": 0.88,
+                "pct_change": 0.5,
+                "net_change": 0.35,
+                "volume": 100.5,
+                "marketcap": 0.75,
+                "country": "US",
+                "ipo_year": 1999,
+                "industry": "Tech",
+                "sector": "Health",
+                "url": "https://example.com",
+            }
+        )
+    ]
+    if artifact_format in ArtifactFormat.formats() or artifact_format is None:
+        store.save(
+            StoreType.LOCAL_ARTIFACT,
+            exchange_name,
+            data,
+            artifact_format,
+        )
+        assert os.path.exists(
+            os.path.join(SAVE_ARTIFACTS_DIR, f"{exchange_name}_data.csv")
+        )
+    else:
+        with pytest.raises(NotImplementedError):
+            store.save(
+                StoreType.LOCAL_ARTIFACT,
+                exchange_name,
+                data,
+                artifact_format,
             )
-        ],
-    )
-    assert os.path.exists(os.path.join(SAVE_ARTIFACTS_DIR, f"{exchange_name}_data.csv"))
 
 
 def test_nasdaqdatastore_postgresql(SessionLocal):  # noqa: F811
