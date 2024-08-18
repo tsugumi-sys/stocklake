@@ -31,6 +31,8 @@ services:
       POSTGRES_USER: metabase
       POSTGRES_DB: metabaseappdb
       POSTGRES_PASSWORD: mysecretpassword
+    volumes:
+      - postgres_data_for_metabase:/var/lib/postgresql/data
     networks:
       - metanet1
   stocklake-db:
@@ -56,3 +58,4 @@ networks:
 
 volumes:
   postgres_data:
+  postgres_data_for_metabase:
