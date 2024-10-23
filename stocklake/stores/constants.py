@@ -15,7 +15,7 @@ class StoreType(str, Enum):
 
 class ArtifactFormat(str, Enum):
     CSV = "csv"
-    # JSON = "json"
+    JSON = "json"
 
     @staticmethod
     def formats():

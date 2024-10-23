@@ -1,5 +1,6 @@
 import os
 import tempfile
+import json
 from typing import List, Optional
 
 from stocklake.core.base_sqlalchemy_store import SQLAlchemyStore
@@ -38,6 +39,11 @@ class WikiSP500Store(BaseStore):
                     csv_file_path = os.path.join(tmpdir, "wiki_sp500.csv")
                     save_data_to_csv([d.model_dump() for d in data], csv_file_path)
                     repository.save_artifact(csv_file_path)
+                elif artifact_format == ArtifactFormat.JSON:
+                    json_file_path = os.path.join(tmpdir, "wiki_sp500.json")
+                    with open(json_file_path, "w") as json_file:
+                        json.dump([d.model_dump() for d in data], json_file)
+                    repository.save_artifact(json_file_path)
                 else:
                     raise NotImplementedError()
             return repository.list_artifacts()[0].path

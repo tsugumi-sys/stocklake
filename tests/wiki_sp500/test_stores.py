@@ -21,7 +21,7 @@ def wiki_sp500_data():
 
 
 @pytest.mark.parametrize(
-    "artifact_format", [None, ArtifactFormat.CSV, "INVALID_FORMAT"]
+    "artifact_format", [None, ArtifactFormat.CSV, ArtifactFormat.JSON, "INVALID_FORMAT"]
 )
 def test_save_local_artifact_repo(artifact_format, wiki_sp500_data):
     store = WikiSP500Store()
