@@ -55,7 +55,7 @@ class PolygonFinancialsDataBase(BaseModel):
     # interest_expense_operating: float
     # net_income_loss_available_to_common_stockholders_basic: float
     revenues: Optional[float]
-    # net_income_loss: float
+    net_income_loss: Optional[float]
     # operating_income_loss: float
     # meta data
     ticker: str

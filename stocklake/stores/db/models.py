@@ -88,7 +88,7 @@ class PolygonFinancialsData(Base):
     # interest_expense_operating = Column(Float)
     # net_income_loss_available_to_common_stockholders_basic = Column(Float)
     revenues = Column(Float, nullable=True)
-    # net_income_loss = Column(Float)
+    net_income_loss = Column(Float, nullable=True)
     # operating_income_loss = Column(Float)
     # meta data
     ticker = Column(String)
