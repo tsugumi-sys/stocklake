@@ -1,7 +1,6 @@
 import json
 import os
 import tempfile
-import json
 from typing import List, Optional
 
 from stocklake.core.base_sqlalchemy_store import SQLAlchemyStore
