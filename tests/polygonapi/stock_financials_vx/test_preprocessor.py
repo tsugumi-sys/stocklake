@@ -35,6 +35,8 @@ def test_preprocessor(MockPolygonStockFinancialsVxAPIServer):  # noqa: F811
                 assert isinstance(val, str) or val is None
             elif col in ["fiscal_year"]:
                 assert isinstance(val, int) or val is None
+            elif col == "net_income_loss":
+                assert isinstance(val, float) or val is None
             else:
                 # check float data
                 assert isinstance(val, float) or val is None

@@ -61,6 +61,8 @@ def test_polygon_financials_store_postgresql(
     with SessionLocal() as session, session.begin():
         res = session.query(models.PolygonFinancialsData).all()
     assert len(res) == 10
+    for record in res:
+        assert record.net_income_loss is not None
 
 
 def test_PolygonFinancialsDataSQLAlchemyStore_create(
